@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/estancias_cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="10dp"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_items_cardview"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/hab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Hab"
+            android:textSize="@dimen/tvSize"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/no_hab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/hab"
+            android:text="0000"
+            android:textSize="@dimen/tvSize"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/fechas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="Fechas"
+            android:textSize="@dimen/tvSize" />
+
+        <TextView
+            android:id="@+id/pax_family_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hab"
+            android:layout_marginTop="5dp"
+            android:text="Nombre y Apellidos"
+            android:textSize="@dimen/tvSize" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

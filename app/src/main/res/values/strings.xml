@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">Herramienta del mayordomo</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+
+
+    <string name="estancias">Estancias</string>
+
+
+
+
+
+    <string name="recordatorios">Recordatorios</string>
+
+
+    <string name="action_settings">Settings</string>
+
+
+    <string name="en_casa">En casa</string>
+    <string name="estancia_title">Estancia</string>
+    <string name="Hab">Hab</string>
+    <string name="reportes">Reportes</string>
+    <string name="cortesias">Cortesías</string>
+    <string name="reserva_restaurant">Reservas de restaurante</string>
+    <string name="obs">Observaciones</string>
+    <string name="desde">Desde</string>
+    <string name="hasta">Hasta</string>
+    <string name="editar">Editar</string>
+    <string name="noches">Noches:</string>
+    <string name="nueva_estancia">Nueva estancia</string>
+    <string name="familyName_id">A nombre de</string>
+    <string name="seleccionar_fecha">Seleccionar fecha</string>
+    <string name="no_pax_vinculado">No hay clientes vinculados</string>
+
+
+    <string name="adultos">adultos</string>
+    <string name="menores">menores</string>
+    <string name="infantes">infantes</string>
+    <string name="nombre">Nombre</string>
+    <string name="origen_pais">País de origen</string>
+    <string name="origen_ciudad">Ciudad</string>
+    <string name="dob">Fecha de nacimiento</string>
+    <string name="pass_ci">Pasaporte/CI</string>
+    <string name="search_box_hint">Buscar</string>
+
+    <string name="clientes">Clientes</string>
+    <string name="nuevo_cliente">Nuevo cliente</string>
+    <string name="info_cliente_title">Información del cliente</string>
+    <string name="actualizar_cliente_title">Actualizar cliente</string>
+    <string name="preferencias">Preferencias</string>
+    <string name="limitaciones">Limitaciones</string>
+
+
+    <string name="guardar">Guardar</string>
+    <string name="registrar">Registrar</string>
+    <string name="actualizar">Actualizar</string>
+
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1F5D71</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#60b981</color>
+    <color name="color_items_cardview">#11d2e4</color>
+    <color name="color_backgroundActivity">#003D52</color>
+    <color name="color_font_blanco">#ffffff</color>
+    <color name="link">#dc6969</color>
+</resources>
