@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Comparator;
 
 /**
  * Created by usuario on 31/10/2021.
@@ -108,5 +109,12 @@ public class Cliente {
         this.pass = pass;
     }
 
-
+    public static Comparator<Cliente> nameAscending = new Comparator<Cliente>() {
+        @Override
+        public int compare(Cliente c1, Cliente c2) {
+            String name1 = c1.getName().toLowerCase();
+            String name2 = c2.getName().toLowerCase();
+            return name1.compareTo(name2);
+        }
+    };
 }

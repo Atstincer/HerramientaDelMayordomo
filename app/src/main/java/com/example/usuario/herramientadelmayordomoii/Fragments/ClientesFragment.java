@@ -25,6 +25,7 @@ import com.example.usuario.herramientadelmayordomoii.Entities.Cliente;
 import com.example.usuario.herramientadelmayordomoii.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -138,6 +139,7 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
             listaClientes.add(c);
         }
         cursor.close();
+        Collections.sort(listaClientes,Cliente.nameAscending);
     }
 
     private void setUpRecyclerView() {
