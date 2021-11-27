@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menu_item_nuevo_cliente"
@@ -7,6 +8,9 @@
 
     <item
         android:id="@+id/menu_item_buscar"
-        android:title="@string/search_box_hint" />
+        android:title="@string/search_box_hint"
+        android:icon="@drawable/ic_lupa"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
 
 </menu>

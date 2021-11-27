@@ -15,6 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.support.v7.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.usuario.herramientadelmayordomoii.Adapters.ClientesRVAdapter;
@@ -34,6 +36,7 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
     public static final String TAG = "ClientesFragment";
 
     private List<Cliente> listaClientes;
+    private ClientesRVAdapter adapter;
 
     private RecyclerView recyclerView;
     private Callback mycallback;
@@ -84,6 +87,22 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
                 break;
             case R.id.menu_item_buscar:
                 Toast.makeText(getActivity(), "Buscar clicked.", Toast.LENGTH_SHORT).show();
+                SearchView sv = (SearchView) item.getActionView();
+
+                sv.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+                sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+                    @Override
+                    public boolean onQueryTextSubmit(String s) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        adapter.getFilter().filter(newText);
+                        return false;
+                    }
+                });
                 break;
             default:
                 break;
@@ -121,9 +140,8 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
         cursor.close();
     }
 
-
     private void setUpRecyclerView() {
-        ClientesRVAdapter adapter = new ClientesRVAdapter(listaClientes,this);
+        adapter = new ClientesRVAdapter(listaClientes,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }

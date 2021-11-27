@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,6 +13,7 @@ import com.example.usuario.herramientadelmayordomoii.Entities.Cliente;
 import com.example.usuario.herramientadelmayordomoii.R;
 import com.example.usuario.herramientadelmayordomoii.Util.MyBitmapFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,13 +21,15 @@ import java.util.List;
  * Created by usuario on 10/11/2021.
  */
 
-public class ClientesRVAdapter extends RecyclerView.Adapter<ClientesRVAdapter.ViewHolder> {
+public class ClientesRVAdapter extends RecyclerView.Adapter<ClientesRVAdapter.ViewHolder> implements Filterable {
 
     private List<Cliente> listClientes;
+    private List<Cliente> fullListClientes;
     private Callback mycallback;
 
     public ClientesRVAdapter(List<Cliente> listClientes,Callback callback) {
         this.listClientes = listClientes;
+        fullListClientes = new ArrayList<>(listClientes);
         this.mycallback = callback;
     }
 
@@ -81,6 +86,40 @@ public class ClientesRVAdapter extends RecyclerView.Adapter<ClientesRVAdapter.Vi
             myCallback.onItemClicked(getAdapterPosition());
         }
     }
+
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            List<Cliente> filteredList = new ArrayList<>();
+            if(charSequence == null || charSequence.length() == 0){
+                filteredList.addAll(fullListClientes);
+            }else{
+                String filterPattern = charSequence.toString().toLowerCase().trim();
+
+                for(Cliente c: fullListClientes){
+                    if(c.getName().toLowerCase().contains(filterPattern)){
+                        filteredList.add(c);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            listClientes.clear();
+            listClientes.addAll((List)filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
 
     public interface Callback{
         void onItemClicked(int position);

@@ -107,6 +107,7 @@ public class ClienteFragment extends Fragment implements IClienteFragment {
                 myCallback.setNewCurrentStateClienteFragment(ClienteFragment.STATE_CLIENTE_UD_MODE);
                 setUpNewState(ClienteFragment.STATE_CLIENTE_UD_MODE);
                 break;
+
             default:
                 break;
         }
