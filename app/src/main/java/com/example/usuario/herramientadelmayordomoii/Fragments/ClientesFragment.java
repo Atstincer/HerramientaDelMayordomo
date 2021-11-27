@@ -115,6 +115,7 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
             c.setDob(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_DOB)));
             c.setOrigenCiudad(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_ORIGEN_CIUDAD)));
             c.setOrigenPais(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_ORIGEN_PAIS)));
+            c.setFoto(cursor.getBlob(cursor.getColumnIndex(Cliente.CAMPO_FOTO)));
             listaClientes.add(c);
         }
         cursor.close();

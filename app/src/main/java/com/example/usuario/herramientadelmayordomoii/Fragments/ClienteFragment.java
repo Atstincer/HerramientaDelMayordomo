@@ -1,34 +1,44 @@
 package com.example.usuario.herramientadelmayordomoii.Fragments;
 
 import android.app.DatePickerDialog;
-import android.content.ComponentName;
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.usuario.herramientadelmayordomoii.BD_conexion.AdminSQLiteOpenHelper;
 import com.example.usuario.herramientadelmayordomoii.Entities.Cliente;
 import com.example.usuario.herramientadelmayordomoii.Interfaces.IClienteFragment;
+import com.example.usuario.herramientadelmayordomoii.MainActivity;
 import com.example.usuario.herramientadelmayordomoii.R;
+import com.example.usuario.herramientadelmayordomoii.Util.MyBitmapFactory;
 
+import java.io.IOException;
 import java.util.Calendar;
+
 
 /**
  * Created by usuario on 6/11/2021.
@@ -42,15 +52,21 @@ public class ClienteFragment extends Fragment implements IClienteFragment {
     public static final String STATE_CLIENTE_UD_MODE = "STATE_CLIENTE_UD_MODE";
     public static final String STATE_NEW_CLIENTE_MODE = "STATE_NEW_CLIENTE_MODE";
 
-    //private String currentState;
-
     private Callback myCallback;
-    private EditText nombre, pass, pais, ciudad, dob, preferencias, limitaciones, obs;
+    private ImageView foto;
+    private EditText nombre, pass, pais, ciudad, dob;
+    private TextView preferencias, limitaciones, obs;
     private Button btn;
-    private Menu myMenu;
 
-    //private int idSelectedClient;
     private Cliente selectedClient;
+
+    private int TOMAR_FOTO = 100;
+    private int SELEC_IMAGEN = 200;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
@@ -81,7 +97,6 @@ public class ClienteFragment extends Fragment implements IClienteFragment {
             inflater.inflate(R.menu.menu_cliente_mode, menu);
         }
         inflater.inflate(R.menu.menu_main, menu);
-        myMenu = menu;
         //super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -98,87 +113,59 @@ public class ClienteFragment extends Fragment implements IClienteFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void setUpNewState(String state) {
-        switch (state) {
-            case STATE_CLIENTE_MODE:
-                setUpClienteMode(true);
-                break;
-            case STATE_CLIENTE_UD_MODE:
-                setUpUpdateMode();
-                break;
-            case STATE_NEW_CLIENTE_MODE:
-                setUpNewClienteMode();
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public String getCurrentState() {
-        return null;
-    }
-
-    private void setUpClienteMode(boolean checkForArguments) {
-        if(checkForArguments){
-            if (getArguments() != null) {
-                Bundle bundle = getArguments();
-                udClientFromDB(bundle.getInt("id"));
-            }
-        }
-        setViewEditable(false);
-        showViews(true);
-        btn.setVisibility(View.GONE);
-        getActivity().invalidateOptionsMenu();
-        showInfoClient();
-    }
-
-    private void setUpUpdateMode() {
-        setViewEditable(true);
-        showViews(false);
-        btn.setVisibility(View.VISIBLE);
-        btn.setText(getResources().getString(R.string.actualizar));
-        getActivity().invalidateOptionsMenu();
-    }
-
-    private void setUpNewClienteMode() {
-        setViewEditable(true);
-        showViews(false);
-        btn.setVisibility(View.VISIBLE);
-        btn.setText(getResources().getString(R.string.registrar));
-    }
-
-    private void showViews(boolean choise) {
-        if (choise) {
-            preferencias.setVisibility(View.VISIBLE);
-            limitaciones.setVisibility(View.VISIBLE);
-            obs.setVisibility(View.VISIBLE);
-        } else {
-            preferencias.setVisibility(View.GONE);
-            limitaciones.setVisibility(View.GONE);
-            obs.setVisibility(View.GONE);
-        }
-    }
-
-    private void setViewEditable(boolean choise) {
-        nombre.setEnabled(choise);
-        pass.setEnabled(choise);
-        pais.setEnabled(choise);
-        ciudad.setEnabled(choise);
-        dob.setEnabled(choise);
-    }
-
     private void bindComponents(View view) {
+        foto = (ImageView)view.findViewById(R.id.iv_foto_cliente);
         nombre = (EditText) view.findViewById(R.id.et_nombre);
         pass = (EditText) view.findViewById(R.id.et_pass);
         pais = (EditText) view.findViewById(R.id.et_origenPais);
         ciudad = (EditText) view.findViewById(R.id.et_origenCiudad);
         dob = (EditText) view.findViewById(R.id.et_dob);
-        preferencias = (EditText) view.findViewById(R.id.et_preferencias);
-        limitaciones = (EditText) view.findViewById(R.id.et_limitaciones);
-        obs = (EditText) view.findViewById(R.id.et_obs_cliente);
+        preferencias = (TextView) view.findViewById(R.id.et_preferencias);
+        limitaciones = (TextView) view.findViewById(R.id.et_limitaciones);
+        obs = (TextView) view.findViewById(R.id.et_obs_cliente);
         btn = (Button) view.findViewById(R.id.btn_cliente);
+
+        foto.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View view) {
+                if(!getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)){
+                    makeToast(getResources().getString(R.string.no_camara_disponible));
+                    return false;
+                }
+                /*if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
+                }*/
+                PopupMenu menu = new PopupMenu(getContext(),view);
+                try{
+                    ((BitmapDrawable)foto.getDrawable()).getBitmap();
+                    menu.getMenuInflater().inflate(R.menu.menu_picture_deselect,menu.getMenu());
+                }catch (Exception e){
+                    //do nothing
+                }
+                menu.getMenuInflater().inflate(R.menu.menu_picture_clicked,menu.getMenu());
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch(menuItem.getItemId()){
+                            case R.id.menu_item_tomar_foto:
+                                tomarFoto();
+                                break;
+                            case R.id.menu_item_seleccionar_foto:
+                                selectImagen();
+                                break;
+                            case R.id.menu_item_eliminar_foto:
+                                foto.setImageResource(R.drawable.ic_cliente);
+                                break;
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                menu.show();
+                return false;
+            }
+        });
 
         preferencias.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,6 +211,82 @@ public class ClienteFragment extends Fragment implements IClienteFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void setUpNewState(String state) {
+        switch (state) {
+            case STATE_CLIENTE_MODE:
+                setUpClienteMode(true);
+                break;
+            case STATE_CLIENTE_UD_MODE:
+                setUpUpdateMode();
+                break;
+            case STATE_NEW_CLIENTE_MODE:
+                setUpNewClienteMode();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public String getCurrentState() {
+        return null;
+    }
+
+    private void setUpClienteMode(boolean checkForArguments) {
+        if(checkForArguments){
+            if (getArguments() != null) {
+                Bundle bundle = getArguments();
+                udClientFromDB(bundle.getInt("id"));
+            }
+        }else{
+            if(selectedClient != null){
+                udClientFromDB(selectedClient.getId());
+            }
+        }
+        setViewEditable(false);
+        showViews(true);
+        btn.setVisibility(View.GONE);
+        getActivity().invalidateOptionsMenu();
+        showInfoClient();
+    }
+
+    private void setUpUpdateMode() {
+        setViewEditable(true);
+        showViews(false);
+        btn.setVisibility(View.VISIBLE);
+        btn.setText(getResources().getString(R.string.actualizar));
+        getActivity().invalidateOptionsMenu();
+    }
+
+    private void setUpNewClienteMode() {
+        setViewEditable(true);
+        showViews(false);
+        btn.setVisibility(View.VISIBLE);
+        btn.setText(getResources().getString(R.string.registrar));
+    }
+
+    private void showViews(boolean choise) {
+        if (choise) {
+            preferencias.setVisibility(View.VISIBLE);
+            limitaciones.setVisibility(View.VISIBLE);
+            obs.setVisibility(View.VISIBLE);
+        } else {
+            preferencias.setVisibility(View.GONE);
+            limitaciones.setVisibility(View.GONE);
+            obs.setVisibility(View.GONE);
+        }
+    }
+
+    private void setViewEditable(boolean choise) {
+        foto.setEnabled(choise);
+        nombre.setEnabled(choise);
+        pass.setEnabled(choise);
+        pais.setEnabled(choise);
+        ciudad.setEnabled(choise);
+        dob.setEnabled(choise);
     }
 
     private void handleDates() {
@@ -276,6 +339,7 @@ public class ClienteFragment extends Fragment implements IClienteFragment {
         values.put(Cliente.CAMPO_ORIGEN_PAIS, newCliente.getOrigenPais());
         values.put(Cliente.CAMPO_ORIGEN_CIUDAD, newCliente.getOrigenCiudad());
         values.put(Cliente.CAMPO_DOB, newCliente.getDob());
+        values.put(Cliente.CAMPO_FOTO,newCliente.getFotoInBytes());
 
         bd.insert(Cliente.TABLE_NAME, null, values);
 
@@ -297,6 +361,8 @@ public class ClienteFragment extends Fragment implements IClienteFragment {
         values.put(Cliente.CAMPO_ORIGEN_PAIS,clienteNewInfo.getOrigenPais());
         values.put(Cliente.CAMPO_ORIGEN_CIUDAD,clienteNewInfo.getOrigenCiudad());
         values.put(Cliente.CAMPO_DOB,clienteNewInfo.getDob());
+        values.put(Cliente.CAMPO_FOTO,clienteNewInfo.getFotoInBytes());
+
         BD.update(Cliente.TABLE_NAME,values,"id=?",new String[]{String.valueOf(selectedClient.getId())});
         selectedClient = clienteNewInfo;
         makeToast("Cliente actualizado correctamente");
@@ -306,6 +372,7 @@ public class ClienteFragment extends Fragment implements IClienteFragment {
     }
 
     private void cleanFragment() {
+        foto.setImageResource(R.drawable.ic_cliente);
         nombre.setText("");
         pass.setText("");
         pais.setText("");
@@ -332,6 +399,11 @@ public class ClienteFragment extends Fragment implements IClienteFragment {
         newCliente.setOrigenPais(pais.getText().toString());
         newCliente.setOrigenCiudad(ciudad.getText().toString());
         newCliente.setDob(dob.getText().toString());
+        try{
+            newCliente.setFoto(((BitmapDrawable)foto.getDrawable()).getBitmap());
+        }catch (Exception e){
+            //do nothing
+        }
         return newCliente;
     }
 
@@ -352,16 +424,56 @@ public class ClienteFragment extends Fragment implements IClienteFragment {
             selectedClient.setOrigenPais(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_ORIGEN_PAIS)));
             selectedClient.setOrigenCiudad(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_ORIGEN_CIUDAD)));
             selectedClient.setDob(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_DOB)));
+            selectedClient.setFoto(cursor.getBlob(cursor.getColumnIndex(Cliente.CAMPO_FOTO)));
         }
     }
 
     private void showInfoClient(){
         if(selectedClient!=null){
+            if(selectedClient.getFoto()!=null){
+                foto.setImageBitmap(MyBitmapFactory.getScaledBitmap(selectedClient.getFoto(),foto));
+            }else if(selectedClient.getFoto()==null){
+                foto.setImageResource(R.drawable.ic_cliente);
+            }
             nombre.setText(selectedClient.getName());
             pass.setText(selectedClient.getPass());
             pais.setText(selectedClient.getOrigenPais());
             ciudad.setText(selectedClient.getOrigenCiudad());
             dob.setText(selectedClient.getDob());
+        }
+    }
+
+    private void tomarFoto(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            startActivityForResult(takePictureIntent, TOMAR_FOTO);
+        } catch (ActivityNotFoundException e) {
+            // display error state to the user
+            // TODO: 25/11/2021 handle the exception 
+        }
+    }
+
+    private void selectImagen(){
+        Intent galeria = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(galeria, SELEC_IMAGEN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == MainActivity.RESULT_OK && requestCode == SELEC_IMAGEN){
+            Uri imagenUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imagenUri);
+                foto.setImageBitmap(MyBitmapFactory.getScaledBitmap(bitmap,foto));
+            }catch (IOException e){
+                // TODO: 25/11/2021 handle exception
+            }
+        } else if(resultCode == MainActivity.RESULT_OK && requestCode == TOMAR_FOTO){
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            foto.setImageBitmap(MyBitmapFactory.getScaledBitmap(imageBitmap,foto));
         }
     }
 

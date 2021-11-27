@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity
     public void setUpNewClientFragment() {
         currentStateClienteFragment = ClienteFragment.STATE_NEW_CLIENTE_MODE;
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ClienteFragment(),ClienteFragment.TAG).addToBackStack(null).commit();
+        udActivity(currentStateClienteFragment);
     }
 
     @Override

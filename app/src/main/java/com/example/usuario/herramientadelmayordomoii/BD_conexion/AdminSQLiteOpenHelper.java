@@ -48,7 +48,8 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
                 "dob TEXT," +
                 "origenPais TEXT," +
                 "origenCiudad TEXT," +
-                "pass TEXT)");
+                "pass TEXT," +
+                "foto BLOB)");
 
         bd.execSQL("CREATE TABLE FamilyNames_Clientes(" +
                 "familyNameId INTEGER," +

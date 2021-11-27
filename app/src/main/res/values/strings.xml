@@ -57,4 +57,12 @@
     <string name="registrar">Registrar</string>
     <string name="actualizar">Actualizar</string>
 
+
+    <string name="eliminar_foto">Eliminar</string>
+    <string name="tomar_foto">Tomar foto</string>
+    <string name="selecionar_foto_galeria">Seleccionar foto</string>
+
+
+    <string name="no_camara_disponible">Su dispositivo no soporta esta opción</string>
+
 </resources>
