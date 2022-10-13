@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:title="@string/en_casa"
+        android:id="@+id/menu_item_en_casa"/>
+
+    <item android:title="@string/segun_periodo"
+        android:id="@+id/menu_item_segun_periodo"/>
+
+    <item android:title="@string/segun_cliente"
+        android:id="@+id/menu_item_segun_cliente"/>
+
+    <item android:title="@string/segun_hab"
+        android:id="@+id/menu_item_segun_hab"/>
+
     <item android:title="@string/nueva_estancia"
         android:id="@+id/menu_item_nuevaEstancia"/>
 

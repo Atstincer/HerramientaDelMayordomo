@@ -19,12 +19,16 @@ public class Cliente {
     public static final String CAMPO_ORIGEN_CIUDAD = "origenCiudad";
     public static final String CAMPO_PASS = "pass";
     public static final String CAMPO_FOTO = "foto";
+    public static final String CAMPO_PREFERENCIAS = "preferencias";
+    public static final String CAMPO_LIMITACIONES = "limitaciones";
+    public static final String CAMPO_OBSERVACIONES = "observaciones";
 
     private int id;
-    private String name,origenPais,origenCiudad,dob,pass;
+    private String name,origenPais,origenCiudad,dob,pass,preferencias,limitaciones,observaciones;
     private Bitmap foto;
+    private boolean checked;
 
-    public Cliente(int id, String name, String origenPais, String origenCiudad, String dob, String pass, Bitmap foto) {
+    public Cliente(int id, String name, String origenPais, String origenCiudad, String dob, String pass, Bitmap foto, boolean checked, String preferencias, String limitaciones, String observaciones) {
         this.id = id;
         this.name = name;
         this.origenPais = origenPais;
@@ -32,9 +36,14 @@ public class Cliente {
         this.dob = dob;
         this.pass = pass;
         this.foto = foto;
+        this.checked = checked;
+        this.preferencias = preferencias;
+        this.limitaciones = limitaciones;
+        this.observaciones = observaciones;
     }
 
     public Cliente() {
+        this.checked = false;
     }
 
     public Bitmap getFoto() {
@@ -107,6 +116,51 @@ public class Cliente {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public String getPreferencias() {
+        return preferencias;
+    }
+
+    public void setPreferencias(String preferencias) {
+        this.preferencias = preferencias;
+    }
+
+    public String getLimitaciones() {
+        return limitaciones;
+    }
+
+    public void setLimitaciones(String limitaciones) {
+        this.limitaciones = limitaciones;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public void checkUncheck(){
+        if(this.checked){
+            setChecked(false);
+        }else{
+            setChecked(true);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 
     public static Comparator<Cliente> nameAscending = new Comparator<Cliente>() {

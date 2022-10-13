@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
 
     public static final String BD_NAME = "MiBD";
+    public static final int BD_VERSION = 1;
     private static AdminSQLiteOpenHelper instancia;
 
     private AdminSQLiteOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -25,18 +26,23 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        db.execSQL("PRAGMA foreign_keys=ON");
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase bd) {
 
         bd.execSQL("CREATE TABLE Estancias(" +
                 "id INTEGER PRIMARY KEY," +
-                "familyName INTEGER," +
+                "familyName TEXT," +
                 "adultos INTEGER," +
                 "menores INTEGER," +
                 "infantes INTEGER," +
                 "desde TEXT," +
                 "hasta TEXT," +
-                "noHab TEXT," +
-                "FOREIGN KEY(familyName) REFERENCES FamilyNames(id))");
+                "noHab TEXT)");
 
         bd.execSQL("CREATE TABLE FamilyNames(" +
                 "id INTEGER PRIMARY KEY," +
@@ -49,13 +55,30 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
                 "origenPais TEXT," +
                 "origenCiudad TEXT," +
                 "pass TEXT," +
-                "foto BLOB)");
+                "foto BLOB," +
+                "preferencias TEXT," +
+                "limitaciones TEXT," +
+                "observaciones TEXT)");
 
         bd.execSQL("CREATE TABLE FamilyNames_Clientes(" +
                 "familyNameId INTEGER," +
                 "clienteId INTEGER," +
-                "FOREIGN KEY(familyNameId) REFERENCES FamilyNames(id)," +
-                "FOREIGN KEY(clienteId) REFERENCES Clientes(id))");
+                "FOREIGN KEY(familyNameId) REFERENCES FamilyNames(id) " +
+                "ON UPDATE CASCADE " +
+                "ON DELETE CASCADE," +
+                "FOREIGN KEY(clienteId) REFERENCES Clientes(id) " +
+                "ON UPDATE CASCADE " +
+                "ON DELETE CASCADE)");
+
+        bd.execSQL("CREATE TABLE Estancias_Clientes(" +
+                "estanciaId INTEGER," +
+                "clienteId INTEGER," +
+                "FOREIGN KEY(estanciaId) REFERENCES Estancias(id) " +
+                "ON UPDATE CASCADE " +
+                "ON DELETE CASCADE," +
+                "FOREIGN KEY(clienteId) REFERENCES Clientes(id) " +
+                "ON UPDATE CASCADE " +
+                "ON DELETE CASCADE)");
     }
 
     @Override

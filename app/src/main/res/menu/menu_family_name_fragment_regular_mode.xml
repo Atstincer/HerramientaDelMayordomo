@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_item_editar"
-        android:title="@string/editar"
+        android:id="@+id/menu_item_editar_family_name"
         android:icon="@drawable/ic_edit"
-        app:showAsAction="ifRoom|collapseActionView"/>
+        android:title="@string/editar"
+        app:showAsAction="ifRoom" />
 
 </menu>

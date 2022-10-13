@@ -4,8 +4,6 @@
     android:id="@+id/estancias_cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
     android:layout_marginTop="10dp"
     app:cardCornerRadius="5dp"
     app:cardElevation="5dp">
@@ -29,7 +27,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_toRightOf="@id/hab"
+            android:layout_toEndOf="@+id/hab"
             android:text="0000"
             android:textSize="@dimen/tvSize"
             android:textStyle="bold" />

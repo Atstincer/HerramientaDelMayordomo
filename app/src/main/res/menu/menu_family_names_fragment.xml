@@ -3,18 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_item_buscar"
+        android:id="@+id/menu_item_nuevo_nombre_de_familia"
+        android:title="@string/nuevo_nombre_de_familia" />
+
+    <item
+        android:id="@+id/menu_item_buscar_family_names"
         android:title="@string/search_box_hint"
         android:icon="@drawable/ic_lupa"
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView"/>
-
-    <item
-        android:id="@+id/menu_item_nuevo_cliente"
-        android:title="@string/nuevo_cliente" />
-
-    <item
-        android:id="@+id/menu_item_family_names"
-        android:title="@string/familias" />
 
 </menu>

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.support.v7.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.usuario.herramientadelmayordomoii.Adapters.ClientesRVAdapter;
@@ -40,6 +41,8 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
     private ClientesRVAdapter adapter;
 
     private RecyclerView recyclerView;
+    private TextView tvNoClientesRegistrados;
+
     private Callback mycallback;
 
     @Nullable
@@ -53,6 +56,7 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_clientes);
+        tvNoClientesRegistrados = (TextView) view.findViewById(R.id.tv_no_clientes_registrados);
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab_clientes);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +66,7 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
         });
         udListaClientes();
         setUpRecyclerView();
+        mycallback.udActivity(ClientesFragment.TAG);
     }
 
     @Override
@@ -80,14 +85,12 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int selected = item.getItemId();
-
-        switch (selected) {
+        switch (item.getItemId()) {
             case R.id.menu_item_nuevo_cliente:
                 mycallback.setUpNewClientFragment();
                 break;
             case R.id.menu_item_buscar:
-                Toast.makeText(getActivity(), "Buscar clicked.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "Buscar clicked.", Toast.LENGTH_SHORT).show();
                 SearchView sv = (SearchView) item.getActionView();
 
                 sv.setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -105,6 +108,10 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
                     }
                 });
                 break;
+            case R.id.menu_item_family_names:
+                mycallback.setUpFamilyNamesFragment();
+                //recyclerView.removeAllViews();
+                break;
             default:
                 break;
         }
@@ -113,7 +120,6 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
 
     @Override
     public void onItemClicked(int position) {
-        //makeToast("Cliente "+listaClientes.get(position).getName()+" clicked..");
         mycallback.setUpClienteFragment(listaClientes.get(position).getId());
     }
 
@@ -127,25 +133,44 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
         SQLiteDatabase BD = admin.getWritableDatabase();
         Cursor cursor = BD.rawQuery("SELECT * FROM " + Cliente.TABLE_NAME, null);
 
-        while (cursor.moveToNext()) {
-            Cliente c = new Cliente();
-            c.setId(cursor.getInt(0));
-            c.setName(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_NAME)));
-            c.setPass(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_PASS)));
-            c.setDob(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_DOB)));
-            c.setOrigenCiudad(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_ORIGEN_CIUDAD)));
-            c.setOrigenPais(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_ORIGEN_PAIS)));
-            c.setFoto(cursor.getBlob(cursor.getColumnIndex(Cliente.CAMPO_FOTO)));
-            listaClientes.add(c);
+        if(cursor.moveToFirst()) {
+            do {
+                Cliente c = new Cliente();
+                c.setId(cursor.getInt(0));
+                c.setName(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_NAME)));
+                c.setPass(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_PASS)));
+                c.setDob(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_DOB)));
+                c.setOrigenCiudad(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_ORIGEN_CIUDAD)));
+                c.setOrigenPais(cursor.getString(cursor.getColumnIndex(Cliente.CAMPO_ORIGEN_PAIS)));
+                c.setFoto(cursor.getBlob(cursor.getColumnIndex(Cliente.CAMPO_FOTO)));
+                listaClientes.add(c);
+            }while (cursor.moveToNext());
         }
         cursor.close();
-        Collections.sort(listaClientes,Cliente.nameAscending);
+        if(!listaClientes.isEmpty()) {
+            Collections.sort(listaClientes, Cliente.nameAscending);
+        }
     }
 
     private void setUpRecyclerView() {
-        adapter = new ClientesRVAdapter(listaClientes,this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        if(listaClientes!=null && listaClientes.size()>0) {
+            adapter = new ClientesRVAdapter(listaClientes, this, false, false);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            showMsgNoClientesRegistrados(false);
+        }else{
+            showMsgNoClientesRegistrados(true);
+        }
+    }
+
+    private void showMsgNoClientesRegistrados(boolean choise){
+        if(choise){
+            recyclerView.setVisibility(View.GONE);
+            tvNoClientesRegistrados.setVisibility(View.VISIBLE);
+        }else{
+            recyclerView.setVisibility(View.VISIBLE);
+            tvNoClientesRegistrados.setVisibility(View.GONE);
+        }
     }
 
     private void makeToast(String s){
@@ -155,5 +180,7 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
     public interface Callback {
         void setUpNewClientFragment();
         void setUpClienteFragment(int id);
+        void udActivity(String tag);
+        void setUpFamilyNamesFragment();
     }
 }

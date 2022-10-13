@@ -27,10 +27,24 @@ public class ClientesRVAdapter extends RecyclerView.Adapter<ClientesRVAdapter.Vi
     private List<Cliente> fullListClientes;
     private Callback mycallback;
 
-    public ClientesRVAdapter(List<Cliente> listClientes,Callback callback) {
+    private boolean selectModeOn, showOnlySelected;
+
+    public ClientesRVAdapter(List<Cliente> listClientes,Callback callback, boolean selectMode, boolean showOnlySelected) {
         this.listClientes = listClientes;
         fullListClientes = new ArrayList<>(listClientes);
         this.mycallback = callback;
+        this.selectModeOn = selectMode;
+        this.showOnlySelected = showOnlySelected;
+
+        if(this.showOnlySelected){
+            this.listClientes.clear();
+            for(Cliente c: fullListClientes){
+                if(c.isChecked()){
+                    this.listClientes.add(c);
+                }
+            }
+            notifyDataSetChanged();
+        }
     }
 
     public void setListClientes(List<Cliente> listClientes) {
@@ -58,7 +72,7 @@ public class ClientesRVAdapter extends RecyclerView.Adapter<ClientesRVAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        ImageView foto;
+        ImageView foto, check;
         TextView tv_nombre, tv_pais;
         Callback myCallback;
 
@@ -66,6 +80,7 @@ public class ClientesRVAdapter extends RecyclerView.Adapter<ClientesRVAdapter.Vi
             super(view);
             this.myCallback = callback;
             foto = (ImageView)view.findViewById(R.id.iv_foto_cliente);
+            check = (ImageView)view.findViewById(R.id.iv_check);
             tv_nombre = (TextView)view.findViewById(R.id.tv_nombre_cliente);
             tv_pais = (TextView)view.findViewById(R.id.tv_paisOrigen);
             view.setOnClickListener(this);
@@ -77,12 +92,34 @@ public class ClientesRVAdapter extends RecyclerView.Adapter<ClientesRVAdapter.Vi
             }else{
                 foto.setImageResource(R.drawable.ic_cliente);
             }
+            if(selectModeOn){
+                if(listClientes.get(position).isChecked()){
+                    check.setVisibility(View.VISIBLE);
+                }else{
+                    check.setVisibility(View.INVISIBLE);
+                }
+            }
             tv_nombre.setText(listClientes.get(position).getName());
             tv_pais.setText(listClientes.get(position).getOrigenPais());
         }
 
         @Override
         public void onClick(View view) {
+            if(selectModeOn){
+                if(listClientes.get(getAdapterPosition()).isChecked()){
+                    check.setVisibility(View.INVISIBLE);
+                }else{
+                    check.setVisibility(View.VISIBLE);
+                }
+                fullListClientes.get(fullListClientes.indexOf(listClientes.get(getAdapterPosition()))).checkUncheck();
+            }
+            if(showOnlySelected){
+                listClientes.clear();
+                for(Cliente c:fullListClientes){
+                    if(c.isChecked()){listClientes.add(c);}
+                }
+                notifyDataSetChanged();
+            }
             myCallback.onItemClicked(getAdapterPosition());
         }
     }
@@ -97,7 +134,13 @@ public class ClientesRVAdapter extends RecyclerView.Adapter<ClientesRVAdapter.Vi
         protected FilterResults performFiltering(CharSequence charSequence) {
             List<Cliente> filteredList = new ArrayList<>();
             if(charSequence == null || charSequence.length() == 0){
-                filteredList.addAll(fullListClientes);
+                if(showOnlySelected){
+                    for(Cliente c:fullListClientes){
+                        if(c.isChecked()){filteredList.add(c);}
+                    }
+                }else {
+                    filteredList.addAll(fullListClientes);
+                }
             }else{
                 String filterPattern = charSequence.toString().toLowerCase().trim();
 
@@ -117,9 +160,18 @@ public class ClientesRVAdapter extends RecyclerView.Adapter<ClientesRVAdapter.Vi
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
             listClientes.clear();
             listClientes.addAll((List)filterResults.values);
+            if(selectModeOn){
+                udSelectedItemsListClientes();
+            }
             notifyDataSetChanged();
         }
     };
+
+    private void udSelectedItemsListClientes(){
+        for(Cliente c: listClientes){
+            c.setChecked(fullListClientes.get(fullListClientes.indexOf(c)).isChecked());
+        }
+    }
 
     public interface Callback{
         void onItemClicked(int position);

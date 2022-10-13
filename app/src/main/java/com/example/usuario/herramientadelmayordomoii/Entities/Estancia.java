@@ -1,8 +1,12 @@
 package com.example.usuario.herramientadelmayordomoii.Entities;
 
+import android.app.DatePickerDialog;
+
 import java.text.ParseException;
+import java.util.Comparator;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 
 /**
@@ -79,7 +83,7 @@ public class Estancia {
     }
 
     public String getNo_noches() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         int noches = 0;
         try{
             Date desde = sdf.parse(getDesde());
@@ -134,4 +138,23 @@ public class Estancia {
                 ", no_hab='" + no_hab + '\'' +
                 '}';
     }
+
+    public static Comparator<Estancia> dateAscending = new Comparator<Estancia>() {
+        @Override
+        public int compare(Estancia e1, Estancia e2) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
+            Date e1Date = null;
+            Date e2Date = null;
+            try{
+                e1Date = sdf.parse(e1.getDesde());
+                e2Date = sdf.parse(e2.getDesde());
+            }catch(ParseException e){
+                System.out.println(e.getMessage());
+            }
+            if(e1Date != null && e2Date != null){
+                return e1Date.compareTo(e2Date);
+            }
+            return 0;
+        }
+    };
 }

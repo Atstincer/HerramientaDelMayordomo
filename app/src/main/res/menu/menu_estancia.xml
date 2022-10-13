@@ -3,7 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="@string/editar"
-        android:id="@+id/menu_item_editar"/>
+        android:id="@+id/menu_item_editar_estancia_fragment"
+        android:icon="@drawable/ic_edit"
+        app:showAsAction="ifRoom|collapseActionView"/>
+
+    <item android:title="@string/borrar"
+        android:id="@+id/menu_item_borrar_estancia_fragment"/>
 
 
 </menu>

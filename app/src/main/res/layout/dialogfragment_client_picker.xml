@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_backgroundActivity">
+
+    <SearchView
+        android:id="@+id/sv_client_pick_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:searchIcon="@drawable/ic_lupa"
+        android:theme="@style/my_searchview" />
+
+    <TextView
+        android:id="@+id/tv_dialogfragment_client_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sv_client_pick_dialog"
+        android:padding="5dp"
+        android:text="@string/seleccionar_clientes_relacionados"
+        android:textColor="@color/color_font_blanco"
+        android:textSize="20sp" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ll_btns_dialogfragment_client_picker"
+        android:layout_below="@+id/tv_dialogfragment_client_picker">
+
+        <include
+            layout="@layout/recyclerview_clientes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_btns_dialogfragment_client_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel_cliente_pick_dialog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/mi_btn_background"
+            android:text="@string/btn_cancel"
+            android:textColor="@color/color_font_blanco"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_ok_cliente_pick_dialog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/mi_btn_background"
+            android:text="@string/btn_ok"
+            android:textColor="@color/color_font_blanco"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</RelativeLayout>

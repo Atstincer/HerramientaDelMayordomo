@@ -15,8 +15,11 @@ import com.example.usuario.herramientadelmayordomoii.Fragments.ClienteFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.ClientesFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.EstanciaFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.EstanciasFragment;
+import com.example.usuario.herramientadelmayordomoii.Fragments.FamilyNameFragment;
+import com.example.usuario.herramientadelmayordomoii.Fragments.FamilyNamesFragment;
+import com.example.usuario.herramientadelmayordomoii.Fragments.FrontFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.RecordatoriosFragment;
-import com.example.usuario.herramientadelmayordomoii.Interfaces.IClienteFragment;
+import com.example.usuario.herramientadelmayordomoii.Interfaces.IMyFragments;
 
 //import android.support.design.widget.FloatingActionButton;
 //import android.support.design.widget.Snackbar;
@@ -24,12 +27,15 @@ import com.example.usuario.herramientadelmayordomoii.Interfaces.IClienteFragment
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ClientesFragment.Callback, EstanciasFragment.CallBack, ClienteFragment.Callback{
+        implements NavigationView.OnNavigationItemSelectedListener, ClientesFragment.Callback, EstanciasFragment.CallBack, ClienteFragment.Callback,
+                    EstanciaFragment.Callback, FamilyNamesFragment.Callback, FamilyNameFragment.CallBack, FrontFragment.Callback{
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
 
     private String currentStateClienteFragment;
+    private String currentStateFamilyNameFragment;
+    private String currentStateEstanciaFragment;
 
 
     @Override
@@ -59,15 +65,11 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null) {
-            setUpEstanciasFragment();
+            //setUpEstanciasFragment();
+            //RelativeLayout rl = (RelativeLayout)findViewById(R.id.content_main);
+            //rl.setBackgroundResource(R.drawable.royalton_bg);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new FrontFragment(),FrontFragment.TAG).addToBackStack(null).commit();
         }
-    }
-
-    @Override
-    public void setUpNewClientFragment() {
-        currentStateClienteFragment = ClienteFragment.STATE_NEW_CLIENTE_MODE;
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ClienteFragment(),ClienteFragment.TAG).addToBackStack(null).commit();
-        udActivity(currentStateClienteFragment);
     }
 
     @Override
@@ -76,9 +78,33 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public String getCurrentStateFamilyNameFragment() {
+        return currentStateFamilyNameFragment;
+    }
+
+    @Override
+    public String getCurrentStateEstanciaFragment() {return currentStateEstanciaFragment;}
+
+    @Override
     public void setNewCurrentStateClienteFragment(String newCurrentStateClienteFragment) {
         currentStateClienteFragment = newCurrentStateClienteFragment;
         udActivity(newCurrentStateClienteFragment);
+    }
+
+    @Override
+    public void setNewCurrentStateFamilyNameFragment(String newState) {
+        currentStateFamilyNameFragment = newState;
+    }
+
+    @Override
+    public void setNewCurrentStateEstanciaFragment(String newState) {
+        currentStateEstanciaFragment = newState;
+    }
+
+    @Override
+    public void setUpNewClientFragment() {
+        currentStateClienteFragment = ClienteFragment.STATE_NEW_CLIENTE_MODE;
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ClienteFragment(),ClienteFragment.TAG).addToBackStack(null).commit();
     }
 
     @Override
@@ -89,35 +115,71 @@ public class MainActivity extends AppCompatActivity
         bundle.putInt("id",id);
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment,ClienteFragment.TAG).addToBackStack(null).commit();
-        udActivity(ClienteFragment.STATE_CLIENTE_MODE);
     }
 
     @Override
     public void setUpNewEstanciaFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EstanciaFragment()).addToBackStack(EstanciaFragment.TAG).commit();
-        udActivity(EstanciaFragment.TAG);
+        currentStateEstanciaFragment = EstanciaFragment.STATE_NEW_ESTANCIA_MODE;
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EstanciaFragment(),EstanciaFragment.TAG).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void setUpEstanciaFragment(int id) {
+        currentStateEstanciaFragment = EstanciaFragment.STATE_REGULAR_MODE;
+        EstanciaFragment f = new EstanciaFragment();
+        Bundle info = new Bundle();
+        info.putInt("id",id);
+        f.setArguments(info);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f,EstanciaFragment.TAG).addToBackStack(null).commit();
     }
 
     private void setUpEstanciasFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EstanciasFragment()).addToBackStack(EstanciasFragment.TAG).commit();
-        udActivity(EstanciasFragment.TAG);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EstanciasFragment(),EstanciasFragment.TAG).addToBackStack(null).commit();
     }
 
-    private void setUpClientesFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ClientesFragment()).addToBackStack(ClientesFragment.TAG).commit();
-        udActivity(ClientesFragment.TAG);
+    public void setUpClientesFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ClientesFragment(),ClientesFragment.TAG).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void setUpFamilyNamesFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new FamilyNamesFragment(),FamilyNamesFragment.TAG).addToBackStack(null).commit();
     }
 
 
-    private void udActivity(String fragmentTag){
+    @Override
+    public void setUpFamilyNameFragment(int id) {
+        Bundle info = new Bundle();
+        info.putInt("id",id);
+        FamilyNameFragment fragment = new FamilyNameFragment();
+        fragment.setArguments(info);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment,FamilyNameFragment.TAG).addToBackStack(null).commit();
+        currentStateFamilyNameFragment = FamilyNameFragment.STATE_REGULAR_MODE;
+    }
+
+    @Override
+    public void setUpNewFamilyNameFragment() {
+        currentStateFamilyNameFragment = FamilyNameFragment.STATE_NEW_FAMILY_NAME_MODE;
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new FamilyNameFragment(), FamilyNameFragment.TAG).addToBackStack(null).commit();
+    }
+
+    public void udActivity(String fragmentTag){
         String title = "";
         switch(fragmentTag){
             case EstanciasFragment.TAG:
                 title = getResources().getString(R.string.en_casa);
                 navigationView.setCheckedItem(R.id.nav_item_estancias);
                 break;
-            case EstanciaFragment.TAG:
+            case EstanciaFragment.STATE_REGULAR_MODE:
+                title = getResources().getString(R.string.estancia);
+                navigationView.setCheckedItem(R.id.nav_item_estancias);
+                break;
+            case EstanciaFragment.STATE_NEW_ESTANCIA_MODE:
                 title = getResources().getString(R.string.nueva_estancia);
+                navigationView.setCheckedItem(R.id.nav_item_estancias);
+                break;
+            case EstanciaFragment.STATE_ESTANCIA_UD_MODE:
+                title = getResources().getString(R.string.actualizar_estancia);
                 navigationView.setCheckedItem(R.id.nav_item_estancias);
                 break;
             case ClientesFragment.TAG:
@@ -136,6 +198,42 @@ public class MainActivity extends AppCompatActivity
                 title = getResources().getString(R.string.actualizar_cliente_title);
                 navigationView.setCheckedItem(R.id.nav_item_clientes);
                 break;
+            case FamilyNamesFragment.TAG:
+                title = getResources().getString(R.string.familias);
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;
+            case FamilyNameFragment.STATE_REGULAR_MODE:
+                title = getResources().getString(R.string.familia);
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;
+            case FamilyNameFragment.STATE_NEW_FAMILY_NAME_MODE:
+                title = getResources().getString(R.string.nuevo_nombre_de_familia);
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;
+            case FamilyNameFragment.STATE_FAMILY_NAME_UD_MODE:
+                title = getResources().getString(R.string.editar_nombre_de_familia);
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;
+            case EstanciasFragment.STATE_EN_CASA:
+                title = getResources().getString(R.string.en_casa);
+                navigationView.setCheckedItem(R.id.nav_item_estancias);
+                break;
+            case EstanciasFragment.STATE_SEGUN_PERIODO:
+                title = getResources().getString(R.string.segun_periodo);
+                navigationView.setCheckedItem(R.id.nav_item_estancias);
+                break;
+            case EstanciasFragment.STATE_SEGUN_CLIENTE:
+                title = getResources().getString(R.string.segun_cliente);
+                navigationView.setCheckedItem(R.id.nav_item_estancias);
+                break;
+            case EstanciasFragment.STATE_SEGUN_HAB:
+                title = getResources().getString(R.string.segun_hab);
+                navigationView.setCheckedItem(R.id.nav_item_estancias);
+                break;
+            case FrontFragment.TAG:
+                title = getResources().getString(R.string.app_name);
+                for(int i=0; i<navigationView.getMenu().size(); i++){navigationView.getMenu().getItem(i).setChecked(false);}
+                break;
             default:
                 title = getResources().getString(R.string.app_name);
                 break;
@@ -149,17 +247,45 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else if(getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof ClienteFragment){
             if(currentStateClienteFragment.equals(ClienteFragment.STATE_CLIENTE_UD_MODE)){
-                IClienteFragment fragment = (IClienteFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                fragment.setUpNewState(ClienteFragment.STATE_CLIENTE_MODE);
-                currentStateClienteFragment = ClienteFragment.STATE_CLIENTE_MODE;
-                udActivity(ClienteFragment.STATE_CLIENTE_MODE);
+                try{
+                    IMyFragments fragment = (IMyFragments)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    fragment.setUpNewState(ClienteFragment.STATE_CLIENTE_MODE);
+                    currentStateClienteFragment = ClienteFragment.STATE_CLIENTE_MODE;
+                    udActivity(ClienteFragment.STATE_CLIENTE_MODE);
+                }catch(ClassCastException e){
+                    Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }else{
                 super.onBackPressed();
-                udActivity(getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName());
+            }
+        } else if(getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof FamilyNameFragment){
+            if(currentStateFamilyNameFragment.equals(FamilyNameFragment.STATE_FAMILY_NAME_UD_MODE)){
+                try{
+                    IMyFragments fragment = (IMyFragments)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    fragment.setUpNewState(FamilyNameFragment.STATE_REGULAR_MODE);
+                    currentStateFamilyNameFragment = FamilyNameFragment.STATE_REGULAR_MODE;
+                    udActivity(FamilyNameFragment.STATE_REGULAR_MODE);
+                }catch (ClassCastException e){
+                    Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                super.onBackPressed();
+            }
+        } else if(getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof EstanciaFragment){
+            if(currentStateEstanciaFragment.equals(EstanciaFragment.STATE_ESTANCIA_UD_MODE)){
+                try{
+                    IMyFragments fragment = (IMyFragments)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    fragment.setUpNewState(EstanciaFragment.STATE_REGULAR_MODE);
+                    currentStateEstanciaFragment = EstanciaFragment.STATE_REGULAR_MODE;
+                    udActivity(EstanciaFragment.STATE_REGULAR_MODE);
+                }catch (ClassCastException e){
+                    Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                super.onBackPressed();
             }
         } else {
             super.onBackPressed();
-            udActivity(getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName());
         }
     }
 
@@ -211,10 +337,5 @@ public class MainActivity extends AppCompatActivity
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-
-    private void makeToast(String s){
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 }

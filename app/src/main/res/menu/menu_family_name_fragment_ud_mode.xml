@@ -3,6 +3,6 @@
 
     <item
         android:title="@string/eliminar"
-        android:id="@+id/menu_item_eliminar_foto"/>
+        android:id="@+id/menu_item_eliminar_family_name"/>
 
 </menu>
