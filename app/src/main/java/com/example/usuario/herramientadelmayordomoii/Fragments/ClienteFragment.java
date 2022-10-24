@@ -501,6 +501,7 @@ public class ClienteFragment extends Fragment implements IMyFragments {
 
         long id_newClient = bd.insert(Cliente.TABLE_NAME, null, values);
 
+        /*
         if (id_newClient > 0) {
             values.clear();
             values.put(FamilyName.CAMPO_FAMILY_NAME, newCliente.getName() + " x 1");
@@ -516,6 +517,13 @@ public class ClienteFragment extends Fragment implements IMyFragments {
                     cleanFragment();
                 }
             }
+        }*/
+
+        if (id_newClient > 0){
+            Toast.makeText(getActivity(), getResources().getString(R.string.registro_correcto), Toast.LENGTH_SHORT).show();
+            cleanFragment();
+        } else {
+            return false;
         }
         return true;
     }
@@ -540,11 +548,13 @@ public class ClienteFragment extends Fragment implements IMyFragments {
 
         BD.update(Cliente.TABLE_NAME, values, "id=?", new String[]{String.valueOf(selectedClient.getId())});
 
+        /*
         if (!selectedClient.getName().equals(clienteNewInfo.getName())) {
             values.clear();
             values.put(FamilyName.CAMPO_FAMILY_NAME, clienteNewInfo.getName() + " x 1");
             BD.update(FamilyName.TABLE_NAME, values, FamilyName.CAMPO_FAMILY_NAME + "=?", new String[]{selectedClient.getName() + " x 1"});
-        }
+        }*/
+
         selectedClient = clienteNewInfo;
         makeToast(getResources().getString(R.string.actualizacion_correcta));
         myCallback.setNewCurrentStateClienteFragment(ClienteFragment.STATE_CLIENTE_MODE);
@@ -577,7 +587,9 @@ public class ClienteFragment extends Fragment implements IMyFragments {
         cursor.close();
 
         bd.execSQL("DELETE FROM " + Cliente.TABLE_NAME + " WHERE id=" + selectedClient.getId());
-        bd.execSQL("DELETE FROM " + FamilyName.TABLE_NAME + " WHERE " + FamilyName.CAMPO_FAMILY_NAME + "='" + selectedClient.getName() + " x 1'");
+        bd.execSQL("DELETE FROM " + FamilyNames_Clientes.TABLE_NAME + " WHERE " + FamilyNames_Clientes.CAMPO_CLIENTE_ID + "=" + selectedClient.getId());
+
+        //bd.execSQL("DELETE FROM " + FamilyName.TABLE_NAME + " WHERE " + FamilyName.CAMPO_FAMILY_NAME + "='" + selectedClient.getName() + " x 1'");
 
         if(familyNamesIdsToDelete.size()>0){
             for(int i=0; i<familyNamesIdsToDelete.size(); i++){
@@ -592,11 +604,8 @@ public class ClienteFragment extends Fragment implements IMyFragments {
 
     public interface Callback {
         void setNewCurrentStateClienteFragment(String newCurrentStateClienteFragment);
-
         String getCurrentStateClienteFragment();
-
         void setUpClientesFragment();
-
         void udActivity(String tag);
     }
 }

@@ -10,5 +10,7 @@
     <item android:title="@string/borrar"
         android:id="@+id/menu_item_borrar_estancia_fragment"/>
 
+    <item android:title="@string/agregar_reporte"
+        android:id="@+id/menu_item_agregar_reporte"/>
 
 </menu>

@@ -19,6 +19,7 @@ import com.example.usuario.herramientadelmayordomoii.Fragments.FamilyNameFragmen
 import com.example.usuario.herramientadelmayordomoii.Fragments.FamilyNamesFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.FrontFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.RecordatoriosFragment;
+import com.example.usuario.herramientadelmayordomoii.Fragments.ReporteFragment;
 import com.example.usuario.herramientadelmayordomoii.Interfaces.IMyFragments;
 
 //import android.support.design.widget.FloatingActionButton;
@@ -28,7 +29,7 @@ import com.example.usuario.herramientadelmayordomoii.Interfaces.IMyFragments;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ClientesFragment.Callback, EstanciasFragment.CallBack, ClienteFragment.Callback,
-                    EstanciaFragment.Callback, FamilyNamesFragment.Callback, FamilyNameFragment.CallBack, FrontFragment.Callback{
+                    EstanciaFragment.Callback, FamilyNamesFragment.Callback, FamilyNameFragment.CallBack, FrontFragment.Callback, ReporteFragment.CallBack{
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity
     private String currentStateClienteFragment;
     private String currentStateFamilyNameFragment;
     private String currentStateEstanciaFragment;
+    private String currentStateReporteFragment;
 
 
     @Override
@@ -163,6 +165,28 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new FamilyNameFragment(), FamilyNameFragment.TAG).addToBackStack(null).commit();
     }
 
+    @Override
+    public void setUpNewReporteFragment(int estanciaId) {
+        Bundle info = new Bundle();
+        info.putInt("estanciaId",estanciaId);
+        ReporteFragment repFragment = new ReporteFragment();
+        repFragment.setArguments(info);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,repFragment,ReporteFragment.TAG).addToBackStack(null).commit();
+        currentStateReporteFragment = ReporteFragment.STATE_NEW_REPORTE_MODE;
+        udActivity(ReporteFragment.TAG);
+    }
+
+    @Override
+    public String getCurrentStateReporteFragment() {
+        return currentStateReporteFragment;
+    }
+
+    @Override
+    public void setCurrentStateReporteFragment(String state) {
+        currentStateReporteFragment = state;
+        udActivity(ReporteFragment.TAG);
+    }
+
     public void udActivity(String fragmentTag){
         String title = "";
         switch(fragmentTag){
@@ -228,6 +252,14 @@ public class MainActivity extends AppCompatActivity
                 break;
             case EstanciasFragment.STATE_SEGUN_HAB:
                 title = getResources().getString(R.string.segun_hab);
+                navigationView.setCheckedItem(R.id.nav_item_estancias);
+                break;
+            case ReporteFragment.TAG:
+                if(currentStateReporteFragment.equals(ReporteFragment.STATE_REGULAR_MODE)){
+                    title = getResources().getString(R.string.reportes);
+                }else if(currentStateReporteFragment.equals(ReporteFragment.STATE_NEW_REPORTE_MODE)){
+                    title = getResources().getString(R.string.new_reporte);
+                }
                 navigationView.setCheckedItem(R.id.nav_item_estancias);
                 break;
             case FrontFragment.TAG:

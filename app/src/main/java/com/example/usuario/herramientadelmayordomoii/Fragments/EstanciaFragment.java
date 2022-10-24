@@ -36,6 +36,7 @@ import com.example.usuario.herramientadelmayordomoii.Entities.FamilyName;
 import com.example.usuario.herramientadelmayordomoii.Entities.FamilyNames_Clientes;
 import com.example.usuario.herramientadelmayordomoii.Interfaces.IMyFragments;
 import com.example.usuario.herramientadelmayordomoii.R;
+import com.example.usuario.herramientadelmayordomoii.Util.DateHandler;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,16 +58,18 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
     public static final String STATE_NEW_ESTANCIA_MODE = "STATE_NEW_ESTANCIA_MODE";
 
     private EditText etNoHab,etAdultos,etMenores,etInfantes;
-    private TextView tvNoNoches,tvDesde,tvHasta,tvNoClientesAsociados,tvReportes,tvCortesias,tvRecordatorios,tvReservaRestaurantes,tvObs;
+    private TextView tvNoNoches,tvDesde,tvHasta,tvNoClientesAsociados,tvReportes,tvCortesias,tvRecordatorios,tvReservaRestaurantes,tvObs,tvNoExistenReportes;
     private AutoCompleteTextView actvFamilyName;
     private RecyclerView rvClientesAsociados;
     private Button btnMain;
+    private RecyclerView rvReportes;
 
     private List<FamilyName> listFamilyNamesBD;
     private List<Cliente> listClientesRelacionados;
     private Estancia selectedEstancia;
 
     private Callback myCallBack;
+    ArrayAdapter<FamilyName> actvAdapter;
 
     @Nullable
     @Override
@@ -117,6 +120,8 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         actvFamilyName = (AutoCompleteTextView)v.findViewById(R.id.actv_family_name);
         rvClientesAsociados = (RecyclerView)v.findViewById(R.id.rv_clientes);
         btnMain = (Button)v.findViewById(R.id.btn_estancia);
+        tvNoExistenReportes = (TextView)v.findViewById(R.id.tv_no_existen_reportes);
+        rvReportes = (RecyclerView)v.findViewById(R.id.rv_reportes);
 
         tvDesde.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -147,8 +152,25 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
                 }
             }
         });
-    }
 
+        actvFamilyName.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                if(myCallBack.getCurrentStateEstanciaFragment().equals(EstanciaFragment.STATE_REGULAR_MODE)){return;}
+                FamilyName familyName = (FamilyName)adapterView.getItemAtPosition(position);
+                if(familyName.getId()==0){
+                    for(Cliente c:familyName.getClientesMiembros()){
+                        c.setChecked(true);
+                        setUpClearListClientesRelacionados();
+                        listClientesRelacionados.add(c);
+                    }
+                }else {
+                    getRelatedClientsFromDB(familyName.getId(), FamilyNames_Clientes.TABLE_NAME);
+                }
+                showRelatedClientsIfExist();
+            }
+        });
+    }
 
     private void setUpRegularMode(){
         myCallBack.udActivity(EstanciaFragment.STATE_REGULAR_MODE);
@@ -210,8 +232,8 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
             selectedEstancia.setId(id);
             selectedEstancia.setFamilyName(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_FAMILY_NAME)));
             selectedEstancia.setNo_hab(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_NO_HAB)));
-            selectedEstancia.setDesde(formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_DESDE))));
-            selectedEstancia.setHasta(formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_HASTA))));
+            selectedEstancia.setDesde(DateHandler.formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_DESDE))));
+            selectedEstancia.setHasta(DateHandler.formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_HASTA))));
             selectedEstancia.setAdultos(cursor.getInt(cursor.getColumnIndex(Estancia.CAMPO_ADULTOS)));
             selectedEstancia.setMenores(cursor.getInt(cursor.getColumnIndex(Estancia.CAMPO_MENORES)));
             selectedEstancia.setInfantes(cursor.getInt(cursor.getColumnIndex(Estancia.CAMPO_INFANTES)));
@@ -228,8 +250,8 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
 
         ContentValues values = new ContentValues();
         values.put(Estancia.CAMPO_NO_HAB,newEstancia.getNo_hab());
-        values.put(Estancia.CAMPO_DESDE,formatDateToStoreInDB(newEstancia.getDesde()));
-        values.put(Estancia.CAMPO_HASTA,formatDateToStoreInDB(newEstancia.getHasta()));
+        values.put(Estancia.CAMPO_DESDE,DateHandler.formatDateToStoreInDB(newEstancia.getDesde()));
+        values.put(Estancia.CAMPO_HASTA,DateHandler.formatDateToStoreInDB(newEstancia.getHasta()));
         values.put(Estancia.CAMPO_FAMILY_NAME,newEstancia.getFamilyName());
         values.put(Estancia.CAMPO_ADULTOS,newEstancia.getAdultos());
         values.put(Estancia.CAMPO_MENORES,newEstancia.getMenores());
@@ -257,8 +279,8 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
 
         ContentValues values = new ContentValues();
         values.put(Estancia.CAMPO_NO_HAB,estanciaNewInfo.getNo_hab());
-        values.put(Estancia.CAMPO_DESDE,formatDateToStoreInDB(estanciaNewInfo.getDesde()));
-        values.put(Estancia.CAMPO_HASTA,formatDateToStoreInDB(estanciaNewInfo.getHasta()));
+        values.put(Estancia.CAMPO_DESDE,DateHandler.formatDateToStoreInDB(estanciaNewInfo.getDesde()));
+        values.put(Estancia.CAMPO_HASTA,DateHandler.formatDateToStoreInDB(estanciaNewInfo.getHasta()));
         values.put(Estancia.CAMPO_FAMILY_NAME,estanciaNewInfo.getFamilyName());
         values.put(Estancia.CAMPO_ADULTOS,estanciaNewInfo.getAdultos());
         values.put(Estancia.CAMPO_MENORES,estanciaNewInfo.getMenores());
@@ -346,23 +368,40 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
                 familyName.setFamilyName(cursor.getString(cursor.getColumnIndex(FamilyName.CAMPO_FAMILY_NAME)));
                 listFamilyNamesBD.add(familyName);
             }while (cursor.moveToNext());
-            ArrayAdapter<FamilyName> adapter = new ArrayAdapter<FamilyName>(getContext(),R.layout.my_simple_dropdown_item_1line,listFamilyNamesBD);
-            actvFamilyName.setAdapter(adapter);
-            actvFamilyName.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    if(myCallBack.getCurrentStateEstanciaFragment().equals(EstanciaFragment.STATE_REGULAR_MODE)){return;}
-                    FamilyName familyName = (FamilyName)adapterView.getItemAtPosition(position);
-                    getRelatedClientsFromDB(familyName.getId(), FamilyNames_Clientes.TABLE_NAME);
-                    showRelatedClientsIfExist();
-                }
-            });
         }
+
         cursor.close();
+
+        Cursor cursorII = bd.rawQuery("SELECT * FROM " + Cliente.TABLE_NAME,null);
+
+        if(cursorII.moveToFirst()){
+            do{
+                Cliente cliente = new Cliente();
+                cliente.setId(cursorII.getInt(0));
+                cliente.setName(cursorII.getString(cursorII.getColumnIndex(Cliente.CAMPO_NAME)));
+                cliente.setPass(cursorII.getString(cursorII.getColumnIndex(Cliente.CAMPO_PASS)));
+                cliente.setOrigenPais(cursorII.getString(cursorII.getColumnIndex(Cliente.CAMPO_ORIGEN_PAIS)));
+                cliente.setOrigenCiudad(cursorII.getString(cursorII.getColumnIndex(Cliente.CAMPO_ORIGEN_CIUDAD)));
+                cliente.setDob(cursorII.getString(cursorII.getColumnIndex(Cliente.CAMPO_DOB)));
+                cliente.setFoto(cursorII.getBlob(cursorII.getColumnIndex(Cliente.CAMPO_FOTO)));
+                cliente.setPreferencias(cursorII.getString(cursorII.getColumnIndex(Cliente.CAMPO_PREFERENCIAS)));
+                cliente.setLimitaciones(cursorII.getString(cursorII.getColumnIndex(Cliente.CAMPO_LIMITACIONES)));
+                cliente.setObservaciones(cursorII.getString(cursorII.getColumnIndex(Cliente.CAMPO_OBSERVACIONES)));
+
+                FamilyName familyName = new FamilyName();
+                familyName.setFamilyName(cliente.getName()+" x 1");
+                familyName.addClienteMiembro(cliente);
+                listFamilyNamesBD.add(familyName);
+            }while (cursorII.moveToNext());
+        }
+        cursorII.close();
+
+        actvAdapter = new ArrayAdapter<FamilyName>(getContext(),R.layout.my_simple_dropdown_item_1line,listFamilyNamesBD);
+        actvFamilyName.setAdapter(actvAdapter);
     }
 
     private void getRelatedClientsFromDB(int id, String tabla){
-        if(listClientesRelacionados==null){listClientesRelacionados = new ArrayList<>();}else{listClientesRelacionados.clear();}
+        setUpClearListClientesRelacionados();
         AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(),AdminSQLiteOpenHelper.BD_NAME,null,AdminSQLiteOpenHelper.BD_VERSION);
         SQLiteDatabase bd = admin.getReadableDatabase();
         String query = "";
@@ -391,6 +430,9 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
                         c.setOrigenCiudad(cursorII.getString(cursorII.getColumnIndex(Cliente.CAMPO_ORIGEN_CIUDAD)));
                         c.setDob(cursorII.getString(cursorII.getColumnIndex(Cliente.CAMPO_DOB)));
                         c.setFoto(cursorII.getBlob(cursorII.getColumnIndex(Cliente.CAMPO_FOTO)));
+                        c.setPreferencias(cursorII.getString(cursorII.getColumnIndex(Cliente.CAMPO_PREFERENCIAS)));
+                        c.setLimitaciones(cursorII.getString(cursorII.getColumnIndex(Cliente.CAMPO_LIMITACIONES)));
+                        c.setObservaciones(cursorII.getString(cursorII.getColumnIndex(Cliente.CAMPO_OBSERVACIONES)));
                         c.setChecked(true);
                         listClientesRelacionados.add(c);
                     }while (cursorII.moveToNext());
@@ -403,6 +445,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
 
     private void showRelatedClientsIfExist(){
         if(listClientesRelacionados==null || listClientesRelacionados.size()==0){showMsgNoClientesAsociados(true);return;}
+        showMsgNoClientesAsociados(false);
         List<Cliente> selectedClients = new ArrayList<>();
         for(Cliente c: listClientesRelacionados){if(c.isChecked()){selectedClients.add(c);}}
         ClientesRVAdapter adapter = new ClientesRVAdapter(selectedClients,new ClientesRVAdapter.Callback(){
@@ -414,7 +457,12 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         },false,false);
         rvClientesAsociados.setAdapter(adapter);
         rvClientesAsociados.setLayoutManager(new LinearLayoutManager(getContext()));
-        showMsgNoClientesAsociados(false);
+        if(myCallBack.getCurrentStateEstanciaFragment().equals(EstanciaFragment.STATE_REGULAR_MODE)){return;}
+        upDateClientsNumber(listClientesRelacionados.size());
+    }
+
+    private void upDateClientsNumber(int cant){
+        etAdultos.setText(String.valueOf(cant));
     }
 
     private void showSelectedEstancia(){
@@ -453,11 +501,16 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         new DatePickerDialog(getContext(),new DatePickerDialog.OnDateSetListener(){
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                String month_str = toDosLugares(month + 1);
-                String day_str = toDosLugares(day);
+                /*
+                String month_str = DateHandler.toDosLugares(month + 1);
+                String day_str = DateHandler.toDosLugares(day);
 
                 String full_date = day_str + "/" + month_str + "/" + year;
+
                 tv.setText(full_date);
+                */
+
+                tv.setText(DateHandler.formatDateToShow(day,month+1,year));
 
                 if (!tvDesde.getText().toString().equalsIgnoreCase(getResources().getString(R.string.seleccionar_fecha)) &&
                         !tvHasta.getText().toString().equalsIgnoreCase(getResources().getString(R.string.seleccionar_fecha))){
@@ -469,14 +522,6 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
                 }
             }
         },year,month,day).show();
-    }
-
-    private String toDosLugares(int x){
-        String cad = String.valueOf(x);
-        if (cad.length() == 1){
-            cad = "0" + x;
-        }
-        return cad;
     }
 
     private boolean isHastaAfterDesde(TextView tv,boolean showByColor){
@@ -507,12 +552,12 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         }
     }
 
-    private String formatDateToStoreInDB(String date){
-        return date.substring(6)+"-"+date.substring(3,5)+"-"+date.substring(0,2);
-    }
-
-    private String formatDateToShow(String date){
-        return date.substring(8) + "/" + date.substring(5,7) + "/" + date.substring(0,4);
+    private void setUpClearListClientesRelacionados(){
+        if(listClientesRelacionados==null){
+            listClientesRelacionados = new ArrayList<Cliente>();
+        }else{
+            listClientesRelacionados.clear();
+        }
     }
 
     @Override
@@ -607,6 +652,11 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
                 //makeToast("Borrando estancia...");
                 borrarEstancia();
                 break;
+            case R.id.menu_item_agregar_reporte:
+                if(!myCallBack.getCurrentStateEstanciaFragment().equals(EstanciaFragment.STATE_NEW_ESTANCIA_MODE)){
+                    myCallBack.setUpNewReporteFragment(selectedEstancia.getId());
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -619,5 +669,6 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         void udActivity(String tag);
         String getCurrentStateEstanciaFragment();
         void setNewCurrentStateEstanciaFragment(String newState);
+        void setUpNewReporteFragment(int estanciaId);
     }
 }

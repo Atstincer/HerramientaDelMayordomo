@@ -37,7 +37,7 @@
                 android:text="@string/noches"
                 android:textColor="@color/color_font_blanco"
                 android:textSize="@dimen/tvSize"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -62,10 +62,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="@string/hasta"
                     android:textColor="@color/color_font_blanco"
-                    android:textSize="@dimen/tvSize"
-                    android:layout_marginTop="10dp"/>
+                    android:textSize="@dimen/tvSize" />
 
             </LinearLayout>
 
@@ -91,13 +91,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/seleccionar_fecha"
                     android:textColor="@color/link"
-                    android:textSize="@dimen/tvSize"
-                    android:layout_marginTop="10dp"/>
+                    android:textSize="@dimen/tvSize" />
 
             </LinearLayout>
-
 
 
         </LinearLayout>
@@ -174,6 +173,26 @@
             android:text="@string/reportes"
             android:textColor="@color/link"
             android:textSize="@dimen/tvSize" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_reportes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginStart="5dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_no_existen_reportes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_existen_reportes"
+            android:textAlignment="center"
+            android:textColor="@color/link"
+            android:textSize="18sp"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_cortesias"

@@ -33,6 +33,7 @@ import com.example.usuario.herramientadelmayordomoii.Entities.Cliente;
 import com.example.usuario.herramientadelmayordomoii.Entities.Estancia;
 import com.example.usuario.herramientadelmayordomoii.Entities.Estancias_Clientes;
 import com.example.usuario.herramientadelmayordomoii.R;
+import com.example.usuario.herramientadelmayordomoii.Util.DateHandler;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -160,8 +161,10 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
     }
 
     private void getEstanciasEnCasa(){
+        String today = DateHandler.getToday(DateHandler.FECHA_FORMATO_BD);
         emptyListEstancias();
-        getEstanciasFromDB("SELECT * FROM "+Estancia.TABLE_NAME+" WHERE DATE('now') >= "+Estancia.CAMPO_DESDE+" AND DATE('now') <= "+Estancia.CAMPO_HASTA);
+        //getEstanciasFromDB("SELECT * FROM "+Estancia.TABLE_NAME+" WHERE DATE('now') >= "+Estancia.CAMPO_DESDE+" AND DATE('now') <= "+Estancia.CAMPO_HASTA);
+        getEstanciasFromDB("SELECT * FROM "+Estancia.TABLE_NAME+" WHERE '"+today+"' >= "+Estancia.CAMPO_DESDE+" AND '"+today+"' <= "+Estancia.CAMPO_HASTA);
         if(listEstancias!=null&&listEstancias.size()>0){Collections.sort(listEstancias,Estancia.dateAscending);}
     }
 
@@ -206,8 +209,8 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
                 e.setId(cursor.getInt(0));
                 e.setNo_hab(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_NO_HAB)));
                 e.setFamilyName(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_FAMILY_NAME)));
-                e.setDesde(formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_DESDE))));
-                e.setHasta(formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_HASTA))));
+                e.setDesde(DateHandler.formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_DESDE))));
+                e.setHasta(DateHandler.formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_HASTA))));
                 e.setAdultos(cursor.getInt(cursor.getColumnIndex(Estancia.CAMPO_ADULTOS)));
                 e.setMenores(cursor.getInt(cursor.getColumnIndex(Estancia.CAMPO_MENORES)));
                 e.setInfantes(cursor.getInt(cursor.getColumnIndex(Estancia.CAMPO_INFANTES)));
@@ -257,8 +260,8 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
                     e.setId(cursor.getInt(0));
                     e.setNo_hab(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_NO_HAB)));
                     e.setFamilyName(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_FAMILY_NAME)));
-                    e.setDesde(formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_DESDE))));
-                    e.setHasta(formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_HASTA))));
+                    e.setDesde(DateHandler.formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_DESDE))));
+                    e.setHasta(DateHandler.formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_HASTA))));
                     e.setAdultos(cursor.getInt(cursor.getColumnIndex(Estancia.CAMPO_ADULTOS)));
                     e.setMenores(cursor.getInt(cursor.getColumnIndex(Estancia.CAMPO_MENORES)));
                     e.setInfantes(cursor.getInt(cursor.getColumnIndex(Estancia.CAMPO_INFANTES)));
@@ -300,24 +303,26 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
         new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int y, int m, int d) {
-                String month_str = toDosLugares(m+1);
-                String day_str = toDosLugares(d);
-
+                /*String month_str = DateHandler.toDosLugares(m+1);
+                String day_str = DateHandler.toDosLugares(d);
                 String full_date = day_str + "/" + month_str + "/" + y;
-                tv.setText(full_date);
+                tv.setText(full_date);*/
+
+                tv.setText(DateHandler.formatDateToShow(d,m+1,y));
                 getEstanciasFromDB(desde.getText().toString(),hasta.getText().toString());
                 showEstanciasIfExist();
             }
         }, year, month, day).show();
     }
 
+    /*
     private String toDosLugares(int x) {
         String cad = String.valueOf(x);
         if (cad.length() == 1) {
             cad = "0" + x;
         }
         return cad;
-    }
+    }*/
 
     private void showEstanciasIfExist(){
         if(listEstancias.size()>0){
@@ -347,9 +352,10 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
         }
     }
 
+    /*
     private String formatDateToShow(String date){
         return date.substring(8)+"/"+date.substring(5,7)+"/"+date.substring(0,4);
-    }
+    }*/
 
     private void showLayout(String tag){
         hideAllLayouts();

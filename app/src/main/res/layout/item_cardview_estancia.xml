@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_items_cardview"
+        android:background="@color/colorPrimary"
         android:padding="5dp">
 
         <TextView
@@ -19,6 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/Hab"
+            android:textColor="@color/color_font_blanco"
             android:textSize="@dimen/tvSize"
             android:textStyle="bold" />
 
@@ -28,9 +29,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
-            android:layout_toRightOf="@id/hab"
             android:layout_toEndOf="@+id/hab"
+            android:layout_toRightOf="@id/hab"
             android:text="0000"
+            android:textColor="@color/color_font_blanco"
             android:textSize="@dimen/tvSize"
             android:textStyle="bold" />
 
@@ -41,6 +43,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:text="Fechas"
+            android:textColor="@color/color_font_blanco"
             android:textSize="@dimen/tvSize" />
 
         <TextView
@@ -50,6 +53,7 @@
             android:layout_below="@id/hab"
             android:layout_marginTop="5dp"
             android:text="Nombre y Apellidos"
+            android:textColor="@color/color_font_blanco"
             android:textSize="@dimen/tvSize" />
 
     </RelativeLayout>

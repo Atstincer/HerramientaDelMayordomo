@@ -76,7 +76,6 @@
             android:id="@+id/tv_preferencias"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
             android:layout_marginTop="10dp"
             android:clickable="false"
             android:text="@string/preferencias"
@@ -87,15 +86,14 @@
             android:id="@+id/et_preferencias"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:textColor="@color/color_font_blanco" />
 
         <TextView
             android:id="@+id/tv_limitaciones"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
             android:layout_marginTop="10dp"
             android:clickable="false"
             android:text="@string/limitaciones"
@@ -106,15 +104,14 @@
             android:id="@+id/et_limitaciones"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:textColor="@color/color_font_blanco" />
 
         <TextView
             android:id="@+id/tv_obs_cliente"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
             android:layout_marginTop="10dp"
             android:clickable="true"
             android:text="@string/obs"
@@ -125,8 +122,8 @@
             android:id="@+id/et_obs_cliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:textColor="@color/color_font_blanco" />
 
 

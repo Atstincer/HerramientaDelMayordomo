@@ -80,6 +80,7 @@
     <string name="confirmar_eliminar_registro">Seguro que desea eliminar este registro?</string>
     <string name="no_existen_clientes_asosiados">No existen clientes asociados</string>
     <string name="no_existen_clientes_registrados">No existen clientes registrados</string>
+    <string name="no_existen_reportes">No existen reportes registrados</string>
 
 
     <!-->Mensages de ERROR</-->
@@ -113,5 +114,15 @@
     <string name="selecionar_foto_galeria">Seleccionar foto</string>
     <string name="editar">Editar</string>
     <string name="borrar">Borrar</string>
+    <string name="agregar_reporte">Agregar reporte</string>
+
+    <!-->REPORTE</-->
+    <string name="reporte_mañana">Mañana</string>
+    <string name="reporte_tarde">Tarde</string>
+    <string name="reporte_noche">Noche</string>
+    <string name="new_reporte">Nuevo reporte</string>
+    <string name="reporte_no_valido">Debe llenar al menos uno de los campos</string>
+    <string name="varios_reportes_misma_fecha">Existe más de un reporte con la misma fecha</string>
+    <string name="confirmar_eliminar_reporte">Seguro que desea eliminar el reporte?</string>
 
 </resources>

@@ -60,6 +60,17 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
                 "limitaciones TEXT," +
                 "observaciones TEXT)");
 
+        bd.execSQL("CREATE TABLE Reportes(" +
+                "id INTEGER PRIMARY KEY," +
+                "estanciaId Integer," +
+                "fecha TEXT," +
+                "reporteMañana TEXT," +
+                "reporteTarde TEXT," +
+                "reporteNoche TEXT," +
+                "FOREIGN KEY(estanciaId) REFERENCES Estancias(id) " +
+                "ON UPDATE CASCADE " +
+                "ON DELETE CASCADE)");
+
         bd.execSQL("CREATE TABLE FamilyNames_Clientes(" +
                 "familyNameId INTEGER," +
                 "clienteId INTEGER," +
@@ -79,6 +90,18 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY(clienteId) REFERENCES Clientes(id) " +
                 "ON UPDATE CASCADE " +
                 "ON DELETE CASCADE)");
+
+        /*
+        bd.execSQL("CREATE TABLE Estancias_Reportes," +
+                "estanciaId INTEGER," +
+                "reporteId INTEGER," +
+                "FOREIGN KEY(estanciaId) REFERENCES Estancias(id) " +
+                "ON UPDATE CASCADE " +
+                "ON DELETE CASCADE," +
+                "FOREIGN KEY(reporteId) REFERENCES Reportes(id) " +
+                "ON UPDATE CASCADE " +
+                "ON DELETE CASCADE");
+                */
     }
 
     @Override

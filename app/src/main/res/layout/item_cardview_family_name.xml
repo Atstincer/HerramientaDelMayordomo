@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_items_cardview">
+        android:background="@color/colorPrimary">
 
         <TextView
             android:id="@+id/tv_family_name"
