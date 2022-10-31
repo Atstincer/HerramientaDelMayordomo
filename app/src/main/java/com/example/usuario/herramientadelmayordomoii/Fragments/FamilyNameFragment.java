@@ -28,6 +28,7 @@ import com.example.usuario.herramientadelmayordomoii.Entities.FamilyName;
 import com.example.usuario.herramientadelmayordomoii.Entities.FamilyNames_Clientes;
 import com.example.usuario.herramientadelmayordomoii.Interfaces.IMyFragments;
 import com.example.usuario.herramientadelmayordomoii.R;
+import com.example.usuario.herramientadelmayordomoii.Util.MyApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +40,10 @@ import java.util.List;
 public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF.Callback, IMyFragments {
 
     public static final String TAG = "FamilyNameFragment";
-
+    /*
     public static final String STATE_REGULAR_MODE = "STATE_FAMILY_NAME_REGULAR_MODE";
     public static final String STATE_FAMILY_NAME_UD_MODE = "STATE_FAMILY_NAME_UD_MODE";
-    public static final String STATE_NEW_FAMILY_NAME_MODE = "STATE_NEW_FAMILY_NAME_MODE";
+    public static final String STATE_NEW_FAMILY_NAME_MODE = "STATE_NEW_FAMILY_NAME_MODE";*/
 
     private FamilyName selectedFamilyName;
     private List<Cliente> listClientesRelacionados;
@@ -67,11 +68,11 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bindComponents(view);
-        if (myCallback.getCurrentStateFamilyNameFragment().equals(STATE_REGULAR_MODE) && getArguments() != null) {
+        if (myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_REGULAR && getArguments() != null) {
             Bundle bundle = getArguments();
             udSelectedFamilyNameFromDB(bundle.getInt("id"));
             setUpRegularMode();//just shows info of a family name
-        }else if(myCallback.getCurrentStateFamilyNameFragment().equals(STATE_NEW_FAMILY_NAME_MODE)){
+        }else if(myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_NEW){
             setUpNewFamilyNameMode();
         }
     }
@@ -92,8 +93,8 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
         tvNoClientesRelacionados.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if(myCallback.getCurrentStateFamilyNameFragment().equals(STATE_FAMILY_NAME_UD_MODE)||
-                        myCallback.getCurrentStateFamilyNameFragment().equals(STATE_NEW_FAMILY_NAME_MODE)){
+                if(myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_UPDATE||
+                        myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_NEW){
                     showDialogPicker();
                 }
             }
@@ -102,9 +103,9 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
         btnMain.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if(myCallback.getCurrentStateFamilyNameFragment().equals(STATE_NEW_FAMILY_NAME_MODE)){
+                if(myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_NEW){
                     registrarNewFamilyName();
-                }else if(myCallback.getCurrentStateFamilyNameFragment().equals(STATE_FAMILY_NAME_UD_MODE)){
+                }else if(myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_UPDATE){
                     actualizarFamilyName();
                 }
             }
@@ -127,14 +128,14 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
     }
 
     private void setUpRegularMode() {
-        myCallback.udActivity(FamilyNameFragment.STATE_REGULAR_MODE);
+        myCallback.udActivity(FamilyNameFragment.TAG);
         showInfoSelectedFamilyName();
         setViewEditable(false);
         showBtns(false);
     }
 
     private void setUpNewFamilyNameMode() {
-        myCallback.udActivity(FamilyNameFragment.STATE_NEW_FAMILY_NAME_MODE);
+        myCallback.udActivity(FamilyNameFragment.TAG);
         selectedFamilyName = null;
         if(listClientesRelacionados!=null){listClientesRelacionados.clear();}
         etFamilyName.setText("");
@@ -144,7 +145,7 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
     }
 
     private void setUpUDMode(){
-        myCallback.udActivity(FamilyNameFragment.STATE_FAMILY_NAME_UD_MODE);
+        myCallback.udActivity(FamilyNameFragment.TAG);
         getActivity().invalidateOptionsMenu();
         setViewEditable(true);
         showBtns(true);
@@ -152,15 +153,15 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
     }
 
     @Override
-    public void setUpNewState(String state) {
+    public void setUpNewState(int state) {
         switch (state){
-            case STATE_FAMILY_NAME_UD_MODE:
+            case MyApp.STATE_UPDATE:
                 setUpUDMode();
                 break;
-            case STATE_NEW_FAMILY_NAME_MODE:
+            case MyApp.STATE_NEW:
                 setUpNewFamilyNameMode();
                 break;
-            case STATE_REGULAR_MODE:
+            case MyApp.STATE_REGULAR:
                 setUpRegularMode();
                 break;
             default:
@@ -296,9 +297,9 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
         if(show){
             btnMain.setVisibility(View.VISIBLE);
             btnAdministrarClientesRelacionados.setVisibility(View.VISIBLE);
-            if(myCallback.getCurrentStateFamilyNameFragment().equals(STATE_NEW_FAMILY_NAME_MODE)){
+            if(myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_NEW){
                 btnMain.setText(getResources().getString(R.string.registrar));
-            }else if (myCallback.getCurrentStateFamilyNameFragment().equals(STATE_FAMILY_NAME_UD_MODE)){
+            }else if (myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_UPDATE){
                 btnMain.setText(getResources().getString(R.string.actualizar));
             }
         }else{
@@ -374,9 +375,9 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if(menu!=null){menu.clear();}
-        if(myCallback.getCurrentStateFamilyNameFragment().equals(STATE_REGULAR_MODE)){
+        if(myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_REGULAR){
             inflater.inflate(R.menu.menu_family_name_fragment_regular_mode,menu);
-        }else if(myCallback.getCurrentStateFamilyNameFragment().equals(STATE_FAMILY_NAME_UD_MODE)){
+        }else if(myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_UPDATE){
             inflater.inflate(R.menu.menu_family_name_fragment_ud_mode,menu);
         }
         //super.onCreateOptionsMenu(menu, inflater);
@@ -386,7 +387,7 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_item_editar_family_name:
-                myCallback.setNewCurrentStateFamilyNameFragment(FamilyNameFragment.STATE_FAMILY_NAME_UD_MODE);
+                myCallback.setNewCurrentStateFamilyNameFragment(MyApp.STATE_UPDATE);
                 setUpUDMode();
                 break;
             case R.id.menu_item_eliminar_family_name:
@@ -432,7 +433,7 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
 
     public interface CallBack {
         void udActivity(String tag);
-        String getCurrentStateFamilyNameFragment();
-        void setNewCurrentStateFamilyNameFragment(String newState);
+        int getCurrentStateFamilyNameFragment();
+        void setNewCurrentStateFamilyNameFragment(int newState);
     }
 }

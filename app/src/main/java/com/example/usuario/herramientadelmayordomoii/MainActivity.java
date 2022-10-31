@@ -21,6 +21,7 @@ import com.example.usuario.herramientadelmayordomoii.Fragments.FrontFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.RecordatoriosFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.ReporteFragment;
 import com.example.usuario.herramientadelmayordomoii.Interfaces.IMyFragments;
+import com.example.usuario.herramientadelmayordomoii.Util.MyApp;
 
 //import android.support.design.widget.FloatingActionButton;
 //import android.support.design.widget.Snackbar;
@@ -34,10 +35,10 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private NavigationView navigationView;
 
-    private String currentStateClienteFragment;
-    private String currentStateFamilyNameFragment;
-    private String currentStateEstanciaFragment;
-    private String currentStateReporteFragment;
+    private int currentStateClienteFragment;
+    private int currentStateFamilyNameFragment;
+    private int currentStateEstanciaFragment;
+    private int currentStateReporteFragment;
 
 
     @Override
@@ -75,43 +76,43 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public String getCurrentStateClienteFragment() {
+    public int getCurrentStateClienteFragment() {
         return currentStateClienteFragment;
     }
 
     @Override
-    public String getCurrentStateFamilyNameFragment() {
+    public int getCurrentStateFamilyNameFragment() {
         return currentStateFamilyNameFragment;
     }
 
     @Override
-    public String getCurrentStateEstanciaFragment() {return currentStateEstanciaFragment;}
+    public int getCurrentStateEstanciaFragment() {return currentStateEstanciaFragment;}
 
     @Override
-    public void setNewCurrentStateClienteFragment(String newCurrentStateClienteFragment) {
-        currentStateClienteFragment = newCurrentStateClienteFragment;
-        udActivity(newCurrentStateClienteFragment);
+    public void setNewCurrentStateClienteFragment(int newState) {
+        currentStateClienteFragment = newState;
+        udActivity(ClienteFragment.TAG);
     }
 
     @Override
-    public void setNewCurrentStateFamilyNameFragment(String newState) {
+    public void setNewCurrentStateFamilyNameFragment(int newState) {
         currentStateFamilyNameFragment = newState;
     }
 
     @Override
-    public void setNewCurrentStateEstanciaFragment(String newState) {
+    public void setNewCurrentStateEstanciaFragment(int newState) {
         currentStateEstanciaFragment = newState;
     }
 
     @Override
     public void setUpNewClientFragment() {
-        currentStateClienteFragment = ClienteFragment.STATE_NEW_CLIENTE_MODE;
+        currentStateClienteFragment = MyApp.STATE_NEW;
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ClienteFragment(),ClienteFragment.TAG).addToBackStack(null).commit();
     }
 
     @Override
     public void setUpClienteFragment(int id) {
-        currentStateClienteFragment = ClienteFragment.STATE_CLIENTE_MODE;
+        currentStateClienteFragment = MyApp.STATE_REGULAR;
         ClienteFragment fragment = new ClienteFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("id",id);
@@ -121,16 +122,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void setUpNewEstanciaFragment() {
-        currentStateEstanciaFragment = EstanciaFragment.STATE_NEW_ESTANCIA_MODE;
+        currentStateEstanciaFragment = MyApp.STATE_NEW;
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EstanciaFragment(),EstanciaFragment.TAG).addToBackStack(null).commit();
     }
 
     @Override
-    public void setUpEstanciaFragment(int id) {
-        currentStateEstanciaFragment = EstanciaFragment.STATE_REGULAR_MODE;
+    public void setUpEstanciaFragment(long id) {
+        currentStateEstanciaFragment = MyApp.STATE_REGULAR;
         EstanciaFragment f = new EstanciaFragment();
         Bundle info = new Bundle();
-        info.putInt("id",id);
+        info.putLong("id",id);
         f.setArguments(info);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f,EstanciaFragment.TAG).addToBackStack(null).commit();
     }
@@ -156,33 +157,34 @@ public class MainActivity extends AppCompatActivity
         FamilyNameFragment fragment = new FamilyNameFragment();
         fragment.setArguments(info);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment,FamilyNameFragment.TAG).addToBackStack(null).commit();
-        currentStateFamilyNameFragment = FamilyNameFragment.STATE_REGULAR_MODE;
+        currentStateFamilyNameFragment = MyApp.STATE_REGULAR;
     }
 
     @Override
     public void setUpNewFamilyNameFragment() {
-        currentStateFamilyNameFragment = FamilyNameFragment.STATE_NEW_FAMILY_NAME_MODE;
+        currentStateFamilyNameFragment = MyApp.STATE_NEW;
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new FamilyNameFragment(), FamilyNameFragment.TAG).addToBackStack(null).commit();
     }
 
     @Override
-    public void setUpNewReporteFragment(int estanciaId) {
+    public void setUpReportFragment(long estanciaId, long reporteId) {
         Bundle info = new Bundle();
-        info.putInt("estanciaId",estanciaId);
+        info.putLong("estanciaId",estanciaId);
+        info.putLong("reporteId",reporteId);
         ReporteFragment repFragment = new ReporteFragment();
         repFragment.setArguments(info);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,repFragment,ReporteFragment.TAG).addToBackStack(null).commit();
-        currentStateReporteFragment = ReporteFragment.STATE_NEW_REPORTE_MODE;
+        currentStateReporteFragment = MyApp.STATE_NEW;
         udActivity(ReporteFragment.TAG);
     }
 
     @Override
-    public String getCurrentStateReporteFragment() {
+    public int getCurrentStateReporteFragment() {
         return currentStateReporteFragment;
     }
 
     @Override
-    public void setCurrentStateReporteFragment(String state) {
+    public void setCurrentStateReporteFragment(int state) {
         currentStateReporteFragment = state;
         udActivity(ReporteFragment.TAG);
     }
@@ -193,50 +195,6 @@ public class MainActivity extends AppCompatActivity
             case EstanciasFragment.TAG:
                 title = getResources().getString(R.string.en_casa);
                 navigationView.setCheckedItem(R.id.nav_item_estancias);
-                break;
-            case EstanciaFragment.STATE_REGULAR_MODE:
-                title = getResources().getString(R.string.estancia);
-                navigationView.setCheckedItem(R.id.nav_item_estancias);
-                break;
-            case EstanciaFragment.STATE_NEW_ESTANCIA_MODE:
-                title = getResources().getString(R.string.nueva_estancia);
-                navigationView.setCheckedItem(R.id.nav_item_estancias);
-                break;
-            case EstanciaFragment.STATE_ESTANCIA_UD_MODE:
-                title = getResources().getString(R.string.actualizar_estancia);
-                navigationView.setCheckedItem(R.id.nav_item_estancias);
-                break;
-            case ClientesFragment.TAG:
-                title = getResources().getString(R.string.clientes);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
-                break;
-            case ClienteFragment.STATE_NEW_CLIENTE_MODE:
-                title = getResources().getString(R.string.nuevo_cliente);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
-                break;
-            case ClienteFragment.STATE_CLIENTE_MODE:
-                title = getResources().getString(R.string.info_cliente_title);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
-                break;
-            case ClienteFragment.STATE_CLIENTE_UD_MODE:
-                title = getResources().getString(R.string.actualizar_cliente_title);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
-                break;
-            case FamilyNamesFragment.TAG:
-                title = getResources().getString(R.string.familias);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
-                break;
-            case FamilyNameFragment.STATE_REGULAR_MODE:
-                title = getResources().getString(R.string.familia);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
-                break;
-            case FamilyNameFragment.STATE_NEW_FAMILY_NAME_MODE:
-                title = getResources().getString(R.string.nuevo_nombre_de_familia);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
-                break;
-            case FamilyNameFragment.STATE_FAMILY_NAME_UD_MODE:
-                title = getResources().getString(R.string.editar_nombre_de_familia);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
                 break;
             case EstanciasFragment.STATE_EN_CASA:
                 title = getResources().getString(R.string.en_casa);
@@ -254,12 +212,73 @@ public class MainActivity extends AppCompatActivity
                 title = getResources().getString(R.string.segun_hab);
                 navigationView.setCheckedItem(R.id.nav_item_estancias);
                 break;
+            case EstanciaFragment.TAG:
+                if(currentStateEstanciaFragment==MyApp.STATE_REGULAR){title = getResources().getString(R.string.estancia);}
+                else if(currentStateEstanciaFragment==MyApp.STATE_NEW){title = getResources().getString(R.string.nueva_estancia);}
+                else if(currentStateEstanciaFragment==MyApp.STATE_UPDATE){title = getResources().getString(R.string.actualizar_estancia);}
+                navigationView.setCheckedItem(R.id.nav_item_estancias);
+                break;
+            /*case EstanciaFragment.STATE_REGULAR_MODE:
+                title = getResources().getString(R.string.estancia);
+                navigationView.setCheckedItem(R.id.nav_item_estancias);
+                break;
+            case EstanciaFragment.STATE_NEW_ESTANCIA_MODE:
+                title = getResources().getString(R.string.nueva_estancia);
+                navigationView.setCheckedItem(R.id.nav_item_estancias);
+                break;
+            case EstanciaFragment.STATE_UPDATE_MODE:
+                title = getResources().getString(R.string.actualizar_estancia);
+                navigationView.setCheckedItem(R.id.nav_item_estancias);
+                break;*/
+            case ClientesFragment.TAG:
+                title = getResources().getString(R.string.clientes);
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;
+            case ClienteFragment.TAG:
+                if(currentStateClienteFragment==MyApp.STATE_NEW){title = getResources().getString(R.string.nuevo_cliente);}
+                else if(currentStateClienteFragment==MyApp.STATE_REGULAR){title = getResources().getString(R.string.info_cliente_title);}
+                else if(currentStateClienteFragment==MyApp.STATE_UPDATE){title = getResources().getString(R.string.actualizar_cliente_title);}
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;
+            /*
+            case ClienteFragment.STATE_NEW_CLIENTE_MODE:
+                title = getResources().getString(R.string.nuevo_cliente);
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;
+            case ClienteFragment.STATE_CLIENTE_MODE:
+                title = getResources().getString(R.string.info_cliente_title);
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;
+            case ClienteFragment.STATE_CLIENTE_UD_MODE:
+                title = getResources().getString(R.string.actualizar_cliente_title);
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;*/
+            case FamilyNamesFragment.TAG:
+                title = getResources().getString(R.string.familias);
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;
+            case FamilyNameFragment.TAG:
+                if(currentStateFamilyNameFragment==MyApp.STATE_REGULAR){title = getResources().getString(R.string.familia);}
+                else if(currentStateFamilyNameFragment==MyApp.STATE_NEW){title = getResources().getString(R.string.nuevo_nombre_de_familia);}
+                else if(currentStateFamilyNameFragment==MyApp.STATE_UPDATE){title = getResources().getString(R.string.editar_nombre_de_familia);}
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;
+            /*
+            case FamilyNameFragment.STATE_REGULAR_MODE:
+                title = getResources().getString(R.string.familia);
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;
+            case FamilyNameFragment.STATE_NEW_FAMILY_NAME_MODE:
+                title = getResources().getString(R.string.nuevo_nombre_de_familia);
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;
+            case FamilyNameFragment.STATE_FAMILY_NAME_UD_MODE:
+                title = getResources().getString(R.string.editar_nombre_de_familia);
+                navigationView.setCheckedItem(R.id.nav_item_clientes);
+                break;*/
             case ReporteFragment.TAG:
-                if(currentStateReporteFragment.equals(ReporteFragment.STATE_REGULAR_MODE)){
-                    title = getResources().getString(R.string.reportes);
-                }else if(currentStateReporteFragment.equals(ReporteFragment.STATE_NEW_REPORTE_MODE)){
-                    title = getResources().getString(R.string.new_reporte);
-                }
+                if(currentStateReporteFragment==MyApp.STATE_REGULAR){title = getResources().getString(R.string.reportes);}
+                else if(currentStateReporteFragment==MyApp.STATE_NEW){title = getResources().getString(R.string.new_reporte);}
                 navigationView.setCheckedItem(R.id.nav_item_estancias);
                 break;
             case FrontFragment.TAG:
@@ -278,12 +297,12 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if(getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof ClienteFragment){
-            if(currentStateClienteFragment.equals(ClienteFragment.STATE_CLIENTE_UD_MODE)){
+            if(currentStateClienteFragment==MyApp.STATE_UPDATE){
                 try{
                     IMyFragments fragment = (IMyFragments)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                    fragment.setUpNewState(ClienteFragment.STATE_CLIENTE_MODE);
-                    currentStateClienteFragment = ClienteFragment.STATE_CLIENTE_MODE;
-                    udActivity(ClienteFragment.STATE_CLIENTE_MODE);
+                    fragment.setUpNewState(MyApp.STATE_REGULAR);
+                    currentStateClienteFragment = MyApp.STATE_REGULAR;
+                    udActivity(ClienteFragment.TAG);
                 }catch(ClassCastException e){
                     Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -291,12 +310,12 @@ public class MainActivity extends AppCompatActivity
                 super.onBackPressed();
             }
         } else if(getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof FamilyNameFragment){
-            if(currentStateFamilyNameFragment.equals(FamilyNameFragment.STATE_FAMILY_NAME_UD_MODE)){
+            if(currentStateFamilyNameFragment==MyApp.STATE_UPDATE){
                 try{
                     IMyFragments fragment = (IMyFragments)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                    fragment.setUpNewState(FamilyNameFragment.STATE_REGULAR_MODE);
-                    currentStateFamilyNameFragment = FamilyNameFragment.STATE_REGULAR_MODE;
-                    udActivity(FamilyNameFragment.STATE_REGULAR_MODE);
+                    fragment.setUpNewState(MyApp.STATE_REGULAR);
+                    currentStateFamilyNameFragment = MyApp.STATE_REGULAR;
+                    udActivity(FamilyNameFragment.TAG);
                 }catch (ClassCastException e){
                     Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -304,12 +323,12 @@ public class MainActivity extends AppCompatActivity
                 super.onBackPressed();
             }
         } else if(getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof EstanciaFragment){
-            if(currentStateEstanciaFragment.equals(EstanciaFragment.STATE_ESTANCIA_UD_MODE)){
+            if(currentStateEstanciaFragment==MyApp.STATE_UPDATE){
                 try{
                     IMyFragments fragment = (IMyFragments)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                    fragment.setUpNewState(EstanciaFragment.STATE_REGULAR_MODE);
-                    currentStateEstanciaFragment = EstanciaFragment.STATE_REGULAR_MODE;
-                    udActivity(EstanciaFragment.STATE_REGULAR_MODE);
+                    fragment.setUpNewState(MyApp.STATE_REGULAR);
+                    currentStateEstanciaFragment = MyApp.STATE_REGULAR;
+                    udActivity(EstanciaFragment.TAG);
                 }catch (ClassCastException e){
                     Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }

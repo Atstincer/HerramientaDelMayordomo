@@ -28,20 +28,6 @@ public class Cliente {
     private Bitmap foto;
     private boolean checked;
 
-    public Cliente(int id, String name, String origenPais, String origenCiudad, String dob, String pass, Bitmap foto, boolean checked, String preferencias, String limitaciones, String observaciones) {
-        this.id = id;
-        this.name = name;
-        this.origenPais = origenPais;
-        this.origenCiudad = origenCiudad;
-        this.dob = dob;
-        this.pass = pass;
-        this.foto = foto;
-        this.checked = checked;
-        this.preferencias = preferencias;
-        this.limitaciones = limitaciones;
-        this.observaciones = observaciones;
-    }
-
     public Cliente() {
         this.checked = false;
     }

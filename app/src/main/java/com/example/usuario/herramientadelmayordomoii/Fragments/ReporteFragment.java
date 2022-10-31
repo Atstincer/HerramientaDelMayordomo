@@ -23,13 +23,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.usuario.herramientadelmayordomoii.BD_conexion.AdminSQLiteOpenHelper;
+import com.example.usuario.herramientadelmayordomoii.Entities.Estancia;
 import com.example.usuario.herramientadelmayordomoii.Entities.Reporte;
 import com.example.usuario.herramientadelmayordomoii.R;
 import com.example.usuario.herramientadelmayordomoii.Util.DateHandler;
+import com.example.usuario.herramientadelmayordomoii.Util.MyApp;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by usuario on 17/10/2022.
@@ -38,8 +43,10 @@ import java.util.List;
 public class ReporteFragment extends Fragment {
 
     public static final String TAG = "ReporteFragment";
+
+    /*
     public static final String STATE_REGULAR_MODE = "STATE_REPORTE_REGULAR_MODE";
-    public static final String STATE_NEW_REPORTE_MODE = "STATE_NEW_REPORTE_MODE";
+    public static final String STATE_NEW_REPORTE_MODE = "STATE_NEW_REPORTE_MODE";*/
 
     private EditText etReporteMañana, etReporteTarde, etReporteNoche;
     private TextView tvDate;
@@ -47,7 +54,6 @@ public class ReporteFragment extends Fragment {
 
     private long idEstanciaRelacionada;
     private long idReporteRelacionado;
-    //private Boolean modificado;
     private CallBack myCallBack;
 
     @Nullable
@@ -66,16 +72,17 @@ public class ReporteFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //modificado = false;
         bindComponents(view);
         if(getArguments()!=null){
-            idEstanciaRelacionada = (int)getArguments().get("estanciaId");
+            idEstanciaRelacionada = (long)getArguments().get("estanciaId");
+            idReporteRelacionado = (long)getArguments().get("reporteId");
+            if(idReporteRelacionado>0){
+                showInfoFragment(idReporteRelacionado);return;}
         }
-        if(myCallBack.getCurrentStateReporteFragment().equals(ReporteFragment.STATE_REGULAR_MODE)){
+        if(myCallBack.getCurrentStateReporteFragment()==MyApp.STATE_REGULAR){
             setUpRegularMode();
-        }else if(myCallBack.getCurrentStateReporteFragment().equals(ReporteFragment.STATE_NEW_REPORTE_MODE)){
+        }else if(myCallBack.getCurrentStateReporteFragment()==MyApp.STATE_NEW){
             setCurrentDate();
-            //setUpNewReportMode();
         }
     }
 
@@ -96,10 +103,9 @@ public class ReporteFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getContext(),"No hacer nada por ahora",Toast.LENGTH_SHORT).show();
-                if(myCallBack.getCurrentStateReporteFragment().equals(ReporteFragment.STATE_NEW_REPORTE_MODE)){
+                if(myCallBack.getCurrentStateReporteFragment()==MyApp.STATE_NEW){
                     registrar();
-                }else if(myCallBack.getCurrentStateReporteFragment().equals(ReporteFragment.STATE_REGULAR_MODE)){
+                }else if(myCallBack.getCurrentStateReporteFragment()==MyApp.STATE_REGULAR){
                     actualizar();
                 }
             }
@@ -107,23 +113,22 @@ public class ReporteFragment extends Fragment {
     }
 
     private void setUpRegularMode(){
-        if(!myCallBack.getCurrentStateReporteFragment().equals(ReporteFragment.STATE_REGULAR_MODE)){
-            myCallBack.setCurrentStateReporteFragment(ReporteFragment.STATE_REGULAR_MODE);
+        if(myCallBack.getCurrentStateReporteFragment()!=MyApp.STATE_REGULAR){
+            myCallBack.setCurrentStateReporteFragment(MyApp.STATE_REGULAR);
         }
-        //modificado = false;
         btn.setText(getResources().getString(R.string.actualizar));
     }
 
     private void setUpNewReportMode(){
-        if(!myCallBack.getCurrentStateReporteFragment().equals(ReporteFragment.STATE_NEW_REPORTE_MODE)){
-            myCallBack.setCurrentStateReporteFragment(ReporteFragment.STATE_NEW_REPORTE_MODE);
+        if(myCallBack.getCurrentStateReporteFragment()!=MyApp.STATE_NEW){
+            myCallBack.setCurrentStateReporteFragment(MyApp.STATE_NEW);
         }
         resetFragment();
         btn.setText(getResources().getString(R.string.registrar));
     }
 
     private void registrar(){
-        if(!validar()){return;}
+        if(!validarReporte()){return;}
         Reporte newReporte = getNewReporte();
         AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(),AdminSQLiteOpenHelper.BD_NAME,null,AdminSQLiteOpenHelper.BD_VERSION);
         SQLiteDatabase db = admin.getWritableDatabase();
@@ -142,7 +147,7 @@ public class ReporteFragment extends Fragment {
     }
 
     private void actualizar(){
-        if(!validar()||idReporteRelacionado==0){return;}
+        if(!validarReporte()||idReporteRelacionado==0){return;}
         Reporte reporte = getNewReporte();
         AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(),AdminSQLiteOpenHelper.BD_NAME,null,AdminSQLiteOpenHelper.BD_VERSION);
         SQLiteDatabase db = admin.getWritableDatabase();
@@ -159,7 +164,7 @@ public class ReporteFragment extends Fragment {
         setUpNewReportMode();
     }
 
-    private void confirmarEliminarCliente() {
+    private void confirmarEliminarReporte() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage(getResources().getString(R.string.confirmar_eliminar_reporte));
         builder.setPositiveButton(getResources().getString(R.string.btn_ok), new DialogInterface.OnClickListener() {
@@ -178,7 +183,7 @@ public class ReporteFragment extends Fragment {
         confirmationDialog.show();
     }
 
-    private boolean validar(){
+    private boolean validarReporte(){
         if(etReporteMañana.getText().toString().equals("") && etReporteTarde.getText().toString().equals("") && etReporteNoche.getText().toString().equals("")){
             Toast.makeText(getContext(),getResources().getString(R.string.reporte_no_valido),Toast.LENGTH_SHORT).show();
             return false;
@@ -206,7 +211,8 @@ public class ReporteFragment extends Fragment {
         new DatePickerDialog(getContext(),new DatePickerDialog.OnDateSetListener(){
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                tvDate.setText(DateHandler.formatDateToShow(day,month+1,year));
+                //tvDate.setText(DateHandler.formatDateToShow(day,month+1,year));
+                showDateIfValid(DateHandler.formatDateToShow(day,month+1,year));
                 checkReportsForNewDate();
             }
         },year,month,day).show();
@@ -237,19 +243,21 @@ public class ReporteFragment extends Fragment {
                 Toast.makeText(getContext(),getResources().getString(R.string.varios_reportes_misma_fecha),Toast.LENGTH_SHORT).show();
             }
             showInfoFragment(listReportes.get(0));
-            myCallBack.setCurrentStateReporteFragment(ReporteFragment.STATE_REGULAR_MODE);
+            myCallBack.setCurrentStateReporteFragment(MyApp.STATE_REGULAR);
             setUpRegularMode();
         }else{
-            myCallBack.setCurrentStateReporteFragment(ReporteFragment.STATE_NEW_REPORTE_MODE);
+            myCallBack.setCurrentStateReporteFragment(MyApp.STATE_NEW);
             setUpNewReportMode();
         }
     }
 
-    private void showInfoFragment(int idReporte){
-        cleanET();
+    private void showInfoFragment(long reporteId){
+        showInfoFragment(getReporteFromDB(reporteId));
+        setUpRegularMode();
     }
 
     private void showInfoFragment(Reporte reporte){
+        if(reporte==null){return;}
         idReporteRelacionado = reporte.getId();
         if(idEstanciaRelacionada!=reporte.getEstanciaId()) {
             idEstanciaRelacionada = reporte.getEstanciaId();
@@ -263,18 +271,76 @@ public class ReporteFragment extends Fragment {
         etReporteNoche.setText(reporte.getReporteNoche());
     }
 
+    private Reporte getReporteFromDB(long reporteId){
+        AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(),AdminSQLiteOpenHelper.BD_NAME,null,AdminSQLiteOpenHelper.BD_VERSION);
+        SQLiteDatabase db = admin.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "+Reporte.TABLE_NAME+" WHERE id=? AND "+Reporte.CAMPO_ESTANCIA_ID+"=?",
+                new String[]{String.valueOf(reporteId),String.valueOf(idEstanciaRelacionada)});
+        Reporte reporte = new Reporte();
+        if(cursor.moveToFirst()){
+            reporte.setId(cursor.getLong(0));
+            reporte.setEstanciaId(cursor.getInt(cursor.getColumnIndex(Reporte.CAMPO_ESTANCIA_ID)));
+            reporte.setFecha(DateHandler.formatDateToShow(cursor.getString(cursor.getColumnIndex(Reporte.CAMPO_FECHA))));
+            reporte.setReporteMañana(cursor.getString(cursor.getColumnIndex(Reporte.CAMPO_REPORTE_MAÑANA)));
+            reporte.setReporteTarde(cursor.getString(cursor.getColumnIndex(Reporte.CAMPO_REPORTE_TARDE)));
+            reporte.setReporteNoche(cursor.getString(cursor.getColumnIndex(Reporte.CAMPO_REPORTE_NOCHE)));
+        }
+        cursor.close();
+        return reporte;
+    }
+
     private void setCurrentDate(){
         Calendar today = Calendar.getInstance();
         int day = today.get(Calendar.DAY_OF_MONTH);
         int month = today.get(Calendar.MONTH);
         int year = today.get(Calendar.YEAR);
-        tvDate.setText(DateHandler.formatDateToShow(day,month+1,year));
+        showDateIfValid(DateHandler.formatDateToShow(day,month+1,year));
+        //tvDate.setText(DateHandler.formatDateToShow(day,month+1,year));
         checkReportsForNewDate();
+    }
+
+    private void showDateIfValid(String fecha){
+        String fechaAnterior = tvDate.getText().toString();
+        Estancia estancia = getEstanciaRelacionada();
+        /*if(DateHandler.areDatesInOrder(estancia.getDesde(),fecha,DateHandler.FECHA_FORMATO_MOSTRAR)&&
+                DateHandler.areDatesInOrder(fecha,estancia.getHasta(),DateHandler.FECHA_FORMATO_MOSTRAR)){
+            tvDate.setText(fecha);
+            return;
+        }*/
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        try {
+            Date desdeDate = sdf.parse(estancia.getDesde());
+            Date hastaDate = sdf.parse(estancia.getHasta());
+            Date newDate = sdf.parse(fecha);
+            if(newDate.after(desdeDate) && newDate.before(hastaDate) || newDate.equals(desdeDate) || newDate.equals(hastaDate)){
+                tvDate.setText(fecha);
+                return;
+            }
+        }catch (Exception e){
+            Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+
+        Toast.makeText(getContext(),R.string.la_fecha_no_es_correcta,Toast.LENGTH_SHORT).show();
+        if(!fechaAnterior.equals("")){tvDate.setText(fechaAnterior);}
+        else {tvDate.setText(estancia.getDesde());}
+    }
+
+    private Estancia getEstanciaRelacionada(){
+        Estancia estancia = new Estancia();
+        AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(),AdminSQLiteOpenHelper.BD_NAME,null,AdminSQLiteOpenHelper.BD_VERSION);
+        SQLiteDatabase db = admin.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT "+Estancia.CAMPO_DESDE+","+Estancia.CAMPO_HASTA+" FROM "+Estancia.TABLE_NAME+" WHERE id = "+idEstanciaRelacionada,null);
+        if(cursor.moveToFirst()){
+            estancia.setId(idEstanciaRelacionada);
+            estancia.setDesde(DateHandler.formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_DESDE))));
+            estancia.setHasta(DateHandler.formatDateToShow(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_HASTA))));
+        }
+        cursor.close();
+        return estancia;
     }
 
     private void resetFragment(){
         idReporteRelacionado = 0;
-        //modificado = false;
         cleanET();
     }
 
@@ -288,7 +354,7 @@ public class ReporteFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if(menu!=null){menu.clear();}
         switch (myCallBack.getCurrentStateReporteFragment()){
-            case ReporteFragment.STATE_REGULAR_MODE:
+            case MyApp.STATE_REGULAR:
                 inflater.inflate(R.menu.menu_reporte_fragment_regular,menu);
                 break;
         }
@@ -299,14 +365,14 @@ public class ReporteFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_item_eliminar_reporte:
-                confirmarEliminarCliente();
+                confirmarEliminarReporte();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     public interface CallBack{
-        String getCurrentStateReporteFragment();
-        void setCurrentStateReporteFragment(String state);
+        int getCurrentStateReporteFragment();
+        void setCurrentStateReporteFragment(int state);
     }
 }

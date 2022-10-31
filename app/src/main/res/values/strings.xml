@@ -84,7 +84,7 @@
 
 
     <!-->Mensages de ERROR</-->
-    <string name="las_fechas_no_son_correctas">Las fechas no son correctas. Chequee por favor.</string>
+    <string name="la_fecha_no_es_correcta">La fecha no es correcta</string>
     <string name="debe_introducir_numero_de_hab">Debe introducir número de habitación</string>
     <string name="debe_introducir_a_nombre_de_quien">Debe introducir a nombre de quién se hace la reserva</string>
     <string name="debe_introducir_numero_de_adultos">La reserva debe tener al menos un adulto</string>
@@ -124,5 +124,9 @@
     <string name="reporte_no_valido">Debe llenar al menos uno de los campos</string>
     <string name="varios_reportes_misma_fecha">Existe más de un reporte con la misma fecha</string>
     <string name="confirmar_eliminar_reporte">Seguro que desea eliminar el reporte?</string>
+
+    <!-->OTROS</-->
+    <string name="si_minuscula">si</string>
+    <string name="no_minuscula">no</string>
 
 </resources>

@@ -23,10 +23,12 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.usuario.herramientadelmayordomoii.Adapters.ClientesRVAdapter;
+import com.example.usuario.herramientadelmayordomoii.Adapters.ReportesRVAdapter;
 import com.example.usuario.herramientadelmayordomoii.BD_conexion.AdminSQLiteOpenHelper;
 import com.example.usuario.herramientadelmayordomoii.DialogFragments.MyPickClienteDialogF;
 import com.example.usuario.herramientadelmayordomoii.Entities.Cliente;
@@ -34,14 +36,17 @@ import com.example.usuario.herramientadelmayordomoii.Entities.Estancia;
 import com.example.usuario.herramientadelmayordomoii.Entities.Estancias_Clientes;
 import com.example.usuario.herramientadelmayordomoii.Entities.FamilyName;
 import com.example.usuario.herramientadelmayordomoii.Entities.FamilyNames_Clientes;
+import com.example.usuario.herramientadelmayordomoii.Entities.Reporte;
 import com.example.usuario.herramientadelmayordomoii.Interfaces.IMyFragments;
 import com.example.usuario.herramientadelmayordomoii.R;
 import com.example.usuario.herramientadelmayordomoii.Util.DateHandler;
+import com.example.usuario.herramientadelmayordomoii.Util.MyApp;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -50,26 +55,30 @@ import java.util.Locale;
  * Created by usuario on 6/11/2021.
  */
 
-public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.Callback, IMyFragments {
+public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.Callback, IMyFragments{
 
     public static final String TAG = "EstanciaFragment";
-    public static final String STATE_REGULAR_MODE = "STATE_ESTANCIA_REGULAR_MODE";
-    public static final String STATE_ESTANCIA_UD_MODE = "STATE_ESTANCIA_UD_MODE";
-    public static final String STATE_NEW_ESTANCIA_MODE = "STATE_NEW_ESTANCIA_MODE";
+    /*
+    public static final String STATE_REGULAR_MODE = "STATE_REGULAR_MODE";
+    public static final String STATE_UPDATE_MODE = "STATE_UPDATE_MODE";
+    public static final String STATE_NEW_ESTANCIA_MODE = "STATE_NEW_ESTANCIA_MODE";*/
 
-    private EditText etNoHab,etAdultos,etMenores,etInfantes;
-    private TextView tvNoNoches,tvDesde,tvHasta,tvNoClientesAsociados,tvReportes,tvCortesias,tvRecordatorios,tvReservaRestaurantes,tvObs,tvNoExistenReportes;
+    private EditText etNoHab,etAdultos,etMenores,etInfantes,etObservaciones;
+    private TextView tvNoNoches,tvDesde,tvHasta,tvNoClientesAsociados,tvReportes;
     private AutoCompleteTextView actvFamilyName;
     private RecyclerView rvClientesAsociados;
     private Button btnMain;
     private RecyclerView rvReportes;
+    private RelativeLayout layoutReportes;
 
     private List<FamilyName> listFamilyNamesBD;
     private List<Cliente> listClientesRelacionados;
+    private List<Reporte> listReportesRelacionados;
     private Estancia selectedEstancia;
 
     private Callback myCallBack;
     ArrayAdapter<FamilyName> actvAdapter;
+    ReportesRVAdapter reportesRVAdapter;
 
     @Nullable
     @Override
@@ -89,13 +98,13 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         super.onViewCreated(view, savedInstanceState);
         bindComponents(view);
         switch (myCallBack.getCurrentStateEstanciaFragment()){
-            case EstanciaFragment.STATE_REGULAR_MODE:
+            case MyApp.STATE_REGULAR:
                 setUpRegularMode();
                 break;
-            case EstanciaFragment.STATE_NEW_ESTANCIA_MODE:
+            case MyApp.STATE_NEW:
                 setUpNewEstanciaMode();
                 break;
-            case EstanciaFragment.STATE_ESTANCIA_UD_MODE:
+            case MyApp.STATE_UPDATE:
                 setUpUDMode();
                 break;
             default:
@@ -113,15 +122,21 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         tvHasta = (TextView)v.findViewById(R.id.tv_hasta);
         tvNoClientesAsociados = (TextView)v.findViewById(R.id.tv_no_clientes_asosiados);
         tvReportes = (TextView)v.findViewById(R.id.tv_reportes);
-        tvCortesias = (TextView)v.findViewById(R.id.tv_cortesias);
-        tvRecordatorios = (TextView)v.findViewById(R.id.tv_recordatorios);
-        tvReservaRestaurantes = (TextView)v.findViewById(R.id.tv_reservas_resto);
-        tvObs = (TextView)v.findViewById(R.id.tv_obs_estancia);
         actvFamilyName = (AutoCompleteTextView)v.findViewById(R.id.actv_family_name);
         rvClientesAsociados = (RecyclerView)v.findViewById(R.id.rv_clientes);
         btnMain = (Button)v.findViewById(R.id.btn_estancia);
-        tvNoExistenReportes = (TextView)v.findViewById(R.id.tv_no_existen_reportes);
         rvReportes = (RecyclerView)v.findViewById(R.id.rv_reportes);
+        layoutReportes = (RelativeLayout)v.findViewById(R.id.layout_reportes);
+        etObservaciones = (EditText)v.findViewById(R.id.et_obs_estancia);
+
+        tvReportes.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if(layoutReportes.getVisibility()==View.VISIBLE){layoutReportes.setVisibility(View.GONE);}
+                else {layoutReportes.setVisibility(View.VISIBLE);}
+                if(listReportesRelacionados==null || listReportesRelacionados.size()<=0){Toast.makeText(getContext(),R.string.no_existen_reportes,Toast.LENGTH_SHORT).show();}
+            }
+        });
 
         tvDesde.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -141,10 +156,10 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
             @Override
             public void onClick(View view) {
                 switch (myCallBack.getCurrentStateEstanciaFragment()){
-                    case EstanciaFragment.STATE_NEW_ESTANCIA_MODE:
+                    case MyApp.STATE_NEW:
                         registrarEstancia();
                         break;
-                    case EstanciaFragment.STATE_ESTANCIA_UD_MODE:
+                    case MyApp.STATE_UPDATE:
                         actualizarEstancia();
                         break;
                     default:
@@ -156,7 +171,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         actvFamilyName.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                if(myCallBack.getCurrentStateEstanciaFragment().equals(EstanciaFragment.STATE_REGULAR_MODE)){return;}
+                if(myCallBack.getCurrentStateEstanciaFragment()==MyApp.STATE_REGULAR){return;}
                 FamilyName familyName = (FamilyName)adapterView.getItemAtPosition(position);
                 if(familyName.getId()==0){
                     for(Cliente c:familyName.getClientesMiembros()){
@@ -170,18 +185,29 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
                 showRelatedClientsIfExist();
             }
         });
+
+        reportesRVAdapter = new ReportesRVAdapter(getContext(),new ReportesRVAdapter.CallBack(){
+            @Override
+            public void itemClicked(int position) {
+                //System.out.println("Item clicked: "+position);
+                myCallBack.setUpReportFragment(selectedEstancia.getId(),listReportesRelacionados.get(position).getId());
+            }
+        });
+        rvReportes.setAdapter(reportesRVAdapter);
+        rvReportes.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void setUpRegularMode(){
-        myCallBack.udActivity(EstanciaFragment.STATE_REGULAR_MODE);
+        myCallBack.udActivity(EstanciaFragment.TAG);
         if(getArguments()!=null){
-            getSelectedEstanciaFromDB((int)getArguments().get("id"));
+            getSelectedEstanciaFromDB((long)getArguments().get("id"));
         }
         if(selectedEstancia!=null && selectedEstancia.getId()>0){
             getRelatedClientsFromDB(selectedEstancia.getId(),Estancias_Clientes.TABLE_NAME);
         }
+        getRelatedReportsFromDB();
         showSelectedEstancia();
-        showRelatedClientsIfExist();
+        //showRelatedClientsIfExist();
         getActivity().invalidateOptionsMenu();
         showViews(true);
         setViewsEditable(false);
@@ -192,15 +218,16 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
     private void setUpNewEstanciaMode(){
         setViewsEditable(true);
         showViews(false);
+        showHowManyNights();
         showBtns(true);
         setUpACTV();
         showMsgNoClientesAsociados(true);
-        myCallBack.udActivity(EstanciaFragment.STATE_NEW_ESTANCIA_MODE);
+        myCallBack.udActivity(EstanciaFragment.TAG);
     }
 
     private void setUpUDMode(){
-        myCallBack.setNewCurrentStateEstanciaFragment(EstanciaFragment.STATE_ESTANCIA_UD_MODE);
-        myCallBack.udActivity(EstanciaFragment.STATE_ESTANCIA_UD_MODE);
+        myCallBack.setNewCurrentStateEstanciaFragment(MyApp.STATE_UPDATE);
+        myCallBack.udActivity(EstanciaFragment.TAG);
         getActivity().invalidateOptionsMenu();
         setUpACTV();
         showViews(false);
@@ -209,21 +236,21 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
     }
 
     @Override
-    public void setUpNewState(String state) {
+    public void setUpNewState(int state) {
         switch (state){
-            case EstanciaFragment.STATE_ESTANCIA_UD_MODE:
+            case MyApp.STATE_UPDATE:
                 setUpUDMode();
                 break;
-            case EstanciaFragment.STATE_NEW_ESTANCIA_MODE:
+            case MyApp.STATE_NEW:
                 setUpNewEstanciaMode();
                 break;
-            case EstanciaFragment.STATE_REGULAR_MODE:
+            case MyApp.STATE_REGULAR:
                 setUpRegularMode();
                 break;
         }
     }
 
-    private void getSelectedEstanciaFromDB(int id){
+    private void getSelectedEstanciaFromDB(long id){
         if(selectedEstancia == null){selectedEstancia = new Estancia();}
         AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(),AdminSQLiteOpenHelper.BD_NAME,null,AdminSQLiteOpenHelper.BD_VERSION);
         SQLiteDatabase bd = admin.getReadableDatabase();
@@ -237,6 +264,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
             selectedEstancia.setAdultos(cursor.getInt(cursor.getColumnIndex(Estancia.CAMPO_ADULTOS)));
             selectedEstancia.setMenores(cursor.getInt(cursor.getColumnIndex(Estancia.CAMPO_MENORES)));
             selectedEstancia.setInfantes(cursor.getInt(cursor.getColumnIndex(Estancia.CAMPO_INFANTES)));
+            selectedEstancia.setObservaciones(cursor.getString(cursor.getColumnIndex(Estancia.CAMPO_OBSERVACIONES)));
         }
         cursor.close();
     }
@@ -256,6 +284,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         values.put(Estancia.CAMPO_ADULTOS,newEstancia.getAdultos());
         values.put(Estancia.CAMPO_MENORES,newEstancia.getMenores());
         values.put(Estancia.CAMPO_INFANTES,newEstancia.getInfantes());
+        values.put(Estancia.CAMPO_OBSERVACIONES,newEstancia.getObservaciones());
 
         long newEstanciaId = bd.insert(Estancia.TABLE_NAME,null,values);
 
@@ -285,6 +314,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         values.put(Estancia.CAMPO_ADULTOS,estanciaNewInfo.getAdultos());
         values.put(Estancia.CAMPO_MENORES,estanciaNewInfo.getMenores());
         values.put(Estancia.CAMPO_INFANTES,estanciaNewInfo.getInfantes());
+        values.put(Estancia.CAMPO_OBSERVACIONES,estanciaNewInfo.getObservaciones());
 
         bd.update(Estancia.TABLE_NAME,values,"id=?",new String[]{String.valueOf(selectedEstancia.getId())});
         Toast.makeText(getContext(),getResources().getString(R.string.actualizacion_correcta),Toast.LENGTH_SHORT).show();
@@ -299,9 +329,6 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
     }
 
     private void borrarEstancia(){
-        //System.out.println("*********************************");
-        //System.out.println(selectedEstancia.getFamilyName() + "//n" + selectedEstancia.getDesde() + " al " + selectedEstancia.getHasta());
-        //System.out.println("*********************************");
         AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(),AdminSQLiteOpenHelper.BD_NAME,null,AdminSQLiteOpenHelper.BD_VERSION);
         SQLiteDatabase BD = admin.getWritableDatabase();
         BD.execSQL("DELETE FROM " + Estancia.TABLE_NAME + " WHERE id = " + selectedEstancia.getId());
@@ -315,7 +342,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
             return false;
         }*/
         if(!isHastaAfterDesde(tvDesde,false)){
-            makeToast(getResources().getString(R.string.las_fechas_no_son_correctas));
+            makeToast(getResources().getString(R.string.la_fecha_no_es_correcta));
             return false;
         }
         if(actvFamilyName.getText().toString().equals("")){
@@ -338,6 +365,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         newEstancia.setAdultos(Integer.parseInt(etAdultos.getText().toString()));
         if(!etMenores.getText().toString().equals("")){newEstancia.setMenores(Integer.parseInt(etMenores.getText().toString()));}
         if(!etInfantes.getText().toString().equals("")){newEstancia.setInfantes(Integer.parseInt(etInfantes.getText().toString()));}
+        newEstancia.setObservaciones(etObservaciones.getText().toString());
         return newEstancia;
     }
     
@@ -351,6 +379,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         etAdultos.setText("");
         etMenores.setText("");
         etInfantes.setText("");
+        etObservaciones.setText("");
         listClientesRelacionados.clear();
         showRelatedClientsIfExist();
     }
@@ -400,7 +429,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         actvFamilyName.setAdapter(actvAdapter);
     }
 
-    private void getRelatedClientsFromDB(int id, String tabla){
+    private void getRelatedClientsFromDB(long id, String tabla){
         setUpClearListClientesRelacionados();
         AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(),AdminSQLiteOpenHelper.BD_NAME,null,AdminSQLiteOpenHelper.BD_VERSION);
         SQLiteDatabase bd = admin.getReadableDatabase();
@@ -443,6 +472,34 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         cursor.close();
     }
 
+    private void getRelatedReportsFromDB(){
+        if(selectedEstancia==null || selectedEstancia.getId()<=0){return;}
+        getRelatedReportsFromDB(selectedEstancia.getId());
+    }
+
+    private void getRelatedReportsFromDB(long estanciaId){
+        if(listReportesRelacionados==null){listReportesRelacionados = new ArrayList<>();}else {listReportesRelacionados.clear();}
+        AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(),AdminSQLiteOpenHelper.BD_NAME,null,AdminSQLiteOpenHelper.BD_VERSION);
+        SQLiteDatabase db = admin.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "+Reporte.TABLE_NAME+" WHERE "+Reporte.CAMPO_ESTANCIA_ID+" = "+estanciaId,null);
+        if(cursor.moveToFirst()){
+            do{
+                Reporte reporte = new Reporte();
+                reporte.setId(cursor.getInt(0));
+                reporte.setEstanciaId(cursor.getInt(cursor.getColumnIndex(Reporte.CAMPO_ESTANCIA_ID)));
+                reporte.setFecha(DateHandler.formatDateToShow(cursor.getString(cursor.getColumnIndex(Reporte.CAMPO_FECHA))));
+                reporte.setReporteMañana(cursor.getString(cursor.getColumnIndex(Reporte.CAMPO_REPORTE_MAÑANA)));
+                reporte.setReporteTarde(cursor.getString(cursor.getColumnIndex(Reporte.CAMPO_REPORTE_TARDE)));
+                reporte.setReporteNoche(cursor.getString(cursor.getColumnIndex(Reporte.CAMPO_REPORTE_NOCHE)));
+                listReportesRelacionados.add(reporte);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        if(listReportesRelacionados.size()>0){
+            Collections.sort(listReportesRelacionados,Reporte.dateAscending);
+        }
+    }
+
     private void showRelatedClientsIfExist(){
         if(listClientesRelacionados==null || listClientesRelacionados.size()==0){showMsgNoClientesAsociados(true);return;}
         showMsgNoClientesAsociados(false);
@@ -451,14 +508,20 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         ClientesRVAdapter adapter = new ClientesRVAdapter(selectedClients,new ClientesRVAdapter.Callback(){
             @Override
             public void onItemClicked(int position) {
-                if(myCallBack.getCurrentStateEstanciaFragment().equals(EstanciaFragment.STATE_REGULAR_MODE)){return;}
+                if(myCallBack.getCurrentStateEstanciaFragment()==MyApp.STATE_REGULAR){return;}
                 showDialogPicker();
             }
         },false,false);
         rvClientesAsociados.setAdapter(adapter);
         rvClientesAsociados.setLayoutManager(new LinearLayoutManager(getContext()));
-        if(myCallBack.getCurrentStateEstanciaFragment().equals(EstanciaFragment.STATE_REGULAR_MODE)){return;}
+        if(myCallBack.getCurrentStateEstanciaFragment()==MyApp.STATE_REGULAR){return;}
         upDateClientsNumber(listClientesRelacionados.size());
+    }
+
+    private void showRelatedReportsIfExist(){
+        if(listReportesRelacionados==null || listReportesRelacionados.size()==0){return;}
+        reportesRVAdapter.setListReportes(listReportesRelacionados);
+        showRVReportes();
     }
 
     private void upDateClientsNumber(int cant){
@@ -478,6 +541,10 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         etAdultos.setText(String.valueOf(selectedEstancia.getAdultos()));
         etMenores.setText(String.valueOf(selectedEstancia.getMenores()));
         etInfantes.setText(String.valueOf(selectedEstancia.getInfantes()));
+        showHowManyNights();
+        etObservaciones.setText(selectedEstancia.getObservaciones());
+        showRelatedClientsIfExist();
+        showRelatedReportsIfExist();
     }
 
     private void handleDatePickerDialog(final TextView tv){
@@ -501,27 +568,31 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         new DatePickerDialog(getContext(),new DatePickerDialog.OnDateSetListener(){
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                /*
-                String month_str = DateHandler.toDosLugares(month + 1);
-                String day_str = DateHandler.toDosLugares(day);
-
-                String full_date = day_str + "/" + month_str + "/" + year;
-
-                tv.setText(full_date);
-                */
-
                 tv.setText(DateHandler.formatDateToShow(day,month+1,year));
-
                 if (!tvDesde.getText().toString().equalsIgnoreCase(getResources().getString(R.string.seleccionar_fecha)) &&
                         !tvHasta.getText().toString().equalsIgnoreCase(getResources().getString(R.string.seleccionar_fecha))){
                     if (!isHastaAfterDesde(tv,true)){
-                        Toast.makeText(getContext(), getResources().getString(R.string.las_fechas_no_son_correctas), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getResources().getString(R.string.la_fecha_no_es_correcta), Toast.LENGTH_SHORT).show();
                     }
+                    showHowManyNights();
                 } else {
                     tv.setTextColor(ContextCompat.getColor(getContext(),R.color.color_font_blanco));
                 }
             }
         },year,month,day).show();
+    }
+
+    private void showHowManyNights(){
+        if (tvDesde.getText().toString().equalsIgnoreCase(getResources().getString(R.string.seleccionar_fecha)) ||
+                tvHasta.getText().toString().equalsIgnoreCase(getResources().getString(R.string.seleccionar_fecha))){tvNoNoches.setVisibility(View.GONE);return;}
+        if(getHowManyNights()>0){tvNoNoches.setVisibility(View.VISIBLE);tvNoNoches.setText(getResources().getString(R.string.noches)+" "+getHowManyNights());}
+        else{tvNoNoches.setVisibility(View.GONE);}
+    }
+
+    private int getHowManyNights(){
+        Date dateDesde = DateHandler.getDate(tvDesde.getText().toString(),DateHandler.FECHA_FORMATO_MOSTRAR);
+        Date dateHasta = DateHandler.getDate(tvHasta.getText().toString(),DateHandler.FECHA_FORMATO_MOSTRAR);
+        return DateHandler.getDiasEntreFechas(dateDesde,dateHasta);
     }
 
     private boolean isHastaAfterDesde(TextView tv,boolean showByColor){
@@ -590,21 +661,16 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         tvDesde.setEnabled(choise);
         tvHasta.setEnabled(choise);
         actvFamilyName.setEnabled(choise);
+        etObservaciones.setEnabled(choise);
     }
 
     private void showViews(boolean choise){
         if(choise){
             tvReportes.setVisibility(View.VISIBLE);
-            tvCortesias.setVisibility(View.VISIBLE);
-            tvRecordatorios.setVisibility(View.VISIBLE);
-            tvReservaRestaurantes.setVisibility(View.VISIBLE);
-            tvObs.setVisibility(View.VISIBLE);
+            showRVReportes();
         }else{
             tvReportes.setVisibility(View.GONE);
-            tvCortesias.setVisibility(View.GONE);
-            tvRecordatorios.setVisibility(View.GONE);
-            tvReservaRestaurantes.setVisibility(View.GONE);
-            tvObs.setVisibility(View.GONE);
+            layoutReportes.setVisibility(View.GONE);
         }
     }
 
@@ -618,12 +684,21 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         }
     }
 
+    private void showRVReportes(){
+        if(listReportesRelacionados!=null && listReportesRelacionados.size()>0){
+            rvReportes.setVisibility(View.VISIBLE);
+        }else {
+            rvReportes.setVisibility(View.GONE);
+            //Toast.makeText(getContext(),R.string.no_existen_reportes,Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void showBtns(boolean choise){
         if(choise){
             btnMain.setVisibility(View.VISIBLE);
-            if(myCallBack.getCurrentStateEstanciaFragment().equals(EstanciaFragment.STATE_NEW_ESTANCIA_MODE)){
+            if(myCallBack.getCurrentStateEstanciaFragment()==MyApp.STATE_NEW){
                 btnMain.setText(getResources().getString(R.string.registrar));
-            }else if(myCallBack.getCurrentStateEstanciaFragment().equals(EstanciaFragment.STATE_ESTANCIA_UD_MODE)){
+            }else if(myCallBack.getCurrentStateEstanciaFragment()==MyApp.STATE_UPDATE){
                 btnMain.setText(getResources().getString(R.string.actualizar));
             }
         }else{
@@ -635,7 +710,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if(menu!=null){menu.clear();}
         switch(myCallBack.getCurrentStateEstanciaFragment()){
-            case EstanciaFragment.STATE_REGULAR_MODE:
+            case MyApp.STATE_REGULAR:
                 inflater.inflate(R.menu.menu_estancia,menu);
                 break;
         }
@@ -653,8 +728,8 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
                 borrarEstancia();
                 break;
             case R.id.menu_item_agregar_reporte:
-                if(!myCallBack.getCurrentStateEstanciaFragment().equals(EstanciaFragment.STATE_NEW_ESTANCIA_MODE)){
-                    myCallBack.setUpNewReporteFragment(selectedEstancia.getId());
+                if(myCallBack.getCurrentStateEstanciaFragment()!= MyApp.STATE_NEW){
+                    myCallBack.setUpReportFragment(selectedEstancia.getId(),0);
                 }
                 break;
         }
@@ -667,8 +742,8 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
 
     public interface Callback{
         void udActivity(String tag);
-        String getCurrentStateEstanciaFragment();
-        void setNewCurrentStateEstanciaFragment(String newState);
-        void setUpNewReporteFragment(int estanciaId);
+        int getCurrentStateEstanciaFragment();
+        void setNewCurrentStateEstanciaFragment(int newState);
+        void setUpReportFragment(long estanciaId,long reporteId);
     }
 }

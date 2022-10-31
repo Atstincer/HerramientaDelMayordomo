@@ -23,23 +23,13 @@ public class Estancia {
     public static final String CAMPO_DESDE = "desde";
     public static final String CAMPO_HASTA = "hasta";
     public static final String CAMPO_NO_HAB = "noHab";
+    public static final String CAMPO_OBSERVACIONES = "observaciones";
 
-    private int id, familyName_id, adultos, menores, infantes;
-    private String desde,hasta,no_hab,familyName;
+    private long id, familyName_id;
+    private int adultos, menores, infantes;
+    private String desde,hasta,no_hab,familyName,observaciones;
 
     public Estancia() {
-    }
-
-    public Estancia(int id, int familyName_id, int adultos, int menores, int infantes, String desde, String hasta, String no_hab, String familyName) {
-        this.id = id;
-        this.familyName_id = familyName_id;
-        this.adultos = adultos;
-        this.menores = menores;
-        this.infantes = infantes;
-        this.desde = desde;
-        this.hasta = hasta;
-        this.no_hab = no_hab;
-        this.familyName = familyName;
     }
 
     public String getFamilyName() {
@@ -74,11 +64,11 @@ public class Estancia {
         this.infantes = infantes;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -96,11 +86,11 @@ public class Estancia {
         return String.valueOf(noches);
     }
 
-    public int getFamilyName_id() {
+    public long getFamilyName_id() {
         return familyName_id;
     }
 
-    public void setFamilyName_id(int familyName_id) {
+    public void setFamilyName_id(long familyName_id) {
         this.familyName_id = familyName_id;
     }
 
@@ -126,6 +116,14 @@ public class Estancia {
 
     public void setNo_hab(String no_hab) {
         this.no_hab = no_hab;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     @Override

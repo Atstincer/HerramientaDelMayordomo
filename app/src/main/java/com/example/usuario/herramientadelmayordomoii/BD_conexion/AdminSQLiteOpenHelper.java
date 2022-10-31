@@ -42,7 +42,8 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
                 "infantes INTEGER," +
                 "desde TEXT," +
                 "hasta TEXT," +
-                "noHab TEXT)");
+                "noHab TEXT," +
+                "observaciones TEXT)");
 
         bd.execSQL("CREATE TABLE FamilyNames(" +
                 "id INTEGER PRIMARY KEY," +
@@ -91,17 +92,6 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
                 "ON UPDATE CASCADE " +
                 "ON DELETE CASCADE)");
 
-        /*
-        bd.execSQL("CREATE TABLE Estancias_Reportes," +
-                "estanciaId INTEGER," +
-                "reporteId INTEGER," +
-                "FOREIGN KEY(estanciaId) REFERENCES Estancias(id) " +
-                "ON UPDATE CASCADE " +
-                "ON DELETE CASCADE," +
-                "FOREIGN KEY(reporteId) REFERENCES Reportes(id) " +
-                "ON UPDATE CASCADE " +
-                "ON DELETE CASCADE");
-                */
     }
 
     @Override

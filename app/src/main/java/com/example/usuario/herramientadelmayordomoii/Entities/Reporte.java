@@ -5,6 +5,8 @@ import android.content.ContentValues;
 
 import com.example.usuario.herramientadelmayordomoii.Util.DateHandler;
 
+import java.util.Comparator;
+
 /**
  * Created by usuario on 17/10/2022.
  */
@@ -90,4 +92,12 @@ public class Reporte {
         values.put(Reporte.CAMPO_REPORTE_NOCHE,reporte.getReporteNoche());
         return values;
     }
+
+    public static Comparator<Reporte> dateAscending = new Comparator<Reporte>() {
+        @Override
+        public int compare(Reporte reporte1, Reporte reporte2) {
+            return DateHandler.getDate(reporte1.getFecha(),DateHandler.FECHA_FORMATO_MOSTRAR).
+                    compareTo(DateHandler.getDate(reporte2.getFecha(),DateHandler.FECHA_FORMATO_MOSTRAR));
+        }
+    };
 }

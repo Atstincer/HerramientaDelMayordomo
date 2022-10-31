@@ -5,5 +5,5 @@ package com.example.usuario.herramientadelmayordomoii.Interfaces;
  */
 
 public interface IMyFragments {
-    void setUpNewState(String state);
+    void setUpNewState(int state);
 }

@@ -37,7 +37,7 @@
                 android:text="@string/noches"
                 android:textColor="@color/color_font_blanco"
                 android:textSize="@dimen/tvSize"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
         </RelativeLayout>
 
@@ -174,61 +174,37 @@
             android:textColor="@color/link"
             android:textSize="@dimen/tvSize" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_reportes"
+        <RelativeLayout
+            android:id="@+id/layout_reportes"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginStart="5dp"
-            android:visibility="gone" />
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_reportes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/tv_no_existen_reportes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/no_existen_reportes"
-            android:textAlignment="center"
-            android:textColor="@color/link"
-            android:textSize="18sp"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/tv_cortesias"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/cortesias"
-            android:textColor="@color/link"
-            android:textSize="@dimen/tvSize" />
-
-        <TextView
-            android:id="@+id/tv_recordatorios"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/recordatorios"
-            android:textColor="@color/link"
-            android:textSize="@dimen/tvSize" />
-
-        <TextView
-            android:id="@+id/tv_reservas_resto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/reserva_restaurant"
-            android:textColor="@color/link"
-            android:textSize="@dimen/tvSize" />
-
-        <TextView
-            android:id="@+id/tv_obs_estancia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/obs"
             android:textColor="@color/link"
             android:textSize="@dimen/tvSize" />
+
+        <EditText
+            android:id="@+id/et_obs_estancia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/color_font_blanco" />
 
         <Button
             android:id="@+id/btn_estancia"

@@ -303,26 +303,12 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
         new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int y, int m, int d) {
-                /*String month_str = DateHandler.toDosLugares(m+1);
-                String day_str = DateHandler.toDosLugares(d);
-                String full_date = day_str + "/" + month_str + "/" + y;
-                tv.setText(full_date);*/
-
                 tv.setText(DateHandler.formatDateToShow(d,m+1,y));
                 getEstanciasFromDB(desde.getText().toString(),hasta.getText().toString());
                 showEstanciasIfExist();
             }
         }, year, month, day).show();
     }
-
-    /*
-    private String toDosLugares(int x) {
-        String cad = String.valueOf(x);
-        if (cad.length() == 1) {
-            cad = "0" + x;
-        }
-        return cad;
-    }*/
 
     private void showEstanciasIfExist(){
         if(listEstancias.size()>0){
@@ -351,11 +337,6 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
             tvNoEstanciasRegistradas.setVisibility(View.GONE);
         }
     }
-
-    /*
-    private String formatDateToShow(String date){
-        return date.substring(8)+"/"+date.substring(5,7)+"/"+date.substring(0,4);
-    }*/
 
     private void showLayout(String tag){
         hideAllLayouts();
@@ -434,7 +415,7 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
 
     public interface CallBack{
         void setUpNewEstanciaFragment();
-        void setUpEstanciaFragment(int id);
+        void setUpEstanciaFragment(long id);
         void udActivity(String tag);
     }
 }

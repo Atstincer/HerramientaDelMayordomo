@@ -28,7 +28,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.usuario.herramientadelmayordomoii.BD_conexion.AdminSQLiteOpenHelper;
@@ -38,6 +37,7 @@ import com.example.usuario.herramientadelmayordomoii.Entities.FamilyNames_Client
 import com.example.usuario.herramientadelmayordomoii.Interfaces.IMyFragments;
 import com.example.usuario.herramientadelmayordomoii.MainActivity;
 import com.example.usuario.herramientadelmayordomoii.R;
+import com.example.usuario.herramientadelmayordomoii.Util.MyApp;
 import com.example.usuario.herramientadelmayordomoii.Util.MyBitmapFactory;
 
 import java.io.IOException;
@@ -54,9 +54,10 @@ import java.util.List;
 public class ClienteFragment extends Fragment implements IMyFragments {
 
     public static final String TAG = "ClienteFragment";
+    /*
     public static final String STATE_CLIENTE_MODE = "STATE_CLIENTE_MODE";
     public static final String STATE_CLIENTE_UD_MODE = "STATE_CLIENTE_UD_MODE";
-    public static final String STATE_NEW_CLIENTE_MODE = "STATE_NEW_CLIENTE_MODE";
+    public static final String STATE_NEW_CLIENTE_MODE = "STATE_NEW_CLIENTE_MODE";*/
 
     private Callback myCallback;
     private ImageView foto;
@@ -99,9 +100,9 @@ public class ClienteFragment extends Fragment implements IMyFragments {
         if (menu != null) {
             menu.clear();
         }
-        if (myCallback.getCurrentStateClienteFragment().equals(ClienteFragment.STATE_CLIENTE_MODE)) {
+        if (myCallback.getCurrentStateClienteFragment()== MyApp.STATE_REGULAR) {
             inflater.inflate(R.menu.menu_cliente_mode, menu);
-        } else if (myCallback.getCurrentStateClienteFragment().equals(ClienteFragment.STATE_CLIENTE_UD_MODE)) {
+        } else if (myCallback.getCurrentStateClienteFragment()==MyApp.STATE_UPDATE) {
             inflater.inflate(R.menu.menu_cliente_update_mode, menu);
         }
         inflater.inflate(R.menu.menu_main, menu);
@@ -112,8 +113,8 @@ public class ClienteFragment extends Fragment implements IMyFragments {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_editar:
-                myCallback.setNewCurrentStateClienteFragment(ClienteFragment.STATE_CLIENTE_UD_MODE);
-                setUpNewState(ClienteFragment.STATE_CLIENTE_UD_MODE);
+                myCallback.setNewCurrentStateClienteFragment(MyApp.STATE_UPDATE);
+                setUpNewState(MyApp.STATE_UPDATE);
                 break;
             case R.id.menu_item_eliminar_cliente:
                 confirmarEliminarCliente();
@@ -212,10 +213,10 @@ public class ClienteFragment extends Fragment implements IMyFragments {
             @Override
             public void onClick(View view) {
                 switch (myCallback.getCurrentStateClienteFragment()) {
-                    case STATE_NEW_CLIENTE_MODE:
+                    case MyApp.STATE_NEW:
                         registrarCliente();
                         break;
-                    case STATE_CLIENTE_UD_MODE:
+                    case MyApp.STATE_UPDATE:
                         actualizarCliente();
                         break;
                     default:
@@ -226,15 +227,15 @@ public class ClienteFragment extends Fragment implements IMyFragments {
     }
 
     @Override
-    public void setUpNewState(String state) {
+    public void setUpNewState(int state) {
         switch (state) {
-            case STATE_CLIENTE_MODE:
-                setUpClienteMode(true);
+            case MyApp.STATE_REGULAR:
+                setUpRegularMode(true);
                 break;
-            case STATE_CLIENTE_UD_MODE:
+            case MyApp.STATE_UPDATE:
                 setUpUpdateMode();
                 break;
-            case STATE_NEW_CLIENTE_MODE:
+            case MyApp.STATE_NEW:
                 setUpNewClienteMode();
                 break;
             default:
@@ -243,7 +244,7 @@ public class ClienteFragment extends Fragment implements IMyFragments {
     }
 
 
-    private void setUpClienteMode(boolean checkForArguments) {
+    private void setUpRegularMode(boolean checkForArguments) {
         if (checkForArguments) {
             if (getArguments() != null) {
                 Bundle bundle = getArguments();
@@ -259,7 +260,7 @@ public class ClienteFragment extends Fragment implements IMyFragments {
         btn.setVisibility(View.GONE);
         getActivity().invalidateOptionsMenu();
         showInfoClient();
-        myCallback.udActivity(ClienteFragment.STATE_CLIENTE_MODE);
+        myCallback.udActivity(ClienteFragment.TAG);
     }
 
     private void setUpUpdateMode() {
@@ -268,7 +269,7 @@ public class ClienteFragment extends Fragment implements IMyFragments {
         btn.setVisibility(View.VISIBLE);
         btn.setText(getResources().getString(R.string.actualizar));
         getActivity().invalidateOptionsMenu();
-        myCallback.udActivity(ClienteFragment.STATE_CLIENTE_UD_MODE);
+        myCallback.udActivity(ClienteFragment.TAG);
     }
 
     private void setUpNewClienteMode() {
@@ -276,7 +277,7 @@ public class ClienteFragment extends Fragment implements IMyFragments {
 //        showViews(false);
         btn.setVisibility(View.VISIBLE);
         btn.setText(getResources().getString(R.string.registrar));
-        myCallback.udActivity(ClienteFragment.STATE_NEW_CLIENTE_MODE);
+        myCallback.udActivity(ClienteFragment.TAG);
     }
 
     /*
@@ -357,7 +358,7 @@ public class ClienteFragment extends Fragment implements IMyFragments {
             Toast.makeText(getActivity(), "Debe ingresar al menos un nombre.", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (myCallback.getCurrentStateClienteFragment().equals(ClienteFragment.STATE_CLIENTE_UD_MODE) && selectedClient == null) {
+        if (myCallback.getCurrentStateClienteFragment()==MyApp.STATE_UPDATE && selectedClient == null) {
             makeToast("No se puede actualizar cliente...cliente no seleccionado.");
             return false;
         }
@@ -557,8 +558,8 @@ public class ClienteFragment extends Fragment implements IMyFragments {
 
         selectedClient = clienteNewInfo;
         makeToast(getResources().getString(R.string.actualizacion_correcta));
-        myCallback.setNewCurrentStateClienteFragment(ClienteFragment.STATE_CLIENTE_MODE);
-        setUpClienteMode(false);
+        myCallback.setNewCurrentStateClienteFragment(MyApp.STATE_REGULAR);
+        setUpRegularMode(false);
         return true;
     }
 
@@ -603,8 +604,8 @@ public class ClienteFragment extends Fragment implements IMyFragments {
     }
 
     public interface Callback {
-        void setNewCurrentStateClienteFragment(String newCurrentStateClienteFragment);
-        String getCurrentStateClienteFragment();
+        void setNewCurrentStateClienteFragment(int newCurrentStateClienteFragment);
+        int getCurrentStateClienteFragment();
         void setUpClientesFragment();
         void udActivity(String tag);
     }

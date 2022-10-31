@@ -1,7 +1,14 @@
 package com.example.usuario.herramientadelmayordomoii.Util;
 
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by usuario on 18/10/2022.
@@ -12,7 +19,7 @@ public class DateHandler {
     public static final int FECHA_FORMATO_MOSTRAR = 0;
     public static final int FECHA_FORMATO_BD = 1;
 
-    public static String toDosLugares(int x){
+    private static String toDosLugares(int x){
         String cad = String.valueOf(x);
         if (cad.length() == 1){
             cad = "0" + x;
@@ -48,5 +55,40 @@ public class DateHandler {
         }
         return "";
     }
+
+    public static Date getDate(String fecha, int patron){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
+        try {
+            if (patron == DateHandler.FECHA_FORMATO_BD) {
+                return sdf.parse(fecha);
+            }else if(patron == DateHandler.FECHA_FORMATO_MOSTRAR){
+                return sdf.parse(DateHandler.formatDateToStoreInDB(fecha));
+            }
+        }catch (Exception e){
+            System.out.println("Exception catch: "+e.getMessage());
+        }
+        return new Date();
+    }
+
+    public static int getDiasEntreFechas(Date desde, Date hasta){
+        if(desde.after(hasta)){return 0;}
+        return (int)(hasta.getTime()-desde.getTime())/(24*60*60*1000);
+    }
+
+    public static boolean areDatesInOrder(String firstDate,String secondDate,int formato){
+        if(formato==FECHA_FORMATO_MOSTRAR){
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            try {
+                Date date1 = sdf.parse(firstDate);
+                Date date2 = sdf.parse(secondDate);
+                return date1.before(date2);
+            }catch (Exception e){
+                System.out.println("Exception capturada parseando fechas: "+e.getMessage());
+            }
+        }
+        return false;
+    }
+
+
 
 }
