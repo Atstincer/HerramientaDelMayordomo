@@ -13,14 +13,6 @@
     <string name="no_estancias_registradas">No hay estancias registradas</string>
 
 
-    <string name="recordatorios">Recordatorios</string>
-
-
-    <string name="action_settings">Settings</string>
-
-
-
-
     <string name="Hab">Hab</string>
     <string name="numero_de_habitacion">Número de habitación</string>
     <string name="reportes">Reportes</string>
@@ -124,6 +116,34 @@
     <string name="reporte_no_valido">Debe llenar al menos uno de los campos</string>
     <string name="varios_reportes_misma_fecha">Existe más de un reporte con la misma fecha</string>
     <string name="confirmar_eliminar_reporte">Seguro que desea eliminar el reporte?</string>
+    <string name="llegando_el">Llegando el </string>
+    <string name="enviar_por_mail">Enviar por mail</string>
+    <string name="guardar_archivo_txt">Guardar en txt</string>
+    <string name="no_aplicacion_disponible">No hay aplicación que soporte esta acción</string>
+    <string name="archivo_creado">Archivo creado</string>
+    <string name="tarjetasd_no_disponible">La tarjeta SD no está disponible</string>
+    <string name="tarjetasd_no_writable">No se puede guardar el fichero en la tarjeta SD</string>
+    <string name="compartir">Compartir</string>
+    <string name="enviar_por_defecto_a">Enviar por defecto a:</string>
+    <string name="escribir_aqui_mail">Escribir aquí la dirección de e-mail</string>
+    <string name="mail_no_valido">Dirección de e-mail no válida</string>
+
+
+    <!-->RECORDATORIOS</-->
+    <string name="recordatorios">Recordatorios</string>
+    <string name="recordatorio_estancia_futuro">Recordatorio estancias</string>
+    <string name="explicacion_recordatorio_estancia">"Añade recordatorio a estancias\npor llegar según el tiempo de\nantelación especificado"</string>
+    <string name="cuantos_dias_antelacion">Días de antelación</string>
+    <string name="agregar_recordatorio">Agregar recordatorio</string>
+    <string name="escriba_mensaje">Escriba aquí el mensaje</string>
+    <string name="debe_agregar_msj">Debe agregar un mensaje</string>
+    <string name="debe_seleccionar_una_fecha">Debe seleccionar una fecha</string>
+    <string name="recordatorio_general">Recordatorio general</string>
+    <string name="recordatorio_agregado">Recordatorio agregado</string>
+
+
+    <!-->AJUSTES</-->
+    <string name="ajustes">Ajustes</string>
 
     <!-->OTROS</-->
     <string name="si_minuscula">si</string>

@@ -1,4 +1,4 @@
-package com.example.usuario.herramientadelmayordomoii.BD_conexion;
+package com.example.usuario.herramientadelmayordomoii.Almacenamiento;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

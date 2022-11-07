@@ -3,7 +3,6 @@ package com.example.usuario.herramientadelmayordomoii.DialogFragments;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -13,16 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.usuario.herramientadelmayordomoii.Adapters.ClientesRVAdapter;
-import com.example.usuario.herramientadelmayordomoii.BD_conexion.AdminSQLiteOpenHelper;
+import com.example.usuario.herramientadelmayordomoii.Almacenamiento.AdminSQLiteOpenHelper;
 import com.example.usuario.herramientadelmayordomoii.Entities.Cliente;
 import com.example.usuario.herramientadelmayordomoii.R;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

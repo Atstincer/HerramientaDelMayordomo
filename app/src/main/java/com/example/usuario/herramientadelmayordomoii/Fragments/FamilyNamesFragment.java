@@ -20,7 +20,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.example.usuario.herramientadelmayordomoii.Adapters.FamilyNamesRVAdapter;
-import com.example.usuario.herramientadelmayordomoii.BD_conexion.AdminSQLiteOpenHelper;
+import com.example.usuario.herramientadelmayordomoii.Almacenamiento.AdminSQLiteOpenHelper;
 import com.example.usuario.herramientadelmayordomoii.Entities.FamilyName;
 import com.example.usuario.herramientadelmayordomoii.Entities.FamilyNames_Clientes;
 import com.example.usuario.herramientadelmayordomoii.R;

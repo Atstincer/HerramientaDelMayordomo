@@ -1,6 +1,7 @@
 package com.example.usuario.herramientadelmayordomoii;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.usuario.herramientadelmayordomoii.Fragments.AjustesFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.ClienteFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.ClientesFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.EstanciaFragment;
@@ -18,7 +20,6 @@ import com.example.usuario.herramientadelmayordomoii.Fragments.EstanciasFragment
 import com.example.usuario.herramientadelmayordomoii.Fragments.FamilyNameFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.FamilyNamesFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.FrontFragment;
-import com.example.usuario.herramientadelmayordomoii.Fragments.RecordatoriosFragment;
 import com.example.usuario.herramientadelmayordomoii.Fragments.ReporteFragment;
 import com.example.usuario.herramientadelmayordomoii.Interfaces.IMyFragments;
 import com.example.usuario.herramientadelmayordomoii.Util.MyApp;
@@ -31,6 +32,8 @@ import com.example.usuario.herramientadelmayordomoii.Util.MyApp;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ClientesFragment.Callback, EstanciasFragment.CallBack, ClienteFragment.Callback,
                     EstanciaFragment.Callback, FamilyNamesFragment.Callback, FamilyNameFragment.CallBack, FrontFragment.Callback, ReporteFragment.CallBack{
+
+    public static final int REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_EXTORAGE = 0;
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -47,6 +50,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //getApplicationContext().deleteDatabase(AdminSQLiteOpenHelper.BD_NAME);
 
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -74,6 +79,8 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new FrontFragment(),FrontFragment.TAG).addToBackStack(null).commit();
         }
     }
+
+
 
     @Override
     public int getCurrentStateClienteFragment() {
@@ -330,12 +337,21 @@ public class MainActivity extends AppCompatActivity
                     currentStateEstanciaFragment = MyApp.STATE_REGULAR;
                     udActivity(EstanciaFragment.TAG);
                 }catch (ClassCastException e){
-                    Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }else{
                 super.onBackPressed();
             }
-        } else {
+        }/*else if(getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof AjustesFragment){
+            System.out.println("En onBackPressed");
+            try{
+                IRecordatorio fragment = (IRecordatorio)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                fragment.storePreferencesRecordatorio();
+            }catch (ClassCastException e){
+                Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+            super.onBackPressed();
+        }*/else {
             super.onBackPressed();
         }
     }
@@ -357,6 +373,8 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Toast.makeText(this, "Settings clicked...", Toast.LENGTH_SHORT).show();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AjustesFragment()).addToBackStack(null).commit();
+            navigationView.setCheckedItem(R.id.nav_item_ajustes);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -364,7 +382,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
 
         switch (item.getItemId()) {
@@ -374,9 +392,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_item_clientes:
                 setUpClientesFragment();
                 break;
-            case R.id.nav_item_recordatorios:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RecordatoriosFragment()).addToBackStack(null).commit();
-                navigationView.setCheckedItem(R.id.nav_item_recordatorios);
+            case R.id.nav_item_ajustes:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AjustesFragment()).addToBackStack(null).commit();
+                navigationView.setCheckedItem(R.id.nav_item_ajustes);
                 break;
             case R.id.nav_share:
                 Toast.makeText(this, "Share clicked..", Toast.LENGTH_SHORT).show();

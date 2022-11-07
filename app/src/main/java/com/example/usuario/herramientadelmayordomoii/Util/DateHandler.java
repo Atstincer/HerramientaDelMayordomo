@@ -31,17 +31,19 @@ public class DateHandler {
         return date.substring(6)+"-"+date.substring(3,5)+"-"+date.substring(0,2);
     }
 
-    public static String formatDateToStoreInDB(int day, int month, int year){
-        return year+"-"+toDosLugares(month)+"-"+toDosLugares(day);
-    }
-
     public static String formatDateToShow(String date){
         return date.substring(8) + "/" + date.substring(5,7) + "/" + date.substring(0,4);
+    }
+
+    private static String formatDateToStoreInDB(int day, int month, int year){
+        return year+"-"+toDosLugares(month)+"-"+toDosLugares(day);
     }
 
     public static String formatDateToShow(int day,int month,int year){
         return toDosLugares(day)+"/"+toDosLugares(month)+"/"+toDosLugares(year);
     }
+
+
 
     public static String getToday(int formato){
         Calendar calendar = Calendar.getInstance();
@@ -70,9 +72,48 @@ public class DateHandler {
         return new Date();
     }
 
+    private static int getDia(String fecha, int patron){
+        int dia = 0;
+        if(patron == FECHA_FORMATO_MOSTRAR){dia=Integer.parseInt(fecha.substring(0,2));}
+        else if(patron == FECHA_FORMATO_BD){dia=Integer.parseInt(fecha.substring(8));}
+        return dia;
+    }
+
+    private static int getMes(String fecha, int patron){
+        int mes = 0;
+        if(patron == FECHA_FORMATO_MOSTRAR){mes=Integer.parseInt(fecha.substring(3,5));}
+        else if(patron == FECHA_FORMATO_BD){mes=Integer.parseInt(fecha.substring(5,7));}
+        return mes;
+    }
+
+    private static int getAno(String fecha, int patron){
+        int ano = 0;
+        if(patron == FECHA_FORMATO_MOSTRAR){ano=Integer.parseInt(fecha.substring(6));}
+        else if(patron == FECHA_FORMATO_BD){ano=Integer.parseInt(fecha.substring(0,4));}
+        return ano;
+    }
+
     public static int getDiasEntreFechas(Date desde, Date hasta){
         if(desde.after(hasta)){return 0;}
         return (int)(hasta.getTime()-desde.getTime())/(24*60*60*1000);
+    }
+
+    public static Calendar getCalendar(String fecha,int patron){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, DateHandler.getAno(fecha,patron));
+        calendar.set(Calendar.MONTH,DateHandler.getMes(fecha,patron)-1);
+        calendar.set(Calendar.DAY_OF_MONTH,DateHandler.getDia(fecha,patron));
+        return calendar;
+    }
+
+    public static String getFecha(Calendar calendar,int patron){
+        int dia = calendar.get(Calendar.DAY_OF_MONTH);
+        int mes = calendar.get(Calendar.MONTH)+1;
+        int ano = calendar.get(Calendar.YEAR);
+        String fecha = "";
+        if(patron==FECHA_FORMATO_MOSTRAR){fecha=formatDateToShow(dia,mes,ano);}
+        else if(patron==FECHA_FORMATO_BD){fecha=formatDateToStoreInDB(dia,mes,ano);}
+        return fecha;
     }
 
     public static boolean areDatesInOrder(String firstDate,String secondDate,int formato){
@@ -89,6 +130,12 @@ public class DateHandler {
         return false;
     }
 
+    public static Calendar configurarHoraRecordatorio(Calendar calendar){
+        calendar.set(Calendar.HOUR_OF_DAY,10);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+        return calendar;
+    }
 
 
 }

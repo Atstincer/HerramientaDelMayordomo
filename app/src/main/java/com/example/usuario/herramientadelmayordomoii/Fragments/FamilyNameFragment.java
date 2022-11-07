@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.usuario.herramientadelmayordomoii.Adapters.ClientesRVAdapter;
-import com.example.usuario.herramientadelmayordomoii.BD_conexion.AdminSQLiteOpenHelper;
+import com.example.usuario.herramientadelmayordomoii.Almacenamiento.AdminSQLiteOpenHelper;
 import com.example.usuario.herramientadelmayordomoii.DialogFragments.MyPickClienteDialogF;
 import com.example.usuario.herramientadelmayordomoii.Entities.Cliente;
 import com.example.usuario.herramientadelmayordomoii.Entities.FamilyName;

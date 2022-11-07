@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.usuario.herramientadelmayordomoii">
 
-    <!--uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/-->
+    <!--uses-permission android:name="android.permission.CAMERA"/-->
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
@@ -46,11 +46,11 @@
 
         </provider-->
 
-        <!--receiver android:name="com.example.usuario.herramientadelmayordomoii.AlarmManagement.AlarmReceiver"
+        <receiver android:name="com.example.usuario.herramientadelmayordomoii.AlarmManagement.AlarmReceiver"
             android:enabled="true"/>
 
         <service android:name="com.example.usuario.herramientadelmayordomoii.AlarmManagement.NotificationService"
-            android:enabled="true"/-->
+            android:enabled="true"/>
 
     </application>
 

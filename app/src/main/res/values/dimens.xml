@@ -14,4 +14,6 @@
     <dimen name="marginTop_item_linearLayout">5dp</dimen>
     <dimen name="marginTop_firstItem_linearLayout">15dp</dimen>
     <dimen name="marginTop_btn_bottomLinearLayout">30dp</dimen>
+    <dimen name="marginSeparator">15dp</dimen>
+
 </resources>

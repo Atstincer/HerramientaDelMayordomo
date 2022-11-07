@@ -1,6 +1,9 @@
 package com.example.usuario.herramientadelmayordomoii.Entities;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+
+import com.example.usuario.herramientadelmayordomoii.R;
 
 import java.text.ParseException;
 import java.util.Comparator;
@@ -126,11 +129,25 @@ public class Estancia {
         this.observaciones = observaciones;
     }
 
+    public static String formatPeriodoToShow(Context ctx, String desde, String hasta){
+        String fechas = "";
+        if(desde.substring(3,5).equals(hasta.substring(3,5))){
+            fechas = desde.substring(0,2) + " "+ ctx.getResources().getString(R.string.al) + " " + hasta;
+        }else {
+            if(desde.substring(6).equals(hasta.substring(6))){
+                fechas = desde.substring(0,5) + " " + ctx.getResources().getString(R.string.al) + " " + hasta;
+            } else {
+                fechas = desde + " " + ctx.getResources().getString(R.string.al) + " " + hasta;
+            }
+        }
+        return fechas;
+    }
+
     @Override
     public String toString() {
         return "Estancia{" +
                 "id=" + id +
-                ", familyName_id='" + familyName_id + '\'' +
+                ", familyName='" + familyName + '\'' +
                 ", desde='" + desde + '\'' +
                 ", hasta='" + hasta + '\'' +
                 ", no_hab='" + no_hab + '\'' +

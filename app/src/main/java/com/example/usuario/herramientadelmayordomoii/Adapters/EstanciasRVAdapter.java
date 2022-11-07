@@ -65,11 +65,11 @@ public class EstanciasRVAdapter extends RecyclerView.Adapter<EstanciasRVAdapter.
 
         public void bindComponents(int position){
             tv_hab.setText(listEstancias.get(position).getNo_hab());
-            tv_fechas.setText(getStrFechas(listEstancias.get(position).getDesde(),listEstancias.get(position).getHasta()));
+            tv_fechas.setText(Estancia.formatPeriodoToShow(context,listEstancias.get(position).getDesde(),listEstancias.get(position).getHasta()));
             tv_family_name.setText(listEstancias.get(position).getFamilyName());
         }
 
-        private String getStrFechas(String desde,String hasta){
+        /*private String getStrFechas(String desde,String hasta){
             String fechas = "";
             if(desde.substring(3,5).equals(hasta.substring(3,5))){
                 fechas = desde.substring(0,2) + " "+ context.getResources().getString(R.string.al) + " " + hasta;
@@ -81,7 +81,7 @@ public class EstanciasRVAdapter extends RecyclerView.Adapter<EstanciasRVAdapter.
                 }
             }
             return fechas;
-        }
+        }*/
 
         @Override
         public void onClick(View view) {

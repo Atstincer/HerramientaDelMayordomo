@@ -30,7 +30,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.example.usuario.herramientadelmayordomoii.BD_conexion.AdminSQLiteOpenHelper;
+import com.example.usuario.herramientadelmayordomoii.Almacenamiento.AdminSQLiteOpenHelper;
 import com.example.usuario.herramientadelmayordomoii.Entities.Cliente;
 import com.example.usuario.herramientadelmayordomoii.Entities.FamilyName;
 import com.example.usuario.herramientadelmayordomoii.Entities.FamilyNames_Clientes;

@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="@string/eliminar"
-        android:id="@+id/menu_item_eliminar_reporte"/>
+    <item
+        android:id="@+id/menu_item_eliminar_reporte"
+        android:title="@string/eliminar" />
+
+    <item
+        android:id="@+id/menu_item_enviar_por_mail"
+        android:title="@string/enviar_por_mail" />
+
+    <item
+        android:id="@+id/menu_item_guardar_txt"
+        android:title="@string/guardar_archivo_txt" />
 
 </menu>

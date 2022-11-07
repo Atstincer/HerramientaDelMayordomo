@@ -15,9 +15,9 @@
             android:title="@string/clientes" />
 
         <item
-            android:id="@+id/nav_item_recordatorios"
-            android:icon="@drawable/ic_recordatorios"
-            android:title="@string/recordatorios" />
+            android:id="@+id/nav_item_ajustes"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/ajustes" />
     </group>
 
     <item android:title="Communicate">
