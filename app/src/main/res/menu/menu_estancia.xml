@@ -7,7 +7,7 @@
         android:icon="@drawable/ic_edit"
         app:showAsAction="ifRoom|collapseActionView"/>
 
-    <item android:title="@string/borrar"
+    <item android:title="@string/eliminar"
         android:id="@+id/menu_item_borrar_estancia_fragment"/>
 
     <item android:title="@string/agregar_reporte"

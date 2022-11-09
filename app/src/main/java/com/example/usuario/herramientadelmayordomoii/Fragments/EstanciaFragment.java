@@ -654,9 +654,11 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
     }
 
     private void setUpRecordatorio(Estancia estancia) {
-        if (!MySharedPreferences.getRecordatorioEstanciasIsActivado(getContext())||Integer.parseInt(MySharedPreferences.getDiasDeAntelacion(getContext()))==0) {
+        if (!MySharedPreferences.getRecordatorioEstanciasIsActivado(getContext()) || MySharedPreferences.getDiasDeAntelacion(getContext()).equals("0") ||
+                MySharedPreferences.getDiasDeAntelacion(getContext()).equals("") || !MyApp.isInt(MySharedPreferences.getDiasDeAntelacion(getContext()))) {
             return;
         }
+
         long diasAntelacion = Integer.parseInt(MySharedPreferences.getDiasDeAntelacion(getContext())) * 24 * 60 * 60 * 1000;
         long desde = DateHandler.configurarHoraRecordatorio(DateHandler.getCalendar(estancia.getDesde(), DateHandler.FECHA_FORMATO_MOSTRAR)).getTimeInMillis();
         long timeStamp = desde - diasAntelacion;
@@ -820,6 +822,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
                 inflater.inflate(R.menu.menu_estancia, menu);
                 break;
         }
+        inflater.inflate(R.menu.menu_main,menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

@@ -18,7 +18,9 @@ import com.example.usuario.herramientadelmayordomoii.Entities.Recordatorio;
 import com.example.usuario.herramientadelmayordomoii.Almacenamiento.MySharedPreferences;
 import com.example.usuario.herramientadelmayordomoii.R;
 import com.example.usuario.herramientadelmayordomoii.Util.DateHandler;
+import com.example.usuario.herramientadelmayordomoii.Util.MyApp;
 
+import java.text.ParseException;
 import java.util.Calendar;
 
 
@@ -27,6 +29,8 @@ import java.util.Calendar;
  */
 
 public class AjustesFragment extends Fragment {
+
+    public static final String TAG = "AjustesFragment";
 
     private TextView tvFechas;
     private EditText etDiasDeAntelacion,etMsjNotificacion,etMailAddress;
@@ -37,6 +41,7 @@ public class AjustesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(false);
         return inflater.inflate(R.layout.fragment_ajustes,container,false);
     }
 
@@ -134,7 +139,11 @@ public class AjustesFragment extends Fragment {
 
 
     private void storePreferences() {
-        if(recordatorioEstanciaisChecked && etDiasDeAntelacion.getText().toString().equals("") || etDiasDeAntelacion.getText().toString().equals("0")){setRecordatorioEstenciaActivado(false);}
+        if(recordatorioEstanciaisChecked && etDiasDeAntelacion.getText().toString().equals("") || etDiasDeAntelacion.getText().toString().equals("0")){
+            setRecordatorioEstenciaActivado(false);}
+        if(recordatorioEstanciaisChecked && !MyApp.isInt(etDiasDeAntelacion.getText().toString())){
+            Toast.makeText(getContext(),getString(R.string.numero_dias_no_valido),Toast.LENGTH_SHORT).show();
+        }
         MySharedPreferences.storePreferencesRecordatorio(getContext(), recordatorioEstanciaisChecked,etDiasDeAntelacion.getText().toString());
         MySharedPreferences.storeDefaultMail(getContext(),etMailAddress.getText().toString());
     }

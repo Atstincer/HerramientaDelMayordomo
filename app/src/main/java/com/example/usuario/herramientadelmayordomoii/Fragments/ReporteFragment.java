@@ -542,6 +542,7 @@ public class ReporteFragment extends Fragment {
                 inflater.inflate(R.menu.menu_reporte_fragment_regular, menu);
                 break;
         }
+        inflater.inflate(R.menu.menu_main,menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Herramienta del mayordomo</string>
+    <string name="my_mail">atstincer87@gmail.com</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -127,6 +128,7 @@
     <string name="enviar_por_defecto_a">Enviar por defecto a:</string>
     <string name="escribir_aqui_mail">Escribir aquí la dirección de e-mail</string>
     <string name="mail_no_valido">Dirección de e-mail no válida</string>
+    <string name="numero_dias_no_valido">El número de días no es válido</string>
 
 
     <!-->RECORDATORIOS</-->

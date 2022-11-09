@@ -80,8 +80,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-
     @Override
     public int getCurrentStateClienteFragment() {
         return currentStateClienteFragment;
@@ -185,6 +183,11 @@ public class MainActivity extends AppCompatActivity
         udActivity(ReporteFragment.TAG);
     }
 
+    private void setUpAjustesFragment(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AjustesFragment()).addToBackStack(null).commit();
+        udActivity(AjustesFragment.TAG);
+    }
+
     @Override
     public int getCurrentStateReporteFragment() {
         return currentStateReporteFragment;
@@ -225,18 +228,6 @@ public class MainActivity extends AppCompatActivity
                 else if(currentStateEstanciaFragment==MyApp.STATE_UPDATE){title = getResources().getString(R.string.actualizar_estancia);}
                 navigationView.setCheckedItem(R.id.nav_item_estancias);
                 break;
-            /*case EstanciaFragment.STATE_REGULAR_MODE:
-                title = getResources().getString(R.string.estancia);
-                navigationView.setCheckedItem(R.id.nav_item_estancias);
-                break;
-            case EstanciaFragment.STATE_NEW_ESTANCIA_MODE:
-                title = getResources().getString(R.string.nueva_estancia);
-                navigationView.setCheckedItem(R.id.nav_item_estancias);
-                break;
-            case EstanciaFragment.STATE_UPDATE_MODE:
-                title = getResources().getString(R.string.actualizar_estancia);
-                navigationView.setCheckedItem(R.id.nav_item_estancias);
-                break;*/
             case ClientesFragment.TAG:
                 title = getResources().getString(R.string.clientes);
                 navigationView.setCheckedItem(R.id.nav_item_clientes);
@@ -247,19 +238,6 @@ public class MainActivity extends AppCompatActivity
                 else if(currentStateClienteFragment==MyApp.STATE_UPDATE){title = getResources().getString(R.string.actualizar_cliente_title);}
                 navigationView.setCheckedItem(R.id.nav_item_clientes);
                 break;
-            /*
-            case ClienteFragment.STATE_NEW_CLIENTE_MODE:
-                title = getResources().getString(R.string.nuevo_cliente);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
-                break;
-            case ClienteFragment.STATE_CLIENTE_MODE:
-                title = getResources().getString(R.string.info_cliente_title);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
-                break;
-            case ClienteFragment.STATE_CLIENTE_UD_MODE:
-                title = getResources().getString(R.string.actualizar_cliente_title);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
-                break;*/
             case FamilyNamesFragment.TAG:
                 title = getResources().getString(R.string.familias);
                 navigationView.setCheckedItem(R.id.nav_item_clientes);
@@ -270,23 +248,14 @@ public class MainActivity extends AppCompatActivity
                 else if(currentStateFamilyNameFragment==MyApp.STATE_UPDATE){title = getResources().getString(R.string.editar_nombre_de_familia);}
                 navigationView.setCheckedItem(R.id.nav_item_clientes);
                 break;
-            /*
-            case FamilyNameFragment.STATE_REGULAR_MODE:
-                title = getResources().getString(R.string.familia);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
-                break;
-            case FamilyNameFragment.STATE_NEW_FAMILY_NAME_MODE:
-                title = getResources().getString(R.string.nuevo_nombre_de_familia);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
-                break;
-            case FamilyNameFragment.STATE_FAMILY_NAME_UD_MODE:
-                title = getResources().getString(R.string.editar_nombre_de_familia);
-                navigationView.setCheckedItem(R.id.nav_item_clientes);
-                break;*/
             case ReporteFragment.TAG:
                 if(currentStateReporteFragment==MyApp.STATE_REGULAR){title = getResources().getString(R.string.reportes);}
                 else if(currentStateReporteFragment==MyApp.STATE_NEW){title = getResources().getString(R.string.new_reporte);}
                 navigationView.setCheckedItem(R.id.nav_item_estancias);
+                break;
+            case AjustesFragment.TAG:
+                title = getString(R.string.ajustes);
+                navigationView.setCheckedItem(R.id.nav_item_ajustes);
                 break;
             case FrontFragment.TAG:
                 title = getResources().getString(R.string.app_name);
@@ -372,9 +341,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Toast.makeText(this, "Settings clicked...", Toast.LENGTH_SHORT).show();
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AjustesFragment()).addToBackStack(null).commit();
-            navigationView.setCheckedItem(R.id.nav_item_ajustes);
+            //Toast.makeText(this, "Settings clicked...", Toast.LENGTH_SHORT).show();
+            setUpAjustesFragment();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -393,15 +361,15 @@ public class MainActivity extends AppCompatActivity
                 setUpClientesFragment();
                 break;
             case R.id.nav_item_ajustes:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AjustesFragment()).addToBackStack(null).commit();
-                navigationView.setCheckedItem(R.id.nav_item_ajustes);
+                setUpAjustesFragment();
                 break;
+            /*
             case R.id.nav_share:
                 Toast.makeText(this, "Share clicked..", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_send:
                 Toast.makeText(this, "Send clicked...", Toast.LENGTH_LONG).show();
-                break;
+                break;*/
         }
 
         drawer.closeDrawer(GravityCompat.START);

@@ -373,34 +373,6 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(menu!=null){menu.clear();}
-        if(myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_REGULAR){
-            inflater.inflate(R.menu.menu_family_name_fragment_regular_mode,menu);
-        }else if(myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_UPDATE){
-            inflater.inflate(R.menu.menu_family_name_fragment_ud_mode,menu);
-        }
-        //super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_item_editar_family_name:
-                myCallback.setNewCurrentStateFamilyNameFragment(MyApp.STATE_UPDATE);
-                setUpUDMode();
-                break;
-            case R.id.menu_item_eliminar_family_name:
-                deleteFamilyName();
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
     public List<Cliente> getClientesRelacionados() {
         return listClientesRelacionados;
     }
@@ -430,6 +402,34 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
     }
 
     private void makeToast(String msg){Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();}
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if(menu!=null){menu.clear();}
+        if(myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_REGULAR){
+            inflater.inflate(R.menu.menu_family_name_fragment_regular_mode,menu);
+        }else if(myCallback.getCurrentStateFamilyNameFragment()==MyApp.STATE_UPDATE){
+            inflater.inflate(R.menu.menu_family_name_fragment_ud_mode,menu);
+        }
+        inflater.inflate(R.menu.menu_main,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_item_editar_family_name:
+                myCallback.setNewCurrentStateFamilyNameFragment(MyApp.STATE_UPDATE);
+                setUpUDMode();
+                break;
+            case R.id.menu_item_eliminar_family_name:
+                deleteFamilyName();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public interface CallBack {
         void udActivity(String tag);

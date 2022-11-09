@@ -127,7 +127,8 @@ public class FamilyNamesFragment extends Fragment implements FamilyNamesRVAdapte
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if(menu!=null){menu.clear();}
         inflater.inflate(R.menu.menu_family_names_fragment,menu);
-        //super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_main,menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

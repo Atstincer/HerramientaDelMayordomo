@@ -369,6 +369,7 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
             menu.clear();
         }
         inflater.inflate(R.menu.menu_estancias,menu);
+        inflater.inflate(R.menu.menu_main,menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

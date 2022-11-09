@@ -95,36 +95,6 @@ public class ClienteFragment extends Fragment implements IMyFragments {
         myCallback = (Callback) context;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (menu != null) {
-            menu.clear();
-        }
-        if (myCallback.getCurrentStateClienteFragment()== MyApp.STATE_REGULAR) {
-            inflater.inflate(R.menu.menu_cliente_mode, menu);
-        } else if (myCallback.getCurrentStateClienteFragment()==MyApp.STATE_UPDATE) {
-            inflater.inflate(R.menu.menu_cliente_update_mode, menu);
-        }
-        inflater.inflate(R.menu.menu_main, menu);
-        //super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_editar:
-                myCallback.setNewCurrentStateClienteFragment(MyApp.STATE_UPDATE);
-                setUpNewState(MyApp.STATE_UPDATE);
-                break;
-            case R.id.menu_item_eliminar_cliente:
-                confirmarEliminarCliente();
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void bindComponents(View view) {
         foto = (ImageView) view.findViewById(R.id.iv_foto_cliente);
         nombre = (EditText) view.findViewById(R.id.et_nombre);
@@ -443,25 +413,6 @@ public class ClienteFragment extends Fragment implements IMyFragments {
         startActivityForResult(galeria, SELEC_IMAGEN);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == MainActivity.RESULT_OK && requestCode == SELEC_IMAGEN) {
-            Uri imagenUri = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imagenUri);
-                foto.setImageBitmap(MyBitmapFactory.getScaledBitmap(bitmap, foto));
-            } catch (IOException e) {
-                Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        } else if (resultCode == MainActivity.RESULT_OK && requestCode == TOMAR_FOTO) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            foto.setImageBitmap(MyBitmapFactory.getScaledBitmap(imageBitmap, foto));
-        }
-    }
-
     private void confirmarEliminarCliente() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage(getResources().getString(R.string.confirmar_eliminar_registro));
@@ -601,6 +552,55 @@ public class ClienteFragment extends Fragment implements IMyFragments {
         makeToast(getResources().getString(R.string.registro_eliminado_correctamente));
         selectedClient = null;
         getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == MainActivity.RESULT_OK && requestCode == SELEC_IMAGEN) {
+            Uri imagenUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imagenUri);
+                foto.setImageBitmap(MyBitmapFactory.getScaledBitmap(bitmap, foto));
+            } catch (IOException e) {
+                Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        } else if (resultCode == MainActivity.RESULT_OK && requestCode == TOMAR_FOTO) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            foto.setImageBitmap(MyBitmapFactory.getScaledBitmap(imageBitmap, foto));
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (menu != null) {
+            menu.clear();
+        }
+        if (myCallback.getCurrentStateClienteFragment()== MyApp.STATE_REGULAR) {
+            inflater.inflate(R.menu.menu_cliente_mode, menu);
+        } else if (myCallback.getCurrentStateClienteFragment()==MyApp.STATE_UPDATE) {
+            inflater.inflate(R.menu.menu_cliente_update_mode, menu);
+        }
+        inflater.inflate(R.menu.menu_main, menu);
+        //super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_editar:
+                myCallback.setNewCurrentStateClienteFragment(MyApp.STATE_UPDATE);
+                setUpNewState(MyApp.STATE_UPDATE);
+                break;
+            case R.id.menu_item_eliminar_cliente:
+                confirmarEliminarCliente();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public interface Callback {
