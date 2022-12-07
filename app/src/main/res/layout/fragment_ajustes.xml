@@ -11,6 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -21,9 +22,9 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
+                android:layout_alignParentStart="true"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -89,53 +90,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:text="@string/agregar_recordatorio"
-            android:textColor="@color/link"
-            android:textSize="@dimen/tvSize"
-            android:textStyle="bold" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:id="@+id/tv_fecha_nuevo_recordatorio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:text="@string/seleccionar_fecha"
-                android:textColor="@color/color_font_blanco"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/btn_agregar_recordatorio"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:text="+"
-                android:textAlignment="center"
-                android:textColor="@color/colorAccent"
-                android:textSize="30sp" />
-
-        </RelativeLayout>
-
-        <EditText
-            android:id="@+id/et_msj_recordatorio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/escriba_mensaje"
-            android:textColor="@color/color_font_blanco"
-            android:textColorHint="@color/color_font_blanco" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
             android:text="@string/compartir"
             android:textColor="@color/link"
             android:textSize="@dimen/tvSize"
@@ -157,12 +111,12 @@
                 android:textColor="@color/color_font_blanco" />
 
             <ImageView
-                android:id="@+id/iv_check_mail"
-                android:layout_width="wrap_content"
+                android:id="@+id/iv_lock_mail"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/ic_check" />
+                android:src="@drawable/ic_locked" />
 
         </RelativeLayout>
 

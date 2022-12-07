@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.usuario.herramientadelmayordomoii">
+    package="com.example.usuario.herramientadelmayordomo">
 
     <!--uses-permission android:name="android.permission.CAMERA"/-->
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
@@ -23,15 +25,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.usuario.herramientadelmayordomo.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+            android:windowSoftInputMode="adjustPan" >
+            <!--android:configChanges="orientation|screenSize|keyboardHidden"-->
             <!--android:screenOrientation="portrait"-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -48,10 +49,17 @@
 
         </provider-->
 
-        <receiver android:name="com.example.usuario.herramientadelmayordomoii.AlarmManagement.AlarmReceiver"
+        <receiver android:name="com.example.usuario.herramientadelmayordomo.AlarmManagement.AlarmReceiver"
             android:enabled="true"/>
 
-        <service android:name="com.example.usuario.herramientadelmayordomoii.AlarmManagement.NotificationService"
+        <receiver android:name=".AlarmManagement.BootReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.example.usuario.herramientadelmayordomo.AlarmManagement.NotificationService"
             android:enabled="true"/>
 
     </application>

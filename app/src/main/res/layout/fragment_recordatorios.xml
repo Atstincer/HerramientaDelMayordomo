@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_backgroundActivity"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="@string/agregar_recordatorio"
+        android:textColor="@color/link"
+        android:textSize="@dimen/tvSize"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/tv_fecha_nuevo_recordatorio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="@string/seleccionar_fecha"
+            android:textColor="@color/color_font_blanco"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/btn_agregar_recordatorio"
+            style="@style/my_btn_add"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:textAlignment="center" />
+
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/et_msj_recordatorio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/escriba_mensaje"
+        android:textColor="@color/color_font_blanco"
+        android:textColorHint="@color/color_font_blanco" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/black" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_recordatorios"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true" />
+
+        <TextView
+            android:id="@+id/tv_no_recordatorios_registrados"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/no_recordatorios_registrados"
+            android:textColor="@color/link"
+            android:textSize="@dimen/tvSize" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

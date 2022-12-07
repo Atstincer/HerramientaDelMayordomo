@@ -8,4 +8,10 @@
         android:title="@string/editar"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/menu_item_eliminar_family_name"
+        android:icon="@drawable/ic_eliminar"
+        android:title="@string/eliminar"
+        app:showAsAction="ifRoom" />
+
 </menu>

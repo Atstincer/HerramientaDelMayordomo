@@ -43,6 +43,7 @@
     <!-->ESTANCIAS</-->
     <string name="segun_cliente">Según cliente</string>
     <string name="segun_hab">Según habitación</string>
+    <string name="confirmar_eliminar_estancia">Seguro que desea eliminar esta estancia?</string>
 
 
 
@@ -63,6 +64,7 @@
     <string name="nuevo_nombre_de_familia">Nuevo nombre de familia</string>
     <string name="editar_nombre_de_familia">Editar nombre de familia</string>
     <string name="no_existen_nombres_de_familia_registrados">No existen nombres de familia registrados</string>
+    <string name="confirmar_eliminar_nombre_familias">Seguro que desea eliminar este nombre de familia?</string>
 
 
     <!-->MENSAJES DE CONFIRMACION</-->
@@ -125,7 +127,7 @@
     <string name="tarjetasd_no_disponible">La tarjeta SD no está disponible</string>
     <string name="tarjetasd_no_writable">No se puede guardar el fichero en la tarjeta SD</string>
     <string name="compartir">Compartir</string>
-    <string name="enviar_por_defecto_a">Enviar por defecto a:</string>
+    <string name="enviar_por_defecto_a">Enviar reporte por defecto a:</string>
     <string name="escribir_aqui_mail">Escribir aquí la dirección de e-mail</string>
     <string name="mail_no_valido">Dirección de e-mail no válida</string>
     <string name="numero_dias_no_valido">El número de días no es válido</string>
@@ -142,6 +144,8 @@
     <string name="debe_seleccionar_una_fecha">Debe seleccionar una fecha</string>
     <string name="recordatorio_general">Recordatorio general</string>
     <string name="recordatorio_agregado">Recordatorio agregado</string>
+    <string name="no_recordatorios_registrados">No existen recordatorios registrados</string>
+    <string name="confirmar_eliminar_recordatorio">Seguro que desea eliminar este recordatorio?</string>
 
 
     <!-->AJUSTES</-->

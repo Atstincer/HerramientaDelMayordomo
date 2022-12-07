@@ -2,24 +2,76 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <item android:title="@string/estancias">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_item_nueva_estancia"
+                    android:icon="@drawable/ic_add_estancia"
+                    android:title="@string/nueva_estancia" />
+                <item
+                    android:id="@+id/nav_item_en_casa"
+                    android:icon="@drawable/en_casa"
+                    android:title="@string/en_casa" />
+                <item
+                    android:id="@+id/nav_item_segun_periodo"
+                    android:icon="@drawable/calendar_icon"
+                    android:title="@string/segun_periodo" />
+                <item
+                    android:id="@+id/nav_item_segun_cliente"
+                    android:icon="@drawable/segun_cliente"
+                    android:title="@string/segun_cliente" />
+                <item
+                    android:id="@+id/nav_item_segun_hab"
+                    android:icon="@drawable/hab_icon"
+                    android:title="@string/segun_hab" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="@string/clientes">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_item_nuevo_cliente"
+                    android:icon="@drawable/ic_add_cliente"
+                    android:title="@string/nuevo_cliente" />
+                <item
+                    android:id="@+id/nav_item_clientes"
+                    android:icon="@drawable/ic_cliente"
+                    android:title="@string/clientes" />
+            </group>
+        </menu>
+
+    </item>
+
+    <item android:title="@string/nombre_de_familia">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_item_nuevo_family_name"
+                    android:icon="@drawable/ic_add_family_names"
+                    android:title="@string/nuevo_nombre_de_familia" />
+                <item
+                    android:id="@+id/nav_item_family_names"
+                    android:icon="@drawable/ic_family_names"
+                    android:title="@string/nombre_de_familia" />
+            </group>
+        </menu>
+    </item>
+
     <group android:checkableBehavior="single">
-
         <item
-            android:id="@+id/nav_item_estancias"
-            android:icon="@drawable/ic_estancia"
-            android:title="@string/estancias" />
-
-        <item
-            android:id="@+id/nav_item_clientes"
-            android:icon="@drawable/ic_cliente"
-            android:title="@string/clientes" />
+            android:id="@+id/nav_item_recordatorios"
+            android:icon="@drawable/ic_recordatorios"
+            android:title="@string/recordatorios" />
 
         <item
             android:id="@+id/nav_item_ajustes"
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/ajustes" />
-
     </group>
+
 
     <!--item android:title="Communicate">
         <menu>

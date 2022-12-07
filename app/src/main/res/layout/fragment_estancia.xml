@@ -165,14 +165,34 @@
 
         <include layout="@layout/recyclerview_clientes" />
 
-        <TextView
-            android:id="@+id/tv_reportes"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/reportes"
-            android:textColor="@color/link"
-            android:textSize="@dimen/tvSize" />
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/tv_reportes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="15dp"
+                android:text="@string/reportes"
+                android:textColor="@color/link"
+                android:textSize="@dimen/tvSize" />
+
+            <TextView
+                android:id="@+id/tv_add_reporte"
+                style="@style/my_btn_add"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textAlignment="center" />
+
+
+        </RelativeLayout>
+
 
         <RelativeLayout
             android:id="@+id/layout_reportes"
