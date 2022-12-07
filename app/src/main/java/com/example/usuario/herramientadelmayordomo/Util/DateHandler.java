@@ -127,16 +127,14 @@ public class DateHandler {
     }
 
     public static Calendar configurarHoraRecordatorio(Calendar calendar){
-        /*calendar.set(Calendar.HOUR_OF_DAY,10);
+        calendar.set(Calendar.HOUR_OF_DAY,10);
         calendar.set(Calendar.MINUTE,0);
-        calendar.set(Calendar.SECOND,0);*/
+        calendar.set(Calendar.SECOND,0);
 
         //probando alarma en + 5 segundos de la hora actual
-        calendar = Calendar.getInstance();
-        System.out.println("Hora actual: "+calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+" " +
-                ""+calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE)+":"+calendar.get(Calendar.SECOND));
-        calendar.set(Calendar.SECOND,calendar.get(Calendar.SECOND)+5);
-        //calendar.set(Calendar.MINUTE,calendar.get(Calendar.MINUTE)+1);
+        /*calendar = Calendar.getInstance();
+        calendar.set(Calendar.SECOND,calendar.get(Calendar.SECOND)+5);*/
+
         /*System.out.println("Configurando alarma para las: "+calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+" " +
                 ""+calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE)+":"+calendar.get(Calendar.SECOND));*/
         return calendar;
