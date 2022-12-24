@@ -57,4 +57,11 @@
         <item name="android:textSize">30sp</item>
     </style>
 
+    <style name="Padding_parent_layout">
+        <item name="android:paddingTop">@dimen/activity_vertical_margin</item>
+        <item name="android:paddingBottom">@dimen/activity_vertical_margin</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+    </style>
+
 </resources>

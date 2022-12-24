@@ -29,6 +29,7 @@
 
 
     <string name="adultos">adultos</string>
+    <string name="adulto">adulto</string>
     <string name="menores">menores</string>
     <string name="infantes">infantes</string>
     <string name="nombre">Nombre</string>
@@ -61,7 +62,7 @@
     <string name="familias">Familias</string>
     <string name="familia">Familia</string>
     <string name="nombre_de_familia">Nombre de familia</string>
-    <string name="nuevo_nombre_de_familia">Nuevo nombre de familia</string>
+    <string name="nueva_familia">Nueva familia</string>
     <string name="editar_nombre_de_familia">Editar nombre de familia</string>
     <string name="no_existen_nombres_de_familia_registrados">No existen nombres de familia registrados</string>
     <string name="confirmar_eliminar_nombre_familias">Seguro que desea eliminar este nombre de familia?</string>

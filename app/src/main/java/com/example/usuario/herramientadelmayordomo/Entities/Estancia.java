@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.util.Comparator;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -36,8 +37,17 @@ public class Estancia {
     private long id, familyName_id;
     private int adultos, menores, infantes;
     private String desde,hasta,no_hab,familyName,observaciones;
+    private List<Cliente> listClientes;
 
     public Estancia() {
+    }
+
+    public List<Cliente> getListClientes() {
+        return listClientes;
+    }
+
+    public void setListClientes(List<Cliente> listClientes) {
+        this.listClientes = listClientes;
     }
 
     public String getFamilyName() {
@@ -138,13 +148,29 @@ public class Estancia {
         return familyName;
     }
 
+    public String getTitleRecordatorio(){
+        return getFamilyName();
+    }
+
+    public String getMensajeRecordatodio(Context ctx){
+        return ctx.getResources().getString(R.string.llegando_el)+" "+getDesde();
+    }
+
     // \
     public String getEmailBody(Context ctx){
-        return ctx.getString(R.string.estancia)+": "+getFamilyName()+ "\n" +
-                ""+ ctx.getString(R.string.Hab) + " " + getNo_hab() + "\n" +
-                ""+ getAdultos() + " " + ctx.getString(R.string.adultos) + "\n" +
-                ""+formatPeriodoToShow(ctx,getDesde(),getHasta()) +"\n" +
+        String body = ctx.getString(R.string.estancia)+": "+getFamilyName()+ "\n";
+        if(!getNo_hab().equals("")){body+=ctx.getString(R.string.Hab) + " " + getNo_hab() + "\n";}
+        if(getListClientes()!=null && getListClientes().size()>0){
+            body += ctx.getString(R.string.clientes)+":\n";
+            for(Cliente cliente:getListClientes()){
+                body += "  - " + cliente.getName() + "\n";
+            }
+        }
+        if(getAdultos()>1){body+=getAdultos() + " " + ctx.getString(R.string.adultos) + "\n";}
+        else if(getAdultos()==1) {body+=getAdultos() + " " + ctx.getString(R.string.adulto) + "\n";}
+        body += formatPeriodoToShow(ctx,getDesde(),getHasta()) +"\n" +
                 ""+getObservaciones();
+        return body;
     }
 
     public static String formatPeriodoToShow(Context ctx, String desde, String hasta){

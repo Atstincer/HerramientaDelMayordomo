@@ -14,7 +14,12 @@
 
     <item android:title="@string/enviar_por_mail"
         android:id="@+id/menu_item_enviar_por_mail"
-        android:icon="@drawable/mail"
+        android:icon="@drawable/ic_mail"
+        app:showAsAction="ifRoom|collapseActionView"/>
+
+    <item android:title="@string/agregar_recordatorio"
+        android:id="@+id/menu_item_agregar_recordatorio"
+        android:icon="@drawable/ic_recordatorios"
         app:showAsAction="ifRoom|collapseActionView"/>
 
     <item android:title="@string/agregar_reporte"

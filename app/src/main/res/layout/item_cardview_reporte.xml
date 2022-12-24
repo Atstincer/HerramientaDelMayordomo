@@ -23,15 +23,41 @@
             android:orientation="vertical"
             android:padding="1dp">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp">
+
+                <TextView
+                    android:id="@+id/tv_identifier_reporte_card_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:text="Fecha ó Habitacion"
+                    android:textColor="@color/color_font_blanco"
+                    android:textSize="@dimen/tvSize"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_periodo_reporte_card_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="Periodo"
+                    android:textColor="@color/color_font_blanco" />
+
+            </RelativeLayout>
+
             <TextView
-                android:id="@+id/tv_fecha_reporte_card_view"
+                android:id="@+id/tv_family_name_reporte_card_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
-                android:text="Fecha"
-                android:textColor="@color/color_font_blanco"
-                android:textSize="@dimen/tvSize"
-                android:textStyle="bold" />
+                android:text="FamilyName"
+                android:textColor="@color/color_font_blanco" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

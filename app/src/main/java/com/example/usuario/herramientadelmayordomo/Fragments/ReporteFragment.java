@@ -6,11 +6,9 @@ import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -41,6 +39,8 @@ import com.example.usuario.herramientadelmayordomo.R;
 import com.example.usuario.herramientadelmayordomo.Util.DateHandler;
 import com.example.usuario.herramientadelmayordomo.Util.MyApp;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -70,7 +70,7 @@ public class ReporteFragment extends Fragment {
     public static final String STATE_NEW_REPORTE_MODE = "STATE_NEW_REPORTE_MODE";*/
 
     private EditText etReporteMañana, etReporteTarde, etReporteNoche;
-    private TextView tvDate;
+    private TextView tvDate, tvNoHab;
     private Button btn;
 
     private long idEstanciaRelacionada;
@@ -97,10 +97,11 @@ public class ReporteFragment extends Fragment {
         if (getArguments() != null) {
             idEstanciaRelacionada = (long) getArguments().get("estanciaId");
             idReporteRelacionado = (long) getArguments().get("reporteId");
-            if (idReporteRelacionado > 0) {
+            /*if (idReporteRelacionado > 0) {
                 showInfoFragment(idReporteRelacionado);
                 return;
-            }
+            }*/
+            showInfoFragment();
         }
         if (myCallBack.getCurrentStateReporteFragment() == MyApp.STATE_REGULAR) {
             setUpRegularMode();
@@ -110,6 +111,7 @@ public class ReporteFragment extends Fragment {
     }
 
     private void bindComponents(View v) {
+        tvNoHab = (TextView)v.findViewById(R.id.tv_habitacion_reporte_fragment);
         etReporteMañana = (EditText) v.findViewById(R.id.et_reporte_mañana);
         etReporteTarde = (EditText) v.findViewById(R.id.et_reporte_tarde);
         etReporteNoche = (EditText) v.findViewById(R.id.et_reporte_noche);
@@ -280,6 +282,15 @@ public class ReporteFragment extends Fragment {
         }
     }
 
+    private void showInfoFragment(){
+        if(idEstanciaRelacionada>0){
+            tvNoHab.setText(Estancia.getEstanciaFromDB(getContext(),idEstanciaRelacionada).getNo_hab());
+        }
+        if(idReporteRelacionado>0){
+            showInfoFragment(idReporteRelacionado);
+        }
+    }
+
     private void showInfoFragment(long reporteId) {
         showInfoFragment(getReporteFromDB(reporteId));
         setUpRegularMode();
@@ -352,7 +363,7 @@ public class ReporteFragment extends Fragment {
     }
 
     private String getFormatMSG(int info) {
-        Estancia estancia = getEstanciaRelacionada();
+        Estancia estancia = Estancia.getEstanciaFromDB(getContext(),idEstanciaRelacionada);
         String noHab = "-";
         if (!estancia.getNo_hab().equals("")) {
             noHab = estancia.getNo_hab();
@@ -485,7 +496,7 @@ public class ReporteFragment extends Fragment {
 
     private void showDateIfValid(String fecha) {
         String fechaAnterior = tvDate.getText().toString();
-        Estancia estancia = getEstanciaRelacionada();
+        Estancia estancia = Estancia.getEstanciaFromDB(getContext(),idEstanciaRelacionada);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         try {
             Date desdeDate = sdf.parse(estancia.getDesde());
@@ -508,7 +519,7 @@ public class ReporteFragment extends Fragment {
         }
     }
 
-    private Estancia getEstanciaRelacionada() {
+    /*private Estancia getEstanciaRelacionada() {
         Estancia estancia = new Estancia();
         AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(), AdminSQLiteOpenHelper.BD_NAME, null, AdminSQLiteOpenHelper.BD_VERSION);
         SQLiteDatabase db = admin.getReadableDatabase();
@@ -526,7 +537,7 @@ public class ReporteFragment extends Fragment {
         }
         cursor.close();
         return estancia;
-    }
+    }*/
 
     private void resetFragment() {
         idReporteRelacionado = 0;

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.usuario.herramientadelmayordomo.Entities.Estancia;
 import com.example.usuario.herramientadelmayordomo.Entities.Reporte;
 import com.example.usuario.herramientadelmayordomo.R;
 
@@ -26,10 +27,13 @@ public class ReportesRVAdapter extends RecyclerView.Adapter<ReportesRVAdapter.Vi
     private List<Reporte> listReportes;
     private Context context;
 
-    public ReportesRVAdapter(Context context,CallBack callBack){
+    private int type;
+
+    public ReportesRVAdapter(Context context,CallBack callBack,int type){
         this.context = context;
         this.myCallBack = callBack;
         this.listReportes = new ArrayList<>();
+        this.type = type;
     }
 
     @Override
@@ -54,16 +58,18 @@ public class ReportesRVAdapter extends RecyclerView.Adapter<ReportesRVAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView fecha,mañana,tarde,noche;
+        private TextView tvIdentificador, tvReporteMañana, tvReporteTarde, tvReporteNoche, tvFamilyName, tvPeriodo;
         private CardView cardView;
         private CallBack cb;
 
         public ViewHolder(View view,CallBack callBack) {
             super(view);
-            fecha = (TextView)view.findViewById(R.id.tv_fecha_reporte_card_view);
-            mañana = (TextView)view.findViewById(R.id.tv_mañana_reportecardview);
-            tarde = (TextView)view.findViewById(R.id.tv_tarde_reportecardview);
-            noche = (TextView)view.findViewById(R.id.tv_noche_reportecardview);
+            tvIdentificador = (TextView)view.findViewById(R.id.tv_identifier_reporte_card_view);
+            tvFamilyName = (TextView)view.findViewById(R.id.tv_family_name_reporte_card_view);
+            tvPeriodo = (TextView)view.findViewById(R.id.tv_periodo_reporte_card_view);
+            tvReporteMañana = (TextView)view.findViewById(R.id.tv_mañana_reportecardview);
+            tvReporteTarde = (TextView)view.findViewById(R.id.tv_tarde_reportecardview);
+            tvReporteNoche = (TextView)view.findViewById(R.id.tv_noche_reportecardview);
             cardView = (CardView)view.findViewById(R.id.reporte_cardView);
             cardView.setOnClickListener(this);
             cb = callBack;
@@ -71,27 +77,40 @@ public class ReportesRVAdapter extends RecyclerView.Adapter<ReportesRVAdapter.Vi
         }
 
         public void bindComponents(int position){
-            fecha.setText(listReportes.get(position).getFecha());
+            if(type==Reporte.LAYOUT_EN_ESTANCIA) {//identificador refleja la fecha del reporte en el fragment Estancia
+                tvIdentificador.setText(listReportes.get(position).getFecha());
+                tvFamilyName.setText("");
+                tvPeriodo.setText("");
+                tvFamilyName.setVisibility(View.GONE);
+                tvPeriodo.setVisibility(View.GONE);
+            }else if (type==Reporte.LAYOUT_EN_REPORTES){//identificador refleja la número de hab del reporte en el fragment Reportes
+                Estancia estancia = Estancia.getEstanciaFromDB(context,listReportes.get(position).getEstanciaId());
+                tvIdentificador.setText(estancia.getNo_hab());
+                tvFamilyName.setText(estancia.getFamilyName());
+                tvPeriodo.setText(Estancia.formatPeriodoToShow(context,estancia.getDesde(),estancia.getHasta()));
+                tvFamilyName.setVisibility(View.VISIBLE);
+                tvPeriodo.setVisibility(View.VISIBLE);
+            }
             if(!listReportes.get(position).getReporteMañana().equals("")){
-                mañana.setText(getLabel(R.string.reporte_mañana,true));
-                mañana.setTextColor(ContextCompat.getColor(context,R.color.color_font_blanco));
+                tvReporteMañana.setText(getLabel(R.string.reporte_mañana,true));
+                tvReporteMañana.setTextColor(ContextCompat.getColor(context,R.color.color_font_blanco));
             }else {
-                mañana.setText(getLabel(R.string.reporte_mañana,false));
-                mañana.setTextColor(ContextCompat.getColor(context,R.color.link));
+                tvReporteMañana.setText(getLabel(R.string.reporte_mañana,false));
+                tvReporteMañana.setTextColor(ContextCompat.getColor(context,R.color.link));
             }
             if(!listReportes.get(position).getReporteTarde().equals("")){
-                tarde.setText(getLabel(R.string.reporte_tarde,true));
-                tarde.setTextColor(ContextCompat.getColor(context,R.color.color_font_blanco));
+                tvReporteTarde.setText(getLabel(R.string.reporte_tarde,true));
+                tvReporteTarde.setTextColor(ContextCompat.getColor(context,R.color.color_font_blanco));
             }else {
-                tarde.setText(getLabel(R.string.reporte_tarde,false));
-                tarde.setTextColor(ContextCompat.getColor(context,R.color.link));
+                tvReporteTarde.setText(getLabel(R.string.reporte_tarde,false));
+                tvReporteTarde.setTextColor(ContextCompat.getColor(context,R.color.link));
             }
             if(!listReportes.get(position).getReporteNoche().equals("")){
-                noche.setText(getLabel(R.string.reporte_noche,true));
-                noche.setTextColor(ContextCompat.getColor(context,R.color.color_font_blanco));
+                tvReporteNoche.setText(getLabel(R.string.reporte_noche,true));
+                tvReporteNoche.setTextColor(ContextCompat.getColor(context,R.color.color_font_blanco));
             }else {
-                noche.setText(getLabel(R.string.reporte_noche,false));
-                noche.setTextColor(ContextCompat.getColor(context,R.color.link));
+                tvReporteNoche.setText(getLabel(R.string.reporte_noche,false));
+                tvReporteNoche.setTextColor(ContextCompat.getColor(context,R.color.link));
             }
         }
 

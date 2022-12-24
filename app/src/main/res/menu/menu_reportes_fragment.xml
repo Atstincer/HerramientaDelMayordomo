@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/menu_item_enviar_mail_reportes_fragment"
+        android:title="@string/enviar_por_mail"
+        android:icon="@drawable/ic_mail"
+        app:showAsAction="ifRoom|collapseActionView"/>
+
+</menu>

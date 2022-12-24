@@ -1,6 +1,11 @@
 package com.example.usuario.herramientadelmayordomo.Util;
 
 
+import android.app.DatePickerDialog;
+import android.content.Context;
+import android.widget.DatePicker;
+import android.widget.TextView;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -144,5 +149,24 @@ public class DateHandler {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(timeStamp);
         return getFecha(calendar,patron);
+    }
+
+    public static void showDatePicker(Context ctx, final TextView textView, final DatePickerCallBack callBack) {
+        String tv_str = textView.getText().toString();
+        int year = Integer.parseInt(tv_str.substring(6));
+        int month = Integer.parseInt(tv_str.substring(3, 5)) - 1;
+        int day = Integer.parseInt(tv_str.substring(0, 2));
+
+        new DatePickerDialog(ctx, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                textView.setText(DateHandler.formatDateToShow(day,month+1,year));
+                callBack.dateSelected();
+            }
+        }, year, month, day).show();
+    }
+
+    public interface DatePickerCallBack{
+        void dateSelected();
     }
 }

@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menu_item_nuevo_nombre_de_familia"
-        android:title="@string/nuevo_nombre_de_familia" />
+        android:title="@string/nueva_familia" />
 
     <item
         android:id="@+id/menu_item_buscar_family_names"

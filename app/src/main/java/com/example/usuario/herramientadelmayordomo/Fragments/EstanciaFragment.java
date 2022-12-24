@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.example.usuario.herramientadelmayordomo.Adapters.ClientesRVAdapter;
 import com.example.usuario.herramientadelmayordomo.Adapters.ReportesRVAdapter;
 import com.example.usuario.herramientadelmayordomo.Almacenamiento.AdminSQLiteOpenHelper;
+import com.example.usuario.herramientadelmayordomo.DialogFragments.AddRecordatorioDialogF;
 import com.example.usuario.herramientadelmayordomo.DialogFragments.MyPickClienteDialogF;
 import com.example.usuario.herramientadelmayordomo.Entities.Cliente;
 import com.example.usuario.herramientadelmayordomo.Entities.Estancia;
@@ -60,7 +61,7 @@ import java.util.Locale;
  * Created by usuario on 6/11/2021.
  */
 
-public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.Callback, IMyFragments {
+public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.Callback, AddRecordatorioDialogF.CallBack, IMyFragments {
 
     public static final String TAG = "EstanciaFragment";
     /*
@@ -214,20 +215,27 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
                 //System.out.println("Item clicked: "+position);
                 myCallBack.setUpReportFragment(selectedEstancia.getId(), listReportesRelacionados.get(position).getId());
             }
-        });
+        },Reporte.LAYOUT_EN_ESTANCIA);
         rvReportes.setAdapter(reportesRVAdapter);
         rvReportes.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void setUpRegularMode() {
+        System.out.println("********************************");
+        System.out.println("Setting up regular Mode...");
         myCallBack.udActivity(EstanciaFragment.TAG);
         if (getArguments() != null) {
             getSelectedEstanciaFromDB((long) getArguments().get("id"));
+            System.out.println("..has arguments");
+            System.out.println("Selected estancia id: "+getArguments().get("id"));
+        }else {
+            System.out.println("Doesn't has arguments..");
         }
         if (selectedEstancia != null && selectedEstancia.getId() > 0) {
             getRelatedClientsFromDB(selectedEstancia.getId(), Estancias_Clientes.TABLE_NAME);
         }
         getRelatedReportsFromDB();
+        System.out.println("Reportes: "+listReportesRelacionados.size());
         showSelectedEstancia();
         //showRelatedClientsIfExist();
         getActivity().invalidateOptionsMenu();
@@ -532,6 +540,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
             } while (cursor.moveToNext());
         }
         cursor.close();
+        if(listClientesRelacionados.size()>0 && selectedEstancia!=null){selectedEstancia.setListClientes(listClientesRelacionados);}
     }
 
     private void getRelatedReportsFromDB() {
@@ -700,8 +709,8 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
 
                 //if(!Recordatorio.validarTimeStamp(timeStamp)){return;}
 
-                String title = estancia.getFamilyName();
-                String msg = getResources().getString(R.string.llegando_el)+" "+estancia.getDesde();
+                String title = estancia.getTitleRecordatorio();
+                String msg = estancia.getMensajeRecordatodio(getContext());
 
                 if(Recordatorio.setAlarm(getActivity().getApplicationContext(),new Recordatorio(0,desde,title,msg,estancia.getId()),true)){
                     try{
@@ -791,6 +800,12 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
                         selectedEstancia.getEmailBody(getContext())));
     }
 
+    private void agregarRecordatorio(){
+        AddRecordatorioDialogF addRecordatorioDialogF = new AddRecordatorioDialogF();
+        addRecordatorioDialogF.setTargetFragment(this,0);
+        addRecordatorioDialogF.show(getChildFragmentManager(),AddRecordatorioDialogF.TAG);
+    }
+
     private void showDialogPicker() {
         MyPickClienteDialogF dialog = new MyPickClienteDialogF();
         dialog.setTargetFragment(EstanciaFragment.this, 1);
@@ -833,8 +848,10 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
     private void showRVReportes() {
         if (listReportesRelacionados != null && listReportesRelacionados.size() > 0) {
             rvReportes.setVisibility(View.VISIBLE);
+            layoutReportes.setVisibility(View.VISIBLE);
         } else {
             rvReportes.setVisibility(View.GONE);
+            layoutReportes.setVisibility(View.GONE);
             //Toast.makeText(getContext(),R.string.no_existen_reportes,Toast.LENGTH_SHORT).show();
         }
     }
@@ -850,6 +867,12 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         } else {
             btnMain.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public long getSelectedEstanciaId() {
+        if(selectedEstancia==null){return 0;}
+        return selectedEstancia.getId();
     }
 
     @Override
@@ -884,6 +907,9 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
                 break;
             case R.id.menu_item_enviar_por_mail:
                 shareByMail();
+                break;
+            case R.id.menu_item_agregar_recordatorio:
+                agregarRecordatorio();
                 break;
         }
         return super.onOptionsItemSelected(item);

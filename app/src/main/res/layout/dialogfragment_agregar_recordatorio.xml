@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/color_backgroundActivity"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/tv_fecha_recordatodio_dialogfragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/seleccionar_fecha"
+        android:textColor="@color/color_font_blanco"
+        android:textSize="@dimen/tvSize"
+        android:padding="10dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel_recordatorio_dialogfragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:text="@string/btn_cancel"
+            android:textColor="@color/color_font_blanco" />
+
+        <Button
+            android:id="@+id/btn_ok_recordatorio_dialogfragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:background="@color/colorAccent"
+            android:text="@string/agregar_recordatorio"
+            android:textColor="@color/color_font_blanco" />
+
+    </LinearLayout>
+
+</LinearLayout>

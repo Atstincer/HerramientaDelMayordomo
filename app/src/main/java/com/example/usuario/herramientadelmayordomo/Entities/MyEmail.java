@@ -15,6 +15,8 @@ import com.example.usuario.herramientadelmayordomo.R;
 public class MyEmail {
 
     public static final String KEY_ENVIAR_INFO = "enviarInfo";
+    public static final String CAMPO_ASUNTO_MAIL = "asunto";
+    public static final String CAMPO_CUERPO_MAIL = "cuerpo";
 
     private String [] para;
     private String asunto,cuerpo;

@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.usuario.herramientadelmayordomo.Almacenamiento.AdminSQLiteOpenHelper;
 import com.example.usuario.herramientadelmayordomo.Almacenamiento.MySharedPreferences;
 import com.example.usuario.herramientadelmayordomo.Entities.Estancia;
 import com.example.usuario.herramientadelmayordomo.Entities.MyEmail;
@@ -26,6 +25,7 @@ import com.example.usuario.herramientadelmayordomo.Fragments.FamilyNamesFragment
 import com.example.usuario.herramientadelmayordomo.Fragments.FrontFragment;
 import com.example.usuario.herramientadelmayordomo.Fragments.RecordatoriosFragment;
 import com.example.usuario.herramientadelmayordomo.Fragments.ReporteFragment;
+import com.example.usuario.herramientadelmayordomo.Fragments.ReportesFragment;
 import com.example.usuario.herramientadelmayordomo.Interfaces.IMyFragments;
 import com.example.usuario.herramientadelmayordomo.Util.MyApp;
 
@@ -39,7 +39,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ClientesFragment.Callback, EstanciasFragment.CallBack, ClienteFragment.Callback,
                     EstanciaFragment.Callback, FamilyNamesFragment.Callback, FamilyNameFragment.CallBack, FrontFragment.Callback, ReporteFragment.CallBack,
-        AjustesFragment.MyCallBack, RecordatoriosFragment.CallBack {
+        AjustesFragment.MyCallBack, RecordatoriosFragment.CallBack, ReportesFragment.CallBack {
 
     public static final int REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_EXTORAGE = 0;
 
@@ -262,6 +262,10 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AjustesFragment()).addToBackStack(null).commit();
     }
 
+    private void setUpReportesFragment(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new ReportesFragment()).addToBackStack(null).commit();
+    }
+
     @Override
     public int getCurrentStateReporteFragment() {
         return currentStateReporteFragment;
@@ -313,13 +317,17 @@ public class MainActivity extends AppCompatActivity
                 break;
             case FamilyNameFragment.TAG:
                 if(currentStateFamilyNameFragment==MyApp.STATE_REGULAR){title = getResources().getString(R.string.familia);navigationView.setCheckedItem(R.id.nav_item_family_names);}
-                else if(currentStateFamilyNameFragment==MyApp.STATE_NEW){title = getResources().getString(R.string.nuevo_nombre_de_familia);navigationView.setCheckedItem(R.id.nav_item_nuevo_family_name);}
+                else if(currentStateFamilyNameFragment==MyApp.STATE_NEW){title = getResources().getString(R.string.nueva_familia);navigationView.setCheckedItem(R.id.nav_item_nuevo_family_name);}
                 else if(currentStateFamilyNameFragment==MyApp.STATE_UPDATE){title = getResources().getString(R.string.editar_nombre_de_familia);navigationView.setCheckedItem(R.id.nav_item_family_names);}
                 break;
             case ReporteFragment.TAG:
                 if(currentStateReporteFragment==MyApp.STATE_REGULAR){title = getResources().getString(R.string.reportes);}
                 else if(currentStateReporteFragment==MyApp.STATE_NEW){title = getResources().getString(R.string.new_reporte);}
                 //navigationView.setCheckedItem(R.id.nav_item_estancias);
+                break;
+            case ReportesFragment.TAG:
+                title = getString(R.string.reportes);
+                navigationView.setCheckedItem(R.id.nav_item_reportes);
                 break;
             case RecordatoriosFragment.TAG:
                 title = getString(R.string.recordatorios);
@@ -386,9 +394,9 @@ public class MainActivity extends AppCompatActivity
             if(currentStateEstanciaFragment==MyApp.STATE_UPDATE){
                 try{
                     IMyFragments fragment = (IMyFragments)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                    fragment.setUpNewState(MyApp.STATE_REGULAR);
                     currentStateEstanciaFragment = MyApp.STATE_REGULAR;
-                    udActivity(EstanciaFragment.TAG);
+                    fragment.setUpNewState(MyApp.STATE_REGULAR);
+                    //udActivity(EstanciaFragment.TAG);
                 }catch (ClassCastException e){
                     Toast.makeText(this,e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -451,6 +459,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_item_family_names:
                 setUpFamilyNamesFragment();
+                break;
+            case R.id.nav_item_reportes:
+                setUpReportesFragment();
                 break;
             case R.id.nav_item_recordatorios:
                 setUpRecordatoriosFragment();

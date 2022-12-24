@@ -65,6 +65,8 @@ public class ClienteFragment extends Fragment implements IMyFragments {
 //    private TextView preferencias, limitaciones, obs;
     private Button btn;
 
+    private boolean fotoSelected;
+
     private Cliente selectedClient;
 
     private int TOMAR_FOTO = 100;
@@ -96,6 +98,7 @@ public class ClienteFragment extends Fragment implements IMyFragments {
     }
 
     private void bindComponents(View view) {
+        fotoSelected = false;
         foto = (ImageView) view.findViewById(R.id.iv_foto_cliente);
         nombre = (EditText) view.findViewById(R.id.et_nombre);
         pass = (EditText) view.findViewById(R.id.et_pass);
@@ -137,6 +140,7 @@ public class ClienteFragment extends Fragment implements IMyFragments {
                                 break;
                             case R.id.menu_item_eliminar_foto:
                                 foto.setImageResource(R.drawable.ic_cliente);
+                                fotoSelected = false;
                                 break;
                             default:
                                 break;
@@ -342,10 +346,12 @@ public class ClienteFragment extends Fragment implements IMyFragments {
         newCliente.setOrigenPais(pais.getText().toString());
         newCliente.setOrigenCiudad(ciudad.getText().toString());
         newCliente.setDob(dob.getText().toString());
-        try {
-            newCliente.setFoto(((BitmapDrawable) foto.getDrawable()).getBitmap());
-        } catch (Exception e) {
-            //do nothing
+        if(fotoSelected) {
+            try {
+                newCliente.setFoto(((BitmapDrawable) foto.getDrawable()).getBitmap());
+            } catch (Exception e) {
+                //do nothing
+            }
         }
         newCliente.setPreferencias(preferencias.getText().toString());
         newCliente.setLimitaciones(limitaciones.getText().toString());
@@ -562,6 +568,7 @@ public class ClienteFragment extends Fragment implements IMyFragments {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imagenUri);
                 foto.setImageBitmap(MyBitmapFactory.getScaledBitmap(bitmap, foto));
+                fotoSelected = true;
             } catch (IOException e) {
                 Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -569,6 +576,7 @@ public class ClienteFragment extends Fragment implements IMyFragments {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             foto.setImageBitmap(MyBitmapFactory.getScaledBitmap(imageBitmap, foto));
+            fotoSelected = true;
         }
     }
 

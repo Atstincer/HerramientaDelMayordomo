@@ -45,17 +45,17 @@
 
     </item>
 
-    <item android:title="@string/nombre_de_familia">
+    <item android:title="@string/familias">
         <menu>
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/nav_item_nuevo_family_name"
                     android:icon="@drawable/ic_add_family_names"
-                    android:title="@string/nuevo_nombre_de_familia" />
+                    android:title="@string/nueva_familia" />
                 <item
                     android:id="@+id/nav_item_family_names"
                     android:icon="@drawable/ic_family_names"
-                    android:title="@string/nombre_de_familia" />
+                    android:title="@string/familias" />
             </group>
         </menu>
     </item>
@@ -65,6 +65,11 @@
             android:id="@+id/nav_item_recordatorios"
             android:icon="@drawable/ic_recordatorios"
             android:title="@string/recordatorios" />
+
+        <item
+            android:id="@+id/nav_item_reportes"
+            android:icon="@drawable/reporte"
+            android:title="@string/reportes" />
 
         <item
             android:id="@+id/nav_item_ajustes"
