@@ -6,14 +6,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
 
-
-    <string name="estancias">Estancias</string>
-    <string name="estancia">Estancia</string>
-    <string name="nueva_estancia">Nueva estancia</string>
-    <string name="actualizar_estancia">Actualizar estancia</string>
-    <string name="no_estancias_registradas">No hay estancias registradas</string>
-
-
     <string name="Hab">Hab</string>
     <string name="numero_de_habitacion">Número de habitación</string>
     <string name="reportes">Reportes</string>
@@ -42,7 +34,16 @@
 
 
     <!-->ESTANCIAS</-->
+    <string name="estancias">Estancias</string>
+    <string name="estancia">Estancia</string>
+    <string name="nueva_estancia">Nueva estancia</string>
+    <string name="actualizar_estancia">Actualizar estancia</string>
+    <string name="no_estancias_registradas">No hay estancias registradas</string>
+    <string name="casa">Casa</string>
     <string name="segun_cliente">Según cliente</string>
+    <string name="cliente">Cliente</string>
+    <string name="segun_periodo">Según período</string>
+    <string name="periodo">Período</string>
     <string name="segun_hab">Según habitación</string>
     <string name="confirmar_eliminar_estancia">Seguro que desea eliminar esta estancia?</string>
 
@@ -104,7 +105,6 @@
     <string name="eliminar">Eliminar</string>
 
     <!-->MENUS</-->
-    <string name="segun_periodo">Según período</string>
     <string name="en_casa">En casa</string>
     <string name="tomar_foto">Tomar foto</string>
     <string name="selecionar_foto_galeria">Seleccionar foto</string>

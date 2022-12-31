@@ -707,12 +707,12 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
                 long desde = DateHandler.configurarHoraRecordatorio(DateHandler.getCalendar(estancia.getDesde(), DateHandler.FECHA_FORMATO_MOSTRAR)).getTimeInMillis();
                 long timeStamp = desde - diasAntelacion;
 
-                //if(!Recordatorio.validarTimeStamp(timeStamp)){return;}
+                if(!Recordatorio.validarTimeStamp(timeStamp)){return;}
 
                 String title = estancia.getTitleRecordatorio();
                 String msg = estancia.getMensajeRecordatodio(getContext());
 
-                if(Recordatorio.setAlarm(getActivity().getApplicationContext(),new Recordatorio(0,desde,title,msg,estancia.getId()),true)){
+                if(Recordatorio.setAlarm(getContext(),new Recordatorio(0,timeStamp,title,msg,estancia.getId()),true)){
                     try{
                         Thread.sleep(1000);
                     }catch (InterruptedException e){

@@ -10,10 +10,10 @@
                     android:icon="@drawable/ic_add_estancia"
                     android:title="@string/nueva_estancia" />
                 <item
-                    android:id="@+id/nav_item_en_casa"
+                    android:id="@+id/nav_item_estancias"
                     android:icon="@drawable/en_casa"
-                    android:title="@string/en_casa" />
-                <item
+                    android:title="@string/estancias" />
+                <!--item
                     android:id="@+id/nav_item_segun_periodo"
                     android:icon="@drawable/calendar_icon"
                     android:title="@string/segun_periodo" />
@@ -24,7 +24,7 @@
                 <item
                     android:id="@+id/nav_item_segun_hab"
                     android:icon="@drawable/hab_icon"
-                    android:title="@string/segun_hab" />
+                    android:title="@string/segun_hab" /-->
             </group>
         </menu>
     </item>

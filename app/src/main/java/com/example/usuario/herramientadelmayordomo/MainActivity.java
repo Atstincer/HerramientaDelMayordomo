@@ -49,10 +49,10 @@ public class MainActivity extends AppCompatActivity
     private int currentStateClienteFragment;
     private int currentStateFamilyNameFragment;
     private int currentStateEstanciaFragment;
-    //private int currentStateEstanciasFragment;
+    private int currentStateEstanciasFragment;
     private int currentStateReporteFragment;
 
-    private ArrayList<Integer> estanciasFragmentHistorial;
+    //private ArrayList<Integer> estanciasFragmentHistorial;
 
     private boolean seDioMttoBD;
 
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         seDioMttoBD = false;
-        estanciasFragmentHistorial = new ArrayList<>();
+        //estanciasFragmentHistorial = new ArrayList<>();
 
         if(savedInstanceState != null) {
             for(String key:savedInstanceState.keySet()){
@@ -82,8 +82,9 @@ public class MainActivity extends AppCompatActivity
                     case "currentStateFamilyNameFragment":
                         currentStateFamilyNameFragment = savedInstanceState.getInt("currentStateFamilyNameFragment");
                         break;
-                    case "estanciasFragmentHistorial":
-                        estanciasFragmentHistorial = savedInstanceState.getIntegerArrayList("estanciasFragmentHistorial");
+                    case "currentStateEstanciasFragment":
+                        //estanciasFragmentHistorial = savedInstanceState.getIntegerArrayList("estanciasFragmentHistorial");
+                        currentStateEstanciasFragment = savedInstanceState.getInt("currentStateEstanciasFragment");
                         break;
                     case "seDioMttoBD":
                         seDioMttoBD = savedInstanceState.getBoolean("seDioMttoBD");
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity
         outState.putInt("currentStateEstanciaFragment",currentStateEstanciaFragment);
         outState.putInt("currentStateFamilyNameFragment",currentStateFamilyNameFragment);
         outState.putInt("currentStateReporteFragment",currentStateReporteFragment);
-        outState.putIntegerArrayList("estanciasFragmentHistorial",estanciasFragmentHistorial);
+        outState.putInt("currentStateEstanciasFragment",currentStateEstanciasFragment);
         outState.putBoolean("seDioMttoBD", seDioMttoBD);
         super.onSaveInstanceState(outState);
     }
@@ -212,7 +213,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setUpEstanciasFragment(int state) {
-        estanciasFragmentHistorial.add(state);
+        //estanciasFragmentHistorial.add(state);
+        currentStateEstanciasFragment = state;
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EstanciasFragment(),EstanciasFragment.TAG).addToBackStack(null).commit();
     }
 
@@ -279,23 +281,23 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public int getCurrentStateEstanciasFragment() {
-        return estanciasFragmentHistorial.get(estanciasFragmentHistorial.size()-1);
+        return currentStateEstanciasFragment;
     }
 
+    @Override
+    public void setCurrentStateStanciasFragment(int state) {
+        currentStateEstanciasFragment = state;
+    }
 
     public void udActivity(String fragmentTag){
         String title = "";
         switch(fragmentTag){
             case EstanciasFragment.TAG:
-                int currentState = estanciasFragmentHistorial.get(estanciasFragmentHistorial.size()-1);
-                if(currentState==MyApp.STATE_EN_CASA){title = getResources().getString(R.string.en_casa);
-                    navigationView.setCheckedItem(R.id.nav_item_en_casa);}
-                else if(currentState==MyApp.STATE_SEGUN_PERIODO){title = getResources().getString(R.string.segun_periodo);
-                    navigationView.setCheckedItem(R.id.nav_item_segun_periodo);}
-                else if(currentState==MyApp.STATE_SEGUN_CLIENTE){title = getResources().getString(R.string.segun_cliente);
-                    navigationView.setCheckedItem(R.id.nav_item_segun_cliente);}
-                else if(currentState==MyApp.STATE_SEGUN_HAB){title = getResources().getString(R.string.segun_hab);
-                    navigationView.setCheckedItem(R.id.nav_item_segun_hab);}
+                if(currentStateEstanciasFragment==MyApp.STATE_EN_CASA){title = getResources().getString(R.string.en_casa);}
+                else if(currentStateEstanciasFragment==MyApp.STATE_SEGUN_PERIODO){title = getResources().getString(R.string.segun_periodo);}
+                else if(currentStateEstanciasFragment==MyApp.STATE_SEGUN_CLIENTE){title = getResources().getString(R.string.segun_cliente);}
+                else if(currentStateEstanciasFragment==MyApp.STATE_SEGUN_HAB){title = getResources().getString(R.string.segun_hab);}
+                navigationView.setCheckedItem(R.id.nav_item_estancias);
                 break;
             case EstanciaFragment.TAG:
                 if(currentStateEstanciaFragment==MyApp.STATE_REGULAR){title = getResources().getString(R.string.estancia);unCheckedNavigationView();}
@@ -403,9 +405,6 @@ public class MainActivity extends AppCompatActivity
             }else{
                 super.onBackPressed();
             }
-        } else if(getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof EstanciasFragment){
-            estanciasFragmentHistorial.remove(estanciasFragmentHistorial.size()-1);
-            super.onBackPressed();
         } else {
             super.onBackPressed();
         }
@@ -436,10 +435,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_item_nueva_estancia:
                 setUpNewEstanciaFragment();
                 break;
-            case R.id.nav_item_en_casa:
+            case R.id.nav_item_estancias:
                 setUpEstanciasFragment(MyApp.STATE_EN_CASA);
                 break;
-            case R.id.nav_item_segun_cliente:
+            /*case R.id.nav_item_segun_cliente:
                 setUpEstanciasFragment(MyApp.STATE_SEGUN_CLIENTE);
                 break;
             case R.id.nav_item_segun_periodo:
@@ -447,7 +446,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_item_segun_hab:
                 setUpEstanciasFragment(MyApp.STATE_SEGUN_HAB);
-                break;
+                break;*/
             case R.id.nav_item_nuevo_cliente:
                 setUpNewClientFragment();
                 break;

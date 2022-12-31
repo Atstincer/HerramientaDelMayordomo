@@ -62,7 +62,7 @@ public class Recordatorio {
         return validarTimeStamp(calendar.getTimeInMillis());
     }
 
-    private static boolean validarTimeStamp(long timeStamp){
+    public static boolean validarTimeStamp(long timeStamp){
         long timeStampNow = Calendar.getInstance().getTimeInMillis();
         return timeStampNow<timeStamp;
     }

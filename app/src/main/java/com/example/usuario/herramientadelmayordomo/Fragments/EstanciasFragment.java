@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -20,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -54,14 +56,19 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
 
 
     private RecyclerView rvEstancias;
-    private TextView tvNoEstanciasRegistradas, desde, hasta;
-    private LinearLayout layoutBuscarEstanciaPeriodo;
+    private TextView tvNoEstanciasRegistradas, desde, hasta, tvBtnEnCasa, tvBtnSegunCliente, tvBtnSegunPeriodo, tvBtnSegunHab;
+    private ImageView ivBtnEnCasa, ivBtnSegunCliente, ivBtnSegunPeriodo, ivBtnSegunHab;
+    private LinearLayout layoutBuscarEstanciaPeriodo, btnEnCasa, btnSegunCliente, btnSegunPeriodo, btnSegunHab;
     private RelativeLayout layoutBuscarEstanciaCliente,layoutBuscarEstanciaHabitacion;
     private AutoCompleteTextView actvClientes;
     private EditText etNoHab;
 
 
     private List<Estancia> listEstancias;
+
+    //Indices en este orden Casa, Cliente, Periodo, Hab
+    private List<LinearLayout> btnsBarraMenu;
+    private List<TextView> textViewsBarraMenu;
 
     private EstanciasRVAdapter adapter;
     private CallBack myCallBack;
@@ -78,8 +85,6 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
         super.onViewCreated(view, savedInstanceState);
         bindComponents(view);
         setUpEstanciasFragment();
-        //setUpRV();
-        //setUpEstanciasFragment();
     }
 
     @Override
@@ -112,14 +117,13 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
             }
         });
         layoutBuscarEstanciaPeriodo = (LinearLayout)view.findViewById(R.id.layout_buscar_estancia_periodo);
-        myCallBack.udActivity(EstanciasFragment.TAG);
-        FloatingActionButton fab = (FloatingActionButton)view.findViewById(R.id.fab_estancias);
+        /*FloatingActionButton fab = (FloatingActionButton)view.findViewById(R.id.fab_estancias);
         fab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 myCallBack.setUpNewEstanciaFragment();
             }
-        });
+        });*/
         layoutBuscarEstanciaCliente = (RelativeLayout)view.findViewById(R.id.layout_buscar_estancia_cliente);
         layoutBuscarEstanciaHabitacion = (RelativeLayout) view.findViewById(R.id.layout_buscar_estancia_hab);
         actvClientes = (AutoCompleteTextView)view.findViewById(R.id.actv_clientes);
@@ -151,6 +155,66 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
                 showEstanciasIfExist();
             }
         });
+
+        btnEnCasa = (LinearLayout)view.findViewById(R.id.layout_btn_en_casa);
+        btnSegunCliente = (LinearLayout)view.findViewById(R.id.layout_btn_segun_cliente);
+        btnSegunPeriodo = (LinearLayout)view.findViewById(R.id.layout_btn_segun_periodo);
+        btnSegunHab = (LinearLayout)view.findViewById(R.id.layout_btn_segun_hab);
+
+        ivBtnEnCasa = (ImageView)view.findViewById(R.id.iv_btn_en_casa);
+        ivBtnSegunCliente = (ImageView)view.findViewById(R.id.iv_btn_segun_cliente);
+        ivBtnSegunPeriodo = (ImageView)view.findViewById(R.id.iv_btn_segun_periodo);
+        ivBtnSegunHab = (ImageView)view.findViewById(R.id.iv_btn_segun_hab);
+
+        tvBtnEnCasa = (TextView)view.findViewById(R.id.tv_btn_en_casa);
+        tvBtnSegunCliente = (TextView)view.findViewById(R.id.tv_btn_segun_cliente);
+        tvBtnSegunPeriodo = (TextView)view.findViewById(R.id.tv_btn_segun_periodo);
+        tvBtnSegunHab = (TextView)view.findViewById(R.id.tv_btn_segun_hab);
+
+        btnsBarraMenu = new ArrayList<LinearLayout>();
+        btnsBarraMenu.add(btnEnCasa);
+        btnsBarraMenu.add(btnSegunCliente);
+        btnsBarraMenu.add(btnSegunPeriodo);
+        btnsBarraMenu.add(btnSegunHab);
+
+        textViewsBarraMenu = new ArrayList<>();
+        textViewsBarraMenu.add(tvBtnEnCasa);
+        textViewsBarraMenu.add(tvBtnSegunCliente);
+        textViewsBarraMenu.add(tvBtnSegunPeriodo);
+        textViewsBarraMenu.add(tvBtnSegunHab);
+
+        btnEnCasa.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                myCallBack.setCurrentStateStanciasFragment(MyApp.STATE_EN_CASA);
+                setUpEstanciasFragment();
+            }
+        });
+
+        btnSegunCliente.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                myCallBack.setCurrentStateStanciasFragment(MyApp.STATE_SEGUN_CLIENTE);
+                setUpEstanciasFragment();
+            }
+        });
+
+        btnSegunPeriodo.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                myCallBack.setCurrentStateStanciasFragment(MyApp.STATE_SEGUN_PERIODO);
+                setUpEstanciasFragment();
+            }
+        });
+
+        btnSegunHab.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                myCallBack.setCurrentStateStanciasFragment(MyApp.STATE_SEGUN_HAB);
+                setUpEstanciasFragment();
+            }
+        });
+
         adapter = new EstanciasRVAdapter(getContext(),this);
         rvEstancias.setAdapter(adapter);
         rvEstancias.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -438,6 +502,8 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
                 setUpStateSegunHab();
                 break;
         }
+        showEstanciasIfExist();
+        udMenuBar();
     }
 
     private void setUpStateSegunHab(){
@@ -445,7 +511,6 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
         myCallBack.udActivity(EstanciasFragment.TAG);
         showLayout(MyApp.STATE_SEGUN_HAB);
         getEstanciasSegunHab();
-        showEstanciasIfExist();
     }
 
     private void setUpStateSegunCliente(){
@@ -453,7 +518,6 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
         myCallBack.udActivity(EstanciasFragment.TAG);
         showLayout(MyApp.STATE_SEGUN_CLIENTE);
         emptyListEstancias();
-        showEstanciasIfExist();
     }
 
     private void setUpStateSegunPeriodo(){
@@ -461,18 +525,52 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
         myCallBack.udActivity(EstanciasFragment.TAG);
         showLayout(MyApp.STATE_SEGUN_PERIODO);
         getEstanciasFromDB(desde.getText().toString(),hasta.getText().toString());
-        showEstanciasIfExist();
     }
 
     private void setUpStateEnCasa(){
-        //myCallBack.setCurrentStateStanciasFragment(MyApp.STATE_EN_CASA);
         myCallBack.udActivity(EstanciasFragment.TAG);
         showLayout(MyApp.STATE_EN_CASA);
         getEstanciasEnCasa();
-        showEstanciasIfExist();
     }
 
+    private void udMenuBar(){
+        deSelectViewsMenuBar();
+        switch (myCallBack.getCurrentStateEstanciasFragment()){
+            case MyApp.STATE_EN_CASA:
+                btnEnCasa.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.mi_btn_background));
+                ivBtnEnCasa.setImageResource(R.drawable.casa_selected);
+                tvBtnEnCasa.setTextColor(ContextCompat.getColor(getContext(),R.color.color_backgroundActivity));
+                break;
+            case MyApp.STATE_SEGUN_CLIENTE:
+                btnSegunCliente.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.mi_btn_background));
+                ivBtnSegunCliente.setImageResource(R.drawable.ic_cliente_sin_relleno_selected);
+                tvBtnSegunCliente.setTextColor(ContextCompat.getColor(getContext(),R.color.color_backgroundActivity));
+                break;
+            case MyApp.STATE_SEGUN_PERIODO:
+                btnSegunPeriodo.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.mi_btn_background));
+                ivBtnSegunPeriodo.setImageResource(R.drawable.calendario_selected);
+                tvBtnSegunPeriodo.setTextColor(ContextCompat.getColor(getContext(),R.color.color_backgroundActivity));
+                break;
+            case MyApp.STATE_SEGUN_HAB:
+                btnSegunHab.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.mi_btn_background));
+                ivBtnSegunHab.setImageResource(R.drawable.hab_selected);
+                tvBtnSegunHab.setTextColor(ContextCompat.getColor(getContext(),R.color.color_backgroundActivity));
+                break;
+        }
+    }
 
+    private void deSelectViewsMenuBar(){
+        for (LinearLayout layout : btnsBarraMenu){
+            layout.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
+        }
+        for (TextView textView : textViewsBarraMenu){
+            textView.setTextColor(ContextCompat.getColor(getContext(),R.color.color_font_blanco));
+        }
+        ivBtnEnCasa.setImageResource(R.drawable.casa_en_blanco);
+        ivBtnSegunCliente.setImageResource(R.drawable.ic_cliente_sin_relleno);
+        ivBtnSegunPeriodo.setImageResource(R.drawable.calendario);
+        ivBtnSegunHab.setImageResource(R.drawable.hab_icon);
+    }
 
     private void emptyListEstancias(){
         if(listEstancias==null){listEstancias = new ArrayList<>();}
@@ -483,7 +581,7 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
         void setUpNewEstanciaFragment();
         void setUpEstanciaFragment(long id);
         int getCurrentStateEstanciasFragment();
-        //void setCurrentStateStanciasFragment(int state);
+        void setCurrentStateStanciasFragment(int state);
         void udActivity(String tag);
     }
 }
