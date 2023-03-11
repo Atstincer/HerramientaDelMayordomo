@@ -13,18 +13,6 @@
                     android:id="@+id/nav_item_estancias"
                     android:icon="@drawable/en_casa"
                     android:title="@string/estancias" />
-                <!--item
-                    android:id="@+id/nav_item_segun_periodo"
-                    android:icon="@drawable/calendar_icon"
-                    android:title="@string/segun_periodo" />
-                <item
-                    android:id="@+id/nav_item_segun_cliente"
-                    android:icon="@drawable/segun_cliente"
-                    android:title="@string/segun_cliente" />
-                <item
-                    android:id="@+id/nav_item_segun_hab"
-                    android:icon="@drawable/hab_icon"
-                    android:title="@string/segun_hab" /-->
             </group>
         </menu>
     </item>
@@ -40,18 +28,6 @@
                     android:id="@+id/nav_item_clientes"
                     android:icon="@drawable/ic_cliente"
                     android:title="@string/clientes" />
-            </group>
-        </menu>
-
-    </item>
-
-    <item android:title="@string/familias">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_item_nuevo_family_name"
-                    android:icon="@drawable/ic_add_family_names"
-                    android:title="@string/nueva_familia" />
                 <item
                     android:id="@+id/nav_item_family_names"
                     android:icon="@drawable/ic_family_names"
@@ -76,19 +52,5 @@
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/ajustes" />
     </group>
-
-
-    <!--item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item-->
 
 </menu>

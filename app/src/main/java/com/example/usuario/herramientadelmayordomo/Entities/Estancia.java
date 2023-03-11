@@ -38,6 +38,7 @@ public class Estancia {
     private int adultos, menores, infantes;
     private String desde,hasta,no_hab,familyName,observaciones;
     private List<Cliente> listClientes;
+    private List<Reporte> listReportes;
 
     public Estancia() {
     }
@@ -104,14 +105,6 @@ public class Estancia {
         return String.valueOf(noches);
     }
 
-    public long getFamilyName_id() {
-        return familyName_id;
-    }
-
-    public void setFamilyName_id(long familyName_id) {
-        this.familyName_id = familyName_id;
-    }
-
     public String getDesde() {
         return desde;
     }
@@ -142,6 +135,14 @@ public class Estancia {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public List<Reporte> getListReportes() {
+        return listReportes;
+    }
+
+    public void setListReportes(List<Reporte> listReportes) {
+        this.listReportes = listReportes;
     }
 
     public String getEmailAsunto(){

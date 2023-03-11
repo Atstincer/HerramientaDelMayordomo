@@ -38,7 +38,7 @@ public class MyPickClienteDialogF extends DialogFragment {
     private List<Cliente> fullListClientes;
     private ClientesRVAdapter adapter;
 
-    private RecyclerView rv_clientesRelacionados;
+    private RecyclerView rvClientesRelacionados;
 
 
     @Nullable
@@ -71,7 +71,7 @@ public class MyPickClienteDialogF extends DialogFragment {
 
     private void bindComponents(View v){
         SearchView sv = (SearchView)v.findViewById(R.id.sv_client_pick_dialog);
-        rv_clientesRelacionados = (RecyclerView)v.findViewById(R.id.rv_clientes);
+        rvClientesRelacionados = (RecyclerView)v.findViewById(R.id.rv_clientes);
         Button btn_ok = (Button)v.findViewById(R.id.btn_ok_cliente_pick_dialog);
         Button btn_cancel = (Button)v.findViewById(R.id.btn_cancel_cliente_pick_dialog);
 
@@ -127,7 +127,6 @@ public class MyPickClienteDialogF extends DialogFragment {
             }while(cursor.moveToNext());
         }
         cursor.close();
-        Collections.sort(fullListClientes,Cliente.nameAscending);
     }
 
     private void udClientesRelacionados(){
@@ -138,6 +137,23 @@ public class MyPickClienteDialogF extends DialogFragment {
                 if(c1.getId()==c2.getId()){c2.setChecked(true);}
             }
         }
+        reOrderList();
+    }
+
+    private void reOrderList(){
+        Collections.sort(fullListClientes,Cliente.nameAscending);
+        List<Cliente> listClientesChecked = new ArrayList<>();
+        List<Cliente> listClientesNotChecked = new ArrayList<>();
+        for(Cliente c: fullListClientes){
+            if(c.isChecked()){
+                listClientesChecked.add(c);
+            }else {
+                listClientesNotChecked.add(c);
+            }
+        }
+        fullListClientes.clear();
+        fullListClientes.addAll(listClientesChecked);
+        fullListClientes.addAll(listClientesNotChecked);
     }
 
     private void setUpAdapter(){
@@ -146,13 +162,15 @@ public class MyPickClienteDialogF extends DialogFragment {
             public void onItemClicked(int position) {
                 //fullListClientes.get(position).checkUncheck();
                 //fullListClientes.get(fullListClientes.indexOf(listClientes.get(position))).checkUncheck();
+                reOrderList();
+                adapter.setListClientes(fullListClientes);
             }
         },true,false); //estaba true
     }
 
     private void setUpRecyclerView(){
-        rv_clientesRelacionados.setAdapter(adapter);
-        rv_clientesRelacionados.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvClientesRelacionados.setAdapter(adapter);
+        rvClientesRelacionados.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     public interface Callback{

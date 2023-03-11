@@ -53,18 +53,16 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
 
     public static final String TAG = "EstanciasFragment";
 
-
-
     private RecyclerView rvEstancias;
     private TextView tvNoEstanciasRegistradas, desde, hasta, tvBtnEnCasa, tvBtnSegunCliente, tvBtnSegunPeriodo, tvBtnSegunHab;
     private ImageView ivBtnEnCasa, ivBtnSegunCliente, ivBtnSegunPeriodo, ivBtnSegunHab;
     private LinearLayout layoutBuscarEstanciaPeriodo, btnEnCasa, btnSegunCliente, btnSegunPeriodo, btnSegunHab;
     private RelativeLayout layoutBuscarEstanciaCliente,layoutBuscarEstanciaHabitacion;
-    private AutoCompleteTextView actvClientes;
     private EditText etNoHab;
 
-
+    private String desdeStr, hastaStr;
     private List<Estancia> listEstancias;
+    private Cliente selectedClient;
 
     //Indices en este orden Casa, Cliente, Periodo, Hab
     private List<LinearLayout> btnsBarraMenu;
@@ -72,6 +70,7 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
 
     private EstanciasRVAdapter adapter;
     private CallBack myCallBack;
+
 
     @Nullable
     @Override
@@ -84,7 +83,7 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bindComponents(view);
-        setUpEstanciasFragment();
+        //setUpEstanciasFragment();
     }
 
     @Override
@@ -98,6 +97,7 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
         super.onResume();
         setUpEstanciasFragment();
     }
+
 
     private void bindComponents(View view){
         rvEstancias = (RecyclerView)view.findViewById(R.id.rv_estancias);
@@ -126,16 +126,38 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
         });*/
         layoutBuscarEstanciaCliente = (RelativeLayout)view.findViewById(R.id.layout_buscar_estancia_cliente);
         layoutBuscarEstanciaHabitacion = (RelativeLayout) view.findViewById(R.id.layout_buscar_estancia_hab);
-        actvClientes = (AutoCompleteTextView)view.findViewById(R.id.actv_clientes);
+        final AutoCompleteTextView actvClientes = (AutoCompleteTextView)view.findViewById(R.id.actv_clientes);
         actvClientes.setAdapter(new ArrayAdapter<Cliente>(getContext(),R.layout.my_simple_dropdown_item_1line,getListClientesFromDB()));
         actvClientes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Cliente c = (Cliente)adapterView.getItemAtPosition(position);
-                getEstanciasSegunCliente(c.getId());
+                selectedClient = (Cliente)adapterView.getItemAtPosition(position);
+                getEstanciasSegunCliente(selectedClient.getId());
                 showEstanciasIfExist();
             }
         });
+
+        actvClientes.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //do nothing
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(actvClientes.getText().toString().equals("")){
+                    selectedClient = null;
+                    emptyListEstancias();
+                    showEstanciasIfExist();
+                }
+            }
+        });
+
         etNoHab = (EditText)view.findViewById(R.id.et_no_hab_estancias_fragment);
 
         etNoHab.addTextChangedListener(new TextWatcher() {
@@ -386,10 +408,17 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
             @Override
             public void onDateSet(DatePicker datePicker, int y, int m, int d) {
                 tv.setText(DateHandler.formatDateToShow(d,m+1,y));
-                getEstanciasFromDB(desde.getText().toString(),hasta.getText().toString());
+                savedDateSelected();
+                //getEstanciasFromDB(desde.getText().toString(),hasta.getText().toString());
+                getEstanciasFromDB(desdeStr,hastaStr);
                 showEstanciasIfExist();
             }
         }, year, month, day).show();
+    }
+
+    private void savedDateSelected(){
+        desdeStr = desde.getText().toString();
+        hastaStr = hasta.getText().toString();
     }
 
     private void showEstanciasIfExist(){
@@ -432,51 +461,14 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
     }
 
     private void hideAllLayouts(){
-        desde.setText(getResources().getString(R.string.desde));
-        hasta.setText(getResources().getString(R.string.hasta));
-        actvClientes.setText("");
-        etNoHab.setText("");
+        //desde.setText(getResources().getString(R.string.desde));
+        //hasta.setText(getResources().getString(R.string.hasta));
+        //actvClientes.setText("");
+        //etNoHab.setText("");
         layoutBuscarEstanciaPeriodo.setVisibility(View.GONE);
         layoutBuscarEstanciaCliente.setVisibility(View.GONE);
         layoutBuscarEstanciaHabitacion.setVisibility(View.GONE);
     }
-
-
-
-    /*
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(menu!=null){
-            menu.clear();
-        }
-        inflater.inflate(R.menu.menu_estancias,menu);
-        inflater.inflate(R.menu.menu_main,menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.menu_item_nuevaEstancia:
-                myCallBack.setUpNewEstanciaFragment();
-                break;
-            case R.id.menu_item_en_casa:
-                setUpStateEnCasa();
-                break;
-            case R.id.menu_item_segun_periodo:
-                setUpStateSegunPeriodo();
-                break;
-            case R.id.menu_item_segun_cliente:
-                setUpStateSegunCliente();
-                break;
-            case R.id.menu_item_segun_hab:
-                setUpStateSegunHab();
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }*/
 
     private void setUpEstanciasFragment(){
         setUpEstanciasFragment(myCallBack.getCurrentStateEstanciasFragment());
@@ -503,28 +495,34 @@ public class EstanciasFragment extends Fragment implements EstanciasRVAdapter.Ca
                 break;
         }
         showEstanciasIfExist();
+        myCallBack.udActivity(EstanciasFragment.TAG);
         udMenuBar();
     }
 
     private void setUpStateSegunHab(){
-        //myCallBack.setCurrentStateStanciasFragment(MyApp.STATE_SEGUN_HAB);
         myCallBack.udActivity(EstanciasFragment.TAG);
         showLayout(MyApp.STATE_SEGUN_HAB);
         getEstanciasSegunHab();
     }
 
     private void setUpStateSegunCliente(){
-        //myCallBack.setCurrentStateStanciasFragment(MyApp.STATE_SEGUN_CLIENTE);
         myCallBack.udActivity(EstanciasFragment.TAG);
         showLayout(MyApp.STATE_SEGUN_CLIENTE);
         emptyListEstancias();
+        if(selectedClient!=null){
+            getEstanciasSegunCliente(selectedClient.getId());
+        }
     }
 
     private void setUpStateSegunPeriodo(){
-        //myCallBack.setCurrentStateStanciasFragment(MyApp.STATE_SEGUN_PERIODO);
         myCallBack.udActivity(EstanciasFragment.TAG);
         showLayout(MyApp.STATE_SEGUN_PERIODO);
-        getEstanciasFromDB(desde.getText().toString(),hasta.getText().toString());
+        if(desdeStr!=null && !desdeStr.equals("") && hastaStr!=null && !hastaStr.equals("")){
+            desde.setText(desdeStr);
+            hasta.setText(hastaStr);
+        }
+        getEstanciasFromDB(desdeStr,hastaStr);
+        //getEstanciasFromDB(desde.getText().toString(),hasta.getText().toString());
     }
 
     private void setUpStateEnCasa(){

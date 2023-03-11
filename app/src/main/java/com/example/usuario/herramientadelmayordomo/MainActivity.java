@@ -300,9 +300,9 @@ public class MainActivity extends AppCompatActivity
                 navigationView.setCheckedItem(R.id.nav_item_estancias);
                 break;
             case EstanciaFragment.TAG:
-                if(currentStateEstanciaFragment==MyApp.STATE_REGULAR){title = getResources().getString(R.string.estancia);unCheckedNavigationView();}
+                if(currentStateEstanciaFragment==MyApp.STATE_REGULAR){title = getResources().getString(R.string.estancia);unCheckedNavigationView();navigationView.setCheckedItem(R.id.nav_item_estancias);}
                 else if(currentStateEstanciaFragment==MyApp.STATE_NEW){title = getResources().getString(R.string.nueva_estancia);navigationView.setCheckedItem(R.id.nav_item_nueva_estancia);}
-                else if(currentStateEstanciaFragment==MyApp.STATE_UPDATE){title = getResources().getString(R.string.actualizar_estancia);unCheckedNavigationView();}
+                else if(currentStateEstanciaFragment==MyApp.STATE_UPDATE){title = getResources().getString(R.string.actualizar_estancia);unCheckedNavigationView();navigationView.setCheckedItem(R.id.nav_item_estancias);}
                 break;
             case ClientesFragment.TAG:
                 title = getResources().getString(R.string.clientes);
@@ -318,9 +318,10 @@ public class MainActivity extends AppCompatActivity
                 navigationView.setCheckedItem(R.id.nav_item_family_names);
                 break;
             case FamilyNameFragment.TAG:
-                if(currentStateFamilyNameFragment==MyApp.STATE_REGULAR){title = getResources().getString(R.string.familia);navigationView.setCheckedItem(R.id.nav_item_family_names);}
-                else if(currentStateFamilyNameFragment==MyApp.STATE_NEW){title = getResources().getString(R.string.nueva_familia);navigationView.setCheckedItem(R.id.nav_item_nuevo_family_name);}
-                else if(currentStateFamilyNameFragment==MyApp.STATE_UPDATE){title = getResources().getString(R.string.editar_nombre_de_familia);navigationView.setCheckedItem(R.id.nav_item_family_names);}
+                if(currentStateFamilyNameFragment==MyApp.STATE_REGULAR){title = getResources().getString(R.string.familia);}
+                else if(currentStateFamilyNameFragment==MyApp.STATE_NEW){title = getResources().getString(R.string.nueva_familia);}
+                else if(currentStateFamilyNameFragment==MyApp.STATE_UPDATE){title = getResources().getString(R.string.editar_nombre_de_familia);}
+                navigationView.setCheckedItem(R.id.nav_item_family_names);
                 break;
             case ReporteFragment.TAG:
                 if(currentStateReporteFragment==MyApp.STATE_REGULAR){title = getResources().getString(R.string.reportes);}
@@ -438,23 +439,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_item_estancias:
                 setUpEstanciasFragment(MyApp.STATE_EN_CASA);
                 break;
-            /*case R.id.nav_item_segun_cliente:
-                setUpEstanciasFragment(MyApp.STATE_SEGUN_CLIENTE);
-                break;
-            case R.id.nav_item_segun_periodo:
-                setUpEstanciasFragment(MyApp.STATE_SEGUN_PERIODO);
-                break;
-            case R.id.nav_item_segun_hab:
-                setUpEstanciasFragment(MyApp.STATE_SEGUN_HAB);
-                break;*/
             case R.id.nav_item_nuevo_cliente:
                 setUpNewClientFragment();
                 break;
             case R.id.nav_item_clientes:
                 setUpClientesFragment();
-                break;
-            case R.id.nav_item_nuevo_family_name:
-                setUpNewFamilyNameFragment();
                 break;
             case R.id.nav_item_family_names:
                 setUpFamilyNamesFragment();

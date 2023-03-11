@@ -23,8 +23,7 @@ import java.util.List;
 
 public class ClientesRVAdapter extends RecyclerView.Adapter<ClientesRVAdapter.ViewHolder> implements Filterable {
 
-    private List<Cliente> listClientes;
-    private List<Cliente> fullListClientes;
+    private List<Cliente> listClientes, fullListClientes;
     private Callback mycallback;
 
     private boolean selectModeOn, showOnlySelected;
@@ -45,10 +44,12 @@ public class ClientesRVAdapter extends RecyclerView.Adapter<ClientesRVAdapter.Vi
             }
             notifyDataSetChanged();
         }
+        //setListClientes(listClientes);
     }
 
     public void setListClientes(List<Cliente> listClientes) {
         this.listClientes = listClientes;
+        //fullListClientes = new ArrayList<>(listClientes);
         notifyDataSetChanged();
     }
 
@@ -158,8 +159,10 @@ public class ClientesRVAdapter extends RecyclerView.Adapter<ClientesRVAdapter.Vi
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            listClientes.clear();
-            listClientes.addAll((List)filterResults.values);
+            if (listClientes!=null && filterResults.values!=null){
+                listClientes.clear();
+                listClientes.addAll((List)filterResults.values);
+            }
             if(selectModeOn){
                 udSelectedItemsListClientes();
             }
@@ -168,6 +171,7 @@ public class ClientesRVAdapter extends RecyclerView.Adapter<ClientesRVAdapter.Vi
     };
 
     private void udSelectedItemsListClientes(){
+        if(listClientes==null || listClientes.size()<=0){return;}
         for(Cliente c: listClientes){
             c.setChecked(fullListClientes.get(fullListClientes.indexOf(c)).isChecked());
         }
