@@ -80,11 +80,14 @@ public class RecordatoriosRVAdaptar extends RecyclerView.Adapter<RecordatoriosRV
             menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()){
+                    if(item.getItemId() == R.id.menu_item_eliminar_recordatorio){
+                        myCallBack.requestEliminarRecordatorio(getAdapterPosition());
+                    }
+                    /*switch (item.getItemId()){
                         case R.id.menu_item_eliminar_recordatorio:
                             myCallBack.requestEliminarRecordatorio(getAdapterPosition());
                             break;
-                    }
+                    }*/
                     return false;
                 }
             });

@@ -1,5 +1,6 @@
 package com.example.usuario.herramientadelmayordomo.Fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -79,6 +80,7 @@ public class FamilyNamesFragment extends Fragment implements FamilyNamesRVAdapte
         });
     }
 
+    @SuppressLint("Range")
     private void udListFamilyNames() {
         if (listFamilyNames == null) {
             listFamilyNames = new ArrayList<>();
@@ -137,28 +139,24 @@ public class FamilyNamesFragment extends Fragment implements FamilyNamesRVAdapte
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_item_nuevo_nombre_de_familia:
-                myCallback.setUpNewFamilyNameFragment();
-                break;
-            case R.id.menu_item_buscar_family_names:
-                SearchView sv = (SearchView) item.getActionView();
-                sv.setImeOptions(EditorInfo.IME_ACTION_DONE);
-                sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
-                    @Override
-                    public boolean onQueryTextSubmit(String s) {
-                        return false;
-                    }
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_item_nuevo_nombre_de_familia) {
+            myCallback.setUpNewFamilyNameFragment();
+        } else if (itemId == R.id.menu_item_buscar_family_names) {
+            SearchView sv = (SearchView) item.getActionView();
+            sv.setImeOptions(EditorInfo.IME_ACTION_DONE);
+            sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        adapter.getFilter().filter(newText);
-                        return false;
-                    }
-                });
-                break;
-            default:
-                break;
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    adapter.getFilter().filter(newText);
+                    return false;
+                }
+            });
         }
         return super.onOptionsItemSelected(item);
     }

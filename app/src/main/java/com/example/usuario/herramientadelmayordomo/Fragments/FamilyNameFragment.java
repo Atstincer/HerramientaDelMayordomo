@@ -1,5 +1,6 @@
 package com.example.usuario.herramientadelmayordomo.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -355,6 +356,7 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
         }
     }
 
+    @SuppressLint("Range")
     private void addClienteRelacionado(int id) {
         AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(), AdminSQLiteOpenHelper.BD_NAME, null, AdminSQLiteOpenHelper.BD_VERSION);
         SQLiteDatabase BD = admin.getReadableDatabase();
@@ -378,6 +380,7 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
         cursor.close();
     }
 
+    @SuppressLint("Range")
     private void udSelectedFamilyNameFromDB(int id) {
         AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(), AdminSQLiteOpenHelper.BD_NAME, null, AdminSQLiteOpenHelper.BD_VERSION);
         SQLiteDatabase BD = admin.getReadableDatabase();
@@ -460,16 +463,12 @@ public class FamilyNameFragment extends Fragment implements MyPickClienteDialogF
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_item_editar_family_name:
-                myCallback.setNewCurrentStateFamilyNameFragment(MyApp.STATE_UPDATE);
-                setUpUDMode();
-                break;
-            case R.id.menu_item_eliminar_family_name:
-                confirmarEliminarFamilyName();
-                break;
-            default:
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_item_editar_family_name) {
+            myCallback.setNewCurrentStateFamilyNameFragment(MyApp.STATE_UPDATE);
+            setUpUDMode();
+        } else if (itemId == R.id.menu_item_eliminar_family_name) {
+            confirmarEliminarFamilyName();
         }
         return super.onOptionsItemSelected(item);
     }

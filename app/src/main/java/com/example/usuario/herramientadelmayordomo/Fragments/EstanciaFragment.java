@@ -1,5 +1,6 @@
 package com.example.usuario.herramientadelmayordomo.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
@@ -296,6 +297,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         }
     }
 
+    @SuppressLint("Range")
     private void getSelectedEstanciaFromDB(long id) {
         if (selectedEstancia == null) {
             selectedEstancia = new Estancia();
@@ -471,6 +473,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         showRelatedClientsIfExist();
     }
 
+    @SuppressLint("Range")
     private void setUpACTV() {
         if (listFamilyNamesBD == null) {
             listFamilyNamesBD = new ArrayList<>();
@@ -520,6 +523,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         actvFamilyName.setAdapter(actvAdapter);
     }
 
+    @SuppressLint("Range")
     private void getRelatedClientsFromDB(long id, String tabla) {
         setUpClearListClientesRelacionados();
         AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(), AdminSQLiteOpenHelper.BD_NAME, null, AdminSQLiteOpenHelper.BD_VERSION);
@@ -571,6 +575,7 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
         getRelatedReportsFromDB(selectedEstancia.getId());
     }
 
+    @SuppressLint("Range")
     private void getRelatedReportsFromDB(long estanciaId) {
         if (listReportesRelacionados == null) {
             listReportesRelacionados = new ArrayList<>();
@@ -904,26 +909,20 @@ public class EstanciaFragment extends Fragment implements MyPickClienteDialogF.C
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_editar_estancia_fragment:
-                setUpUDMode();
-                break;
-            case R.id.menu_item_borrar_estancia_fragment:
-                //makeToast("Borrando estancia...");
-                //eliminarEstancia();
-                confirmarEliminarEstancia();
-                break;
-            case R.id.menu_item_agregar_reporte:
-                if (myCallBack.getCurrentStateEstanciaFragment() != MyApp.STATE_NEW) {
-                    myCallBack.setUpReportFragment(selectedEstancia.getId(), 0);
-                }
-                break;
-            case R.id.menu_item_enviar_por_mail:
-                shareByMail();
-                break;
-            case R.id.menu_item_agregar_recordatorio:
-                agregarRecordatorio();
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_item_editar_estancia_fragment) {
+            setUpUDMode();
+        } else if (itemId == R.id.menu_item_borrar_estancia_fragment) {//makeToast("Borrando estancia...");
+            //eliminarEstancia();
+            confirmarEliminarEstancia();
+        } else if (itemId == R.id.menu_item_agregar_reporte) {
+            if (myCallBack.getCurrentStateEstanciaFragment() != MyApp.STATE_NEW) {
+                myCallBack.setUpReportFragment(selectedEstancia.getId(), 0);
+            }
+        } else if (itemId == R.id.menu_item_enviar_por_mail) {
+            shareByMail();
+        } else if (itemId == R.id.menu_item_agregar_recordatorio) {
+            agregarRecordatorio();
         }
         return super.onOptionsItemSelected(item);
     }

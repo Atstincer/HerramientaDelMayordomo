@@ -1,6 +1,7 @@
 package com.example.usuario.herramientadelmayordomo.Fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
@@ -249,6 +250,7 @@ public class ReporteFragment extends Fragment {
         }, year, month, day).show();
     }
 
+    @SuppressLint("Range")
     private void checkReportsForNewDate() {
         String fechaBD = DateHandler.formatDateToStoreInDB(tvDate.getText().toString());
         AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(), AdminSQLiteOpenHelper.BD_NAME, null, AdminSQLiteOpenHelper.BD_VERSION);
@@ -313,6 +315,7 @@ public class ReporteFragment extends Fragment {
         etReporteNoche.setText(reporte.getReporteNoche());
     }
 
+    @SuppressLint("Range")
     private Reporte getReporteFromDB(long reporteId) {
         AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(), AdminSQLiteOpenHelper.BD_NAME, null, AdminSQLiteOpenHelper.BD_VERSION);
         SQLiteDatabase db = admin.getReadableDatabase();
@@ -566,16 +569,13 @@ public class ReporteFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_eliminar_reporte:
-                confirmarEliminarReporte();
-                break;
-            case R.id.menu_item_enviar_por_mail:
-                sendMail();
-                break;
-            case R.id.menu_item_guardar_txt:
-                checkForPermissions();
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_item_eliminar_reporte) {
+            confirmarEliminarReporte();
+        } else if (itemId == R.id.menu_item_enviar_por_mail) {
+            sendMail();
+        } else if (itemId == R.id.menu_item_guardar_txt) {
+            checkForPermissions();
         }
         return super.onOptionsItemSelected(item);
     }

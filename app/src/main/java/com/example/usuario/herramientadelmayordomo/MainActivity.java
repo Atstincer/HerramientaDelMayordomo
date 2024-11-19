@@ -432,31 +432,23 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_item_nueva_estancia:
-                setUpNewEstanciaFragment();
-                break;
-            case R.id.nav_item_estancias:
-                setUpEstanciasFragment(MyApp.STATE_EN_CASA);
-                break;
-            case R.id.nav_item_nuevo_cliente:
-                setUpNewClientFragment();
-                break;
-            case R.id.nav_item_clientes:
-                setUpClientesFragment();
-                break;
-            case R.id.nav_item_family_names:
-                setUpFamilyNamesFragment();
-                break;
-            case R.id.nav_item_reportes:
-                setUpReportesFragment();
-                break;
-            case R.id.nav_item_recordatorios:
-                setUpRecordatoriosFragment();
-                break;
-            case R.id.nav_item_ajustes:
-                setUpAjustesFragment();
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.nav_item_nueva_estancia) {
+            setUpNewEstanciaFragment();
+        } else if (itemId == R.id.nav_item_estancias) {
+            setUpEstanciasFragment(MyApp.STATE_EN_CASA);
+        } else if (itemId == R.id.nav_item_nuevo_cliente) {
+            setUpNewClientFragment();
+        } else if (itemId == R.id.nav_item_clientes) {
+            setUpClientesFragment();
+        } else if (itemId == R.id.nav_item_family_names) {
+            setUpFamilyNamesFragment();
+        } else if (itemId == R.id.nav_item_reportes) {
+            setUpReportesFragment();
+        } else if (itemId == R.id.nav_item_recordatorios) {
+            setUpRecordatoriosFragment();
+        } else if (itemId == R.id.nav_item_ajustes) {
+            setUpAjustesFragment();
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;

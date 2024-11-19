@@ -183,10 +183,8 @@ public class ReportesFragment extends Fragment implements ReportesRVAdapter.Call
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_item_enviar_mail_reportes_fragment:
-                setUpMail();
-                break;
+        if (item.getItemId() == R.id.menu_item_enviar_mail_reportes_fragment) {
+            setUpMail();
         }
         return super.onOptionsItemSelected(item);
     }

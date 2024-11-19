@@ -1,5 +1,6 @@
 package com.example.usuario.herramientadelmayordomo.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ActivityNotFoundException;
@@ -131,19 +132,14 @@ public class ClienteFragment extends Fragment implements IMyFragments {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            case R.id.menu_item_tomar_foto:
-                                tomarFoto();
-                                break;
-                            case R.id.menu_item_seleccionar_foto:
-                                selectImagen();
-                                break;
-                            case R.id.menu_item_eliminar_foto:
-                                foto.setImageResource(R.drawable.ic_cliente);
-                                fotoSelected = false;
-                                break;
-                            default:
-                                break;
+                        int itemId = menuItem.getItemId();
+                        if (itemId == R.id.menu_item_tomar_foto) {
+                            tomarFoto();
+                        } else if (itemId == R.id.menu_item_seleccionar_foto) {
+                            selectImagen();
+                        } else if (itemId == R.id.menu_item_eliminar_foto) {
+                            foto.setImageResource(R.drawable.ic_cliente);
+                            fotoSelected = false;
                         }
                         return false;
                     }
@@ -363,6 +359,7 @@ public class ClienteFragment extends Fragment implements IMyFragments {
         Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
     }
 
+    @SuppressLint("Range")
     private void udClientFromDB(int id) {
         AdminSQLiteOpenHelper admin = AdminSQLiteOpenHelper.getInstance(getContext(), AdminSQLiteOpenHelper.BD_NAME, null, 1);
         SQLiteDatabase bd = admin.getWritableDatabase();
@@ -596,16 +593,12 @@ public class ClienteFragment extends Fragment implements IMyFragments {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_editar:
-                myCallback.setNewCurrentStateClienteFragment(MyApp.STATE_UPDATE);
-                setUpNewState(MyApp.STATE_UPDATE);
-                break;
-            case R.id.menu_item_eliminar_cliente:
-                confirmarEliminarCliente();
-                break;
-            default:
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_item_editar) {
+            myCallback.setNewCurrentStateClienteFragment(MyApp.STATE_UPDATE);
+            setUpNewState(MyApp.STATE_UPDATE);
+        } else if (itemId == R.id.menu_item_eliminar_cliente) {
+            confirmarEliminarCliente();
         }
         return super.onOptionsItemSelected(item);
     }

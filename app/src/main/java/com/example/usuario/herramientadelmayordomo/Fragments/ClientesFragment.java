@@ -1,5 +1,6 @@
 package com.example.usuario.herramientadelmayordomo.Fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -79,6 +80,7 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
         mycallback.setUpClienteFragment(listaClientes.get(position).getId());
     }
 
+    @SuppressLint("Range")
     private void udListaClientes() {
         if (listaClientes == null) {
             listaClientes = new ArrayList<>();
@@ -140,35 +142,29 @@ public class ClientesFragment extends Fragment implements ClientesRVAdapter.Call
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_nuevo_cliente:
-                mycallback.setUpNewClientFragment();
-                break;
-            case R.id.menu_item_buscar:
-                //Toast.makeText(getActivity(), "Buscar clicked.", Toast.LENGTH_SHORT).show();
-                SearchView sv = (SearchView) item.getActionView();
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_item_nuevo_cliente) {
+            mycallback.setUpNewClientFragment();
+        } else if (itemId == R.id.menu_item_buscar) {//Toast.makeText(getActivity(), "Buscar clicked.", Toast.LENGTH_SHORT).show();
+            SearchView sv = (SearchView) item.getActionView();
 
-                sv.setImeOptions(EditorInfo.IME_ACTION_DONE);
+            sv.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
-                sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
-                    @Override
-                    public boolean onQueryTextSubmit(String s) {
-                        return false;
-                    }
+            sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        adapter.getFilter().filter(newText);
-                        return false;
-                    }
-                });
-                break;
-            case R.id.menu_item_family_names:
-                mycallback.setUpFamilyNamesFragment();
-                //recyclerView.removeAllViews();
-                break;
-            default:
-                break;
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    adapter.getFilter().filter(newText);
+                    return false;
+                }
+            });
+        } else if (itemId == R.id.menu_item_family_names) {
+            mycallback.setUpFamilyNamesFragment();
+            //recyclerView.removeAllViews();
         }
         return super.onOptionsItemSelected(item);
     }
